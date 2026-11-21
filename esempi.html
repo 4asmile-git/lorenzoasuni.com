@@ -5,7 +5,6 @@
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Esempi del radar: campagne con un numero, e quanto fidarsi</title>
 <meta name="description" content="Campagne di altre aziende con il loro numero, il tipo di prova e un voto su 10.">
-<meta name="robots" content="noindex">
 <script>(function () {
   /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
      nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
@@ -94,7 +93,7 @@
   });
 })();
 </script>
-<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')!=='notte')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){document.documentElement.setAttribute('data-pelle','tavola');}})();</script>
 <style>
 @font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
 @font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
@@ -139,6 +138,9 @@ h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; lett
 .menu a { text-decoration: none; color: var(--muted); }
 .menu a:hover { color: var(--text); }
 .menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
+.menu .cyber a { color: var(--giallo); border: 1px solid var(--giallo); padding: 5px 10px; border-radius: var(--r); }
+.menu .cyber a:hover { color: var(--bg); background: var(--giallo); }
+html[data-pelle="tavola"] .menu .cyber a { color: #A3241F; border-color: #A3241F; }
 @media (max-width: 860px) {
   .testata .riga { flex-wrap: wrap; height: auto; padding-top: 10px; row-gap: 4px; }
   .testata nav { width: 100%; }
@@ -146,12 +148,32 @@ h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; lett
   .menu::-webkit-scrollbar { display: none; }
   .menu li { flex: none; }
   .menu .forte { order: -1; }
+  .menu .cyber { order: -1; }
+  .menu .cyber a { padding: 3px 8px; }
   .menu .forte a { padding: 3px 8px; }
   section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 96px; }
 }
 .quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
 footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Movimento: solo dove racconta un dato, e mai con prefers-reduced-motion */
+.btn { transition: background-color .18s, color .18s, border-color .18s, transform .12s; }
+.btn:active { transform: translateY(1px); }
+.pelli a { color: inherit; }
+.giro { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: var(--riga2, var(--giallo)); pointer-events: none; }
+@media (prefers-reduced-motion: no-preference) {
+  .flap i.gira { animation: palette .07s linear infinite; }
+  .flap i.fermo { animation: arresto .32s cubic-bezier(.3,1.6,.5,1); }
+  @keyframes palette { 0% { transform: rotateX(0); } 50% { transform: rotateX(80deg); } 100% { transform: rotateX(0); } }
+  @keyframes arresto { 0% { transform: rotateX(70deg); } 100% { transform: rotateX(0); } }
+  .podio:not(.coperto) .voto { animation: voto .45s cubic-bezier(.2,1.4,.4,1) both; }
+  .podio:not(.coperto) .card:nth-child(2) .voto { animation-delay: .15s; }
+  .podio:not(.coperto) .card:nth-child(3) .voto { animation-delay: .3s; }
+  @keyframes voto { 0% { transform: rotateX(90deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
+  [data-o="main"].aggiornato { animation: lampo .6s ease-out; }
+  @keyframes lampo { 0% { background: color-mix(in srgb, var(--giallo) 45%, transparent); } 100% { background: transparent; } }
+}
 
 /* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
    Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
@@ -221,7 +243,7 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
 <a class="skip" href="#contenuto">Vai al contenuto</a>
 <header class="testata"><div class="wrap riga">
   <a class="firma" href="index.html">Lorenzo Asuni</a>
-  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li></ul></nav>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li><li class="cyber"><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></li></ul></nav>
 </div></header>
 <main id="contenuto">
   <section class="intro quadretti"><div class="wrap">
@@ -327,7 +349,41 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
     </div>
   </div>
 </main>
-<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span></div></footer>
+<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span><span class="pelli">Pagina <a href="?pelle=tavola">chiara</a> · <a href="?pelle=notte">scura</a></span></div></footer><script>(function(){
+  var ridotto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (ridotto || !('IntersectionObserver' in window)) return;
+  /* Tabellone del radar: le cifre girano come un tabellone a palette e si fermano sul numero vero. */
+  var tab = document.querySelector('.tabellone');
+  if (tab) {
+    var io = new IntersectionObserver(function (es) {
+      es.forEach(function (e) {
+        if (!e.isIntersecting) return; io.disconnect();
+        tab.querySelectorAll('.flap i').forEach(function (el, k) {
+          var vero = el.textContent, giri = 7 + k * 2, n = 0;
+          el.classList.add('gira');
+          var t = setInterval(function () {
+            n++; el.textContent = n >= giri ? vero : String(Math.floor(Math.random() * 10));
+            if (n >= giri) { clearInterval(t); el.classList.remove('gira'); el.classList.add('fermo'); }
+          }, 70);
+        });
+      });
+    }, { threshold: .5 });
+    io.observe(tab);
+  }
+  /* Conti: quando il risultato cambia, il numero principale lampeggia una volta. */
+  document.querySelectorAll('[data-o="main"]').forEach(function (b) {
+    var prima = b.textContent;
+    new MutationObserver(function () {
+      if (b.textContent === prima) return; prima = b.textContent;
+      b.classList.remove('aggiornato'); void b.offsetWidth; b.classList.add('aggiornato');
+    }).observe(b, { childList: true, characterData: true, subtree: true });
+  });
+  /* Barra del giro: quanto della pagina hai letto. */
+  var barra = document.createElement('div'); barra.className = 'giro'; barra.setAttribute('aria-hidden', 'true');
+  document.body.appendChild(barra);
+  var su = function () { var h = document.documentElement; var m = h.scrollHeight - h.clientHeight; barra.style.transform = 'scaleX(' + (m > 0 ? h.scrollTop / m : 0) + ')'; };
+  addEventListener('scroll', su, { passive: true }); su();
+})();</script>
 <script>
 (function () {
   var f = { canale: '', prova: '' }, schede = document.querySelectorAll('.es');

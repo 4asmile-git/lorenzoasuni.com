@@ -4,7 +4,6 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Scheda del BDR</title>
-<meta name="robots" content="noindex">
 <style>
 @font-face { font-family: 'Big Shoulders'; src: url('../../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
 @font-face { font-family: 'Barlow Condensed'; src: url('../../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
@@ -167,7 +166,7 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 36px; font-size: 14p
   });
 })();
 </script>
-<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')!=='notte')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){document.documentElement.setAttribute('data-pelle','tavola');}})();</script>
 </head>
 <body>
 <header class="testata"><div class="wrap"><a class="firma" href="../index.html">Lorenzo Asuni</a><span><a class="indietro" href="../index.html">Torna alla home</a> <a class="indietro" href="../officina.html">Officina</a></span></div></header>

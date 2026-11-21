@@ -182,7 +182,12 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
 @media (max-width: 900px) { .calc2 { grid-template-columns: 1fr; padding: 16px; } }
 .c-esempio { font-size: 13.5px; color: var(--muted); margin: 0 0 12px; }
 .c-griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
-@media (max-width: 520px) { .c-griglia { grid-template-columns: 1fr; } }
+@media (max-width: 600px) {
+  .c-griglia { grid-template-columns: 1fr 1fr; gap: 10px; align-items: end; }
+  .calc2 .campo label { font-size: 12.5px; margin-bottom: 4px; }
+  .calc2 .campo input { font-size: 17px; padding: 8px 10px; }
+  .calc2.coperto .c-uscite .uscita { max-height: 190px; overflow: hidden; }
+}
 .calc2 .campo label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 5px; line-height: 1.3; min-height: 2.6em; }
 @media (max-width: 520px) { .calc2 .campo label { min-height: 0; } }
 .calc2 .campo input { width: 100%; font-family: var(--mono); font-size: 18px; padding: 9px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 3px; }
@@ -422,7 +427,19 @@ button.card:hover { border-color: var(--text); }
 .attrezzi { columns: 2; column-gap: 34px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 15px; }
 .attrezzi li { break-inside: avoid; margin: 0 0 10px; color: var(--muted); }
 .attrezzi b { color: var(--text); font-weight: 700; display: block; }
-@media (max-width: 600px) { .attrezzi { columns: 1; } }
+@media (max-width: 600px) {
+  .sezione { padding: 44px 0; }
+  .lead { font-size: 17px; }
+  .podio, .anteprime { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin: 0 -16px; padding: 0 16px 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
+  .podio::-webkit-scrollbar, .anteprime::-webkit-scrollbar { display: none; }
+  .podio > *, .anteprime > * { flex: 0 0 84%; scroll-snap-align: start; }
+  .chi-grid { gap: 18px; }
+  .ritratto { max-width: 240px; }
+  .ritratto img { aspect-ratio: 1 / 1; }
+  .carriera li { padding-bottom: 14px; }
+  .carriera p { font-size: 14.5px; }
+  .attrezzi { columns: 2; column-gap: 16px; font-size: 13.5px; }
+}
 .scrivimi { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
 /* Chiusura */
 .arrivo .bandiera { height: 22px; background: conic-gradient(var(--text) 25%, var(--bg) 0 50%, var(--text) 0 75%, var(--bg) 0) 0 0 / 22px 22px; margin-bottom: 40px; }

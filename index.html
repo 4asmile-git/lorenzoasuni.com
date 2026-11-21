@@ -139,7 +139,16 @@ h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; lett
 .menu a { text-decoration: none; color: var(--muted); }
 .menu a:hover { color: var(--text); }
 .menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
-@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+@media (max-width: 860px) {
+  .testata .riga { flex-wrap: wrap; height: auto; padding-top: 10px; row-gap: 4px; }
+  .testata nav { width: 100%; }
+  .menu { gap: 18px; font-size: 13px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding: 2px 0 10px; -webkit-overflow-scrolling: touch; }
+  .menu::-webkit-scrollbar { display: none; }
+  .menu li { flex: none; }
+  .menu .forte { order: -1; }
+  .menu .forte a { padding: 3px 8px; }
+  section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 96px; }
+}
 .quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
 footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
@@ -297,7 +306,16 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
 .apertura .cosa { font-size: 16.5px; color: #DDD4C2; max-width: 60ch; margin: 0 0 22px; }
 .apertura .bottoni { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
 .credito { position: absolute; right: 12px; bottom: 8px; font-size: 11px; color: #8C8273; z-index: 2; }
-@media (max-width: 600px) { .apertura h1 { font-size: 38px; } .apertura .dentro { padding-top: 28px; padding-bottom: 34px; } .apertura .chi { margin-top: 14px; font-size: 17px; } .apertura .cosa { font-size: 15px; margin-bottom: 16px; } .apertura .btn { font-size: 16px; padding: 10px 16px; } }
+@media (max-width: 600px) {
+  .apertura { min-height: 0; flex-direction: column; align-items: stretch; }
+  .apertura h1 { font-size: 38px; }
+  .apertura .dentro { padding-top: max(110px, 18svh); padding-bottom: 18px; }
+  .apertura .chi { margin-top: 14px; font-size: 17px; }
+  .apertura .cosa { font-size: 15px; margin-bottom: 18px; }
+  .apertura .bottoni { gap: 10px; }
+  .apertura .btn { font-size: 16px; padding: 12px 16px; flex: 1 1 auto; text-align: center; }
+  .credito { position: relative; right: auto; bottom: auto; padding: 0 16px 12px; font-size: 10.5px; line-height: 1.4; }
+}
 /* Il conto */
 .dopo-conto { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 22px 0 0; }
 /* Come leggo un numero */
@@ -395,6 +413,7 @@ button.card:hover { border-color: var(--text); }
 .fatti { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0 0 24px; padding: 0; list-style: none; }
 .fatti b { display: block; font-family: var(--display); font-weight: 900; font-size: 30px; line-height: 1; }
 .fatti span { font-size: 13.5px; color: var(--muted); }
+@media (max-width: 600px) { .fatti { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; } .fatti b { font-size: 26px; } .fatti span { display: block; margin-top: 4px; line-height: 1.35; } }
 .carriera { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 2px solid var(--line); }
 .carriera li { position: relative; padding: 0 0 18px; }
 .carriera li::before { content: ""; position: absolute; left: -30px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 3px solid var(--giallo); }

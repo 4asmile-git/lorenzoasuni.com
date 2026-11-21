@@ -139,7 +139,16 @@ h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; lett
 .menu a { text-decoration: none; color: var(--muted); }
 .menu a:hover { color: var(--text); }
 .menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
-@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+@media (max-width: 860px) {
+  .testata .riga { flex-wrap: wrap; height: auto; padding-top: 10px; row-gap: 4px; }
+  .testata nav { width: 100%; }
+  .menu { gap: 18px; font-size: 13px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding: 2px 0 10px; -webkit-overflow-scrolling: touch; }
+  .menu::-webkit-scrollbar { display: none; }
+  .menu li { flex: none; }
+  .menu .forte { order: -1; }
+  .menu .forte a { padding: 3px 8px; }
+  section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 96px; }
+}
 .quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
 footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
 footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }

@@ -1,0 +1,338 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Esempi del radar: campagne con un numero, e quanto fidarsi</title>
+<meta name="description" content="Campagne di altre aziende con il loro numero, il tipo di prova e un voto su 10.">
+<meta name="robots" content="noindex">
+<script>(function () {
+  /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
+     nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
+     build_v3.py legge questa riga e scrive la privacy del fornitore scelto, quindi codice e privacy non si separano.
+     SPENTA finché ATTIVA è false: si accende solo alla pubblicazione, con l'OK di Lorenzo, dopo aver creato il sito
+     sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
+     In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
+     Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
+  var FORNITORE = 'plausible';
+  var ATTIVA = false;
+  var UMAMI_SITO = '';
+  var DOMINIO = 'lorenzoasuni.com';
+  var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
+  function plausible(nome, p) {
+    var corpo = { name: nome, url: location.origin + location.pathname, domain: DOMINIO };
+    if (nome === 'pageview') { if (document.referrer) corpo.referrer = document.referrer; }
+    else corpo.props = p;
+    var dati = JSON.stringify(corpo);
+    /* text/plain evita la richiesta preliminare del browser; Plausible lo legge comunque come JSON. */
+    if (!(navigator.sendBeacon && navigator.sendBeacon('https://plausible.io/api/event', new Blob([dati], { type: 'text/plain' }))))
+      fetch('https://plausible.io/api/event', { method: 'POST', body: dati, headers: { 'Content-Type': 'text/plain' }, keepalive: true });
+  }
+  function umami(nome, p) {
+    if (!UMAMI_SITO) return;
+    /* Pagina vista = evento senza nome. Il percorso sta già nell'url, quindi la proprietà "pagina" non si manda:
+       nel piano gratuito ogni proprietà conta come un evento in più. Niente titolo, schermo e lingua: non servono. */
+    var payload = { website: UMAMI_SITO, hostname: location.hostname, url: location.pathname, referrer: document.referrer || '' };
+    if (nome !== 'pageview') {
+      payload.name = nome;
+      var d = {}, n = 0;
+      for (var k in p) if (k !== 'pagina') { d[k] = p[k]; n++; }
+      if (n) payload.data = d;
+    }
+    fetch('https://gateway.umami.is/api/send', { method: 'POST', body: JSON.stringify({ type: 'event', payload: payload }), headers: { 'Content-Type': 'application/json' }, keepalive: true, credentials: 'omit' });
+  }
+  function invia(nome, p) {
+    if (!ATTIVA || !PRODUZIONE) return;
+    try { (FORNITORE === 'umami' ? umami : plausible)(nome, p || {}); } catch (e) {}
+  }
+  var visti = {};
+  function pagina() { var p = location.pathname.split('/').pop() || 'index.html'; return /materiali\//.test(location.pathname) ? 'materiali/' + p : p; }
+  window.traccia = function (nome, proprieta) {
+    var p = proprieta || {}; p.pagina = pagina();
+    if (SVILUPPO) { try { console.info('[traccia]', nome, p); } catch (e) {} }
+    invia(nome, p);
+  };
+  /* Pagina vista: una per caricamento, con la provenienza. Nessuna proprietà. */
+  if (SVILUPPO) { try { console.info('[traccia] pageview', { pagina: pagina() }); } catch (e) {} }
+  invia('pageview');
+  function unaVolta(chiave, nome, prop) { if (visti[chiave]) return; visti[chiave] = 1; window.traccia(nome, prop); }
+
+  /* Cambio di pelle: avviene solo da indirizzo (?pelle=tavola o ?pelle=notte). Questo script gira prima di quello
+     che salva la pelle, quindi vede ancora la scelta precedente. */
+  try {
+    var q = new URLSearchParams(location.search).get('pelle'), prima = localStorage.getItem('la-v3-pelle') || 'notte';
+    if ((q === 'tavola' || q === 'notte') && q !== prima) window.traccia('pelle_cambiata', { pelle: q });
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var isc = el.getAttribute('data-az-isc') || (el.closest('.sblocco') && el.getAttribute('data-az'));
+    if (isc === 'carica') return window.traccia('iscrizione_modulo_aperto', {});
+    if (isc === 'gia') return window.traccia('iscrizione_gia_iscritto', {});
+    if (isc === 'fatto') return window.traccia('iscrizione_fatto', {});
+    var card = el.closest('#podio .card');
+    if (card) return unaVolta('pron', 'pronostico_giocato', { scelta: card.getAttribute('data-id') });
+    if (el.id === 'salta-pron') return unaVolta('pron', 'pronostico_giocato', { scelta: 'salta' });
+    var href = el.getAttribute('href') || '';
+    if (/^https?:/.test(href)) {
+      var u; try { u = new URL(href); } catch (x) { return; }
+      var verso = /substack\.com$/.test(u.hostname) ? 'substack' : (u.hostname === 'github.com' ? 'github' : 'altro');
+      var prop = { verso: verso };
+      if (verso === 'github') prop.repo = u.pathname.split('/').slice(1, 3).join('/');
+      if (verso === 'altro') prop.dominio = u.hostname;
+      return window.traccia('uscita', prop);
+    }
+    if (/(^|\/)materiali\/[^/]+\.html/.test(href)) return window.traccia('materiale_aperto', { materiale: href.split('/').pop().replace('.html', '') });
+    if (pagina() === 'index.html' && el.classList.contains('btn') && href) return window.traccia('cta_home', { verso: href.split('?')[0] });
+  });
+
+  /* Calcolatore usato: il primo numero cambiato in un conto, una volta per conto e per visita. Solo il nome del conto. */
+  document.addEventListener('change', function (e) {
+    var c = e.target.closest && e.target.closest('[data-calc]');
+    if (c && e.target.hasAttribute('data-k')) unaVolta('calc-' + c.getAttribute('data-calc'), 'calcolo_usato', { calcolatore: c.getAttribute('data-calc') });
+  });
+})();
+</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<style>
+@font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
+  --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
+  --carta: #F4EFE4; --su-carta: #15110D; --griglia: rgba(244,239,228,.06); --r: 4px;
+  --display: 'Big Shoulders', 'Barlow Condensed', sans-serif; --cond: 'Barlow Condensed', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--giallo); color: #15110D; padding: 8px 12px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
+h1, h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; }
+h2 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 18px; }
+h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.08; margin: 0 0 8px; }
+.lead { font-size: 19px; max-width: 64ch; }
+.nota { font-size: 14px; color: var(--muted); }
+.bozza { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--muted); padding: 1px 5px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 12px 22px; border-radius: var(--r); border: 2px solid var(--text); text-decoration: none; background: transparent; color: var(--text); cursor: pointer; }
+.btn.pieno { background: var(--rosso-fondo); border-color: var(--rosso-fondo); color: var(--su-rosso); }
+.btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.pieno:hover { background: var(--su-rosso); color: var(--rosso-fondo); border-color: var(--su-rosso); }
+.btn.piccolo { font-size: 15px; padding: 8px 14px; }
+.sezione { padding: 84px 0; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .sezione { padding: 60px 0; } }
+.testata { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
+.testata .riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 58px; }
+.firma { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
+.menu { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
+.menu a { text-decoration: none; color: var(--muted); }
+.menu a:hover { color: var(--text); }
+.menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
+@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+.quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
+   Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
+html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A;
+  --rosso: #C0302A; --rosso-fondo: #C0302A; --su-rosso: #FFFFFF; --arancio: #A3241F; --giallo: #A3241F; --verde: #2F6B45;
+  --carta: #FFFDF6; --su-carta: #363737; --griglia: rgba(54,55,55,.05); }
+html[data-pelle="tavola"] .tabellone, html[data-pelle="tavola"] .c-uscite .uscita { --giallo: #F7C948; --text: #F4EFE4; --muted: #BDB39F; color: #F4EFE4; }
+html[data-pelle="tavola"] .tabellone .trow .l { color: #F4EFE4; }
+html[data-pelle="tavola"] .apertura { background: var(--bg); }
+html[data-pelle="tavola"] .apertura video { filter: grayscale(.2) contrast(1.05); opacity: .16; }
+html[data-pelle="tavola"] .apertura .cosa { color: var(--muted); }
+html[data-pelle="tavola"] .credito { color: var(--muted); }
+html[data-pelle="tavola"] .fascia { background: var(--bg-2); color: var(--text); border-top: 0; }
+html[data-pelle="tavola"] .fascia h2 { color: var(--rosso); }
+html[data-pelle="tavola"] .tovaglia-bordo, html[data-pelle="tavola"] .arrivo .bandiera { background-color: #FFFDF6;
+  background-image: linear-gradient(90deg, rgba(192,48,42,.45) 50%, transparent 50%), linear-gradient(rgba(192,48,42,.45) 50%, transparent 50%);
+  background-size: 22px 22px; height: 22px; }
+html[data-pelle="tavola"] .tovaglia-bordo { display: block; margin: -84px 0 62px; }
+@media (max-width: 760px) { html[data-pelle="tavola"] .tovaglia-bordo { margin: -60px 0 40px; } }
+.tovaglia-bordo { display: none; }
+html[data-pelle="tavola"] .tag.visto { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .btn.pieno:hover { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .bozza { color: var(--muted); border-color: var(--muted); }
+html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transparent, rgba(30,24,20,.82)); }
+
+.intro { padding: 56px 0 10px; }
+.intro h1 { font-size: clamp(48px, 8vw, 100px); margin-bottom: 14px; }
+.filtri { display: flex; flex-wrap: wrap; gap: 8px; margin: 10px 0 6px; align-items: center; }
+.filtri b { font-family: var(--cond); text-transform: uppercase; letter-spacing: .06em; font-size: 14px; color: var(--muted); margin-right: 4px; }
+.filtri button { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 15px; padding: 6px 12px; border-radius: var(--r); border: 1px solid var(--line); background: var(--bg-2); color: var(--text); cursor: pointer; }
+.filtri button[aria-pressed="true"] { background: var(--giallo); color: #15110D; border-color: var(--giallo); }
+.filtri button span { font-family: var(--mono); font-size: 12px; margin-left: 4px; }
+.griglia { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; margin: 22px 0; }
+@media (max-width: 800px) { .griglia { grid-template-columns: 1fr; } }
+.es { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; }
+.es[hidden] { display: none; }
+.ante { margin: 0; background: #fff; border-bottom: 1px solid var(--line); }
+.ante img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; }
+.ante figcaption { font-family: var(--mono); font-size: 11.5px; color: #6B6358; background: #FBF8F0; padding: 4px 10px; }
+.ante-carta span { display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 22px; color: #6B6358; background: repeating-linear-gradient(0deg, transparent 0 23px, rgba(54,55,55,.06) 23px 24px), #FBF8F0; }
+
+.es .ritaglio { width: 100%; height: auto; border: 1px solid var(--line); }
+.es .fig { background: var(--bg-3); padding: 14px; }
+.tags { display: flex; gap: 6px; flex-wrap: wrap; margin-bottom: 10px; }
+.tag { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 13px; padding: 4px 8px; border-radius: 2px; border: 1px solid var(--muted); }
+.tag.visto { background: var(--carta); color: #15110D; border-color: var(--carta); }
+.es .num { font-family: var(--display); font-weight: 900; font-size: 38px; line-height: .95; text-transform: uppercase; }
+.es .num small { display: block; font-family: var(--body); font-weight: 400; text-transform: none; font-size: 14px; color: var(--muted); line-height: 1.35; margin-top: 6px; }
+.es .corpo { padding: 14px; }
+.es .chi { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 13px; color: var(--giallo); margin: 0 0 4px; display: flex; justify-content: space-between; gap: 8px; }
+.es .chi span { color: var(--muted); }
+.es h2 { font-family: var(--cond); font-size: 22px; line-height: 1.1; text-transform: uppercase; margin: 0 0 8px; }
+.es .voto { font-family: var(--display); font-weight: 900; font-size: 30px; color: var(--giallo); }
+.es .voto small { font-size: 14px; color: var(--muted); }
+.es details { border-top: 1px solid var(--line); padding: 10px 14px; }
+.es summary { cursor: pointer; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; }
+.es details p { font-size: 15.5px; margin: 8px 0; }
+.es details h3 { font-size: 16px; margin: 12px 0 0; color: var(--muted); }
+.vuoto { color: var(--muted); }
+.uscite { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 30px 0 70px; }
+@media (max-width: 760px) { .uscite { grid-template-columns: 1fr; } }
+.uscite > div { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
+.uscite p { margin: 0 0 12px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="testata"><div class="wrap riga">
+  <a class="firma" href="index.html">Lorenzo Asuni</a>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li></ul></nav>
+</div></header>
+<main id="contenuto">
+  <section class="intro quadretti"><div class="wrap">
+    <h1>Campagne con un numero, e quanto fidarsi</h1>
+    <p class="lead">Gli esempi del radar dall'8 novembre: campagne e iniziative di altre aziende, ognuna con il suo numero e con quanto mi fido di quel numero. Per ognuna scrivo come la proverei in un'azienda B2B italiana da 5 a 50 persone.</p>
+    <p class="nota">8 esempi in due settimane: 1 con il numero visto da me in un dato misurato, 7 con il numero dichiarato da chi l'ha fatto. Ogni venerdì se ne aggiungono, quando un articolo ha un numero che regge.</p>
+    <div class="filtri" role="group" aria-label="Canale"><b>Canale</b><button type="button" data-f="canale" data-v="" aria-pressed="true">Tutti<span>8</span></button><button type="button" data-f="canale" data-v="paid" aria-pressed="false">Paid Meta e Google<span>2</span></button><button type="button" data-f="canale" data-v="cold-calling-bdr" aria-pressed="false">Cold calling e BDR<span>1</span></button><button type="button" data-f="canale" data-v="linkedin-newsletter" aria-pressed="false">LinkedIn e newsletter<span>3</span></button><button type="button" data-f="canale" data-v="crm-pipeline" aria-pressed="false">CRM e pipeline<span>1</span></button><button type="button" data-f="canale" data-v="competitive-intelligence" aria-pressed="false">Competitive intelligence<span>1</span></button></div><div class="filtri" role="group" aria-label="Prova"><b>Prova</b><button type="button" data-f="prova" data-v="" aria-pressed="true">Tutte</button><button type="button" data-f="prova" data-v="VISTO" aria-pressed="false">Visto<span>1</span></button><button type="button" data-f="prova" data-v="DETTO" aria-pressed="false">Dichiarato<span>7</span></button></div>
+  </div></section>
+  <div class="wrap">
+    <div class="griglia"><article class="es" id="RG-20261108-01" data-canale="paid" data-prova="VISTO">
+  <figure class="ante"><img src="esempi-img/RG-20261108-01-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Frankfurt School · 11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag visto">Visto</span><span class="tag">Paid Meta e Google</span></div>
+  <div class="num">0,37% contro 1,17%<small>conversione della visita da un annuncio ChatGPT e da Google Search, sugli stessi 1.898 negozi online</small></div></div>
+  <div class="corpo"><p class="chi">Frankfurt School e WU Vienna<span>11/2026</span></p><h2>Su ChatGPT una visita pagata converte un terzo di una da Google</h2><p class="voto">10<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Due ricercatori hanno misurato il rendimento degli annunci su ChatGPT sui dati reali di quasi 1.900 negozi online, confrontandolo con Google Search sugli stessi negozi. La visita portata da un annuncio ChatGPT converte un terzo e porta circa un terzo del ricavo. Sul ricavo per dollaro speso la distanza sale a 6,6 volte, con i prezzi pubblici degli annunci.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Chi valuta gli annunci su ChatGPT parte con un tetto di spesa e lo stesso metro del canale che vuole sostituire (ricavo o lead qualificati per euro, non clic). Lo studio è su negozi online: per il B2B a ciclo lungo il dato va riletto sui lead qualificati, che lo studio non misura.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261108-01.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://www.frankfurt-school.de/en/news/2026/11/chatgpt-advertising-delivers-more-than-six-times-less-value-for-money-than-google-ads-">frankfurt-school</a>, 11/2026. fonte primaria, comunicato dell'università sullo studio. Voto: prova 3/3, si rifà 3/3, novità 2/2, canale 2/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261108-02" data-canale="cold-calling-bdr" data-prova="DETTO">
+  <figure class="ante"><img src="esempi-img/RG-20261108-02-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>SaaStr · 06/11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">Cold calling e BDR</span></div>
+  <div class="num">Da 10 a 1<small>persone sullo smistamento dei lead in ingresso, sei settimane dopo il lancio dell'agente</small></div></div>
+  <div class="corpo"><p class="chi">Vercel<span>06/11/2026</span></p><h2>Un agente sulla qualifica dei lead: da dieci persone a una in sei settimane</h2><p class="voto">9<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Il team di go-to-market engineering di Vercel ha costruito in casa agenti per vendite, marketing e supporto. Quello sui lead in ingresso decide chi è qualificato e a chi passarlo: il lavoro di smistamento che facevano dieci persone ora lo segue una. Gli SDR liberati da 30 flussi automatizzati hanno ricevuto quote più alte del 30%.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Un SaaS italiano con lead da Meta e Google e due o tre BDR può partire dallo smistamento: arricchimento, regole di qualifica scritte, priorità della coda di chiamata, misurato sul tempo alla prima chiamata e sulle chiamate in cui si parla con la persona giusta. Il costo regge anche a scala piccola; serve qualcuno che tenga le regole e il CRM in ordine.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261108-02.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://www.saastr.com/top-5-learnings-from-vercels-coo-10-sdrs-down-to-1-a-5k-a-year-lead-agent-and-93-of-support-cases-handled-by-ai/">saastr</a>, 06/11/2026. resoconto di Jason Lemkin del talk della COO a SaaStr AI; SaaStr organizza l'evento. Voto: prova 2/3, si rifà 3/3, novità 2/2, canale 2/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261108-04" data-canale="linkedin-newsletter" data-prova="DETTO">
+  <figure class="ante ante-carta"><span>SaaStr</span><figcaption>SaaStr · 07/11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">LinkedIn e newsletter</span></div>
+  <div class="num">80 milioni $<small>prezzo iniziale in contanti più earn-out fino al 2029, dal comunicato di Wix letto in copia</small></div></div>
+  <div class="corpo"><p class="chi">Base44<span>07/11/2026</span></p><h2>Un founder, nessun round, venduta a Wix sei mesi dopo il lancio</h2><p class="voto">7<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Un founder da solo, autofinanziato con 10-20.000 dollari spesi quasi tutti in chiamate ai modelli, lancia un costruttore di app senza codice all'inizio del 2025. Racconta il lavoro in pubblico e gli utenti condividono le app che fanno: le app condivise dagli utenti portano i nuovi utenti. Sei mesi dopo Wix lo compra.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Il racconto in pubblico del founder su LinkedIn si trasferisce bene a un SaaS italiano; la viralità di un prodotto consumer no. Il pezzo replicabile è far vedere l'output del cliente (il preventivo, il report, l'app) dove il pubblico del cliente lo incontra.</p>
+    <h3>Il ritaglio della fonte</h3><p>La fonte non si apre in automatico (controllo del browser): il ritaglio va fatto a mano.</p>
+    <h3>Fonte e voto</h3><p><a href="https://www.saastr.com/saastr-ai-app-of-the-week-base44-one-founder-zero-funding-80-million-from-wix-in-6-months-now-at-200-million-arr/">saastr</a>, 07/11/2026. riassunto con numeri in gran parte riportati da altri. Voto: prova 2/3, si rifà 2/3, novità 1/2, canale 2/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261108-03" data-canale="paid" data-prova="DETTO">
+  <figure class="ante"><img src="esempi-img/RG-20261108-03-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Lenny&#x27;s Newsletter · 01/11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">Paid Meta e Google</span></div>
+  <div class="num">500-600<small>annunci in stile UGC al mese, con circa 50 creator in rosa</small></div></div>
+  <div class="corpo"><p class="chi">Wispr Flow<span>01/11/2026</span></p><h2>Annunci girati da 50 creator, pagati in percentuale della spesa</h2><p class="voto">7<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Wispr Flow (dettatura vocale con AI) ha portato nel software il metodo dei marchi DTC: una rosa di circa 50 creator che girano annunci in stile UGC, pagati con una percentuale della spesa pubblicitaria che il loro annuncio genera. Il volume è di 500-600 annunci nuovi al mese. Il motore l'ha costruito un ragazzo entrato a 19 anni come responsabile dei contenuti.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Per un SaaS B2B italiano a ciclo lungo regge poco: volumi, pubblico e budget sono da prodotto prosumer americano. Si trasferisce la meccanica del compenso legato alla spesa, utile a chi vende al consumatore e testa molte creatività su Meta.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261108-03.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://www.lennysnewsletter.com/p/how-a-19-year-old-intern-built-the">lennys-newsletter</a>, 01/11/2026. episodio del podcast, visibile solo il sommario; la pagina dichiara che Lenny può essere investitore delle aziende di cui parla. Voto: prova 2/3, si rifà 1/3, novità 2/2, canale 2/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261114-01" data-canale="crm-pipeline" data-prova="DETTO">
+  <figure class="ante ante-carta"><span>SaaStr</span><figcaption>SaaStr · 12/11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">CRM e pipeline</span></div>
+  <div class="num">Dal 20% al 70%<small>rinnovi degli sponsor da 100.000 $ in su, con l'agente attivo da circa 11 mesi</small></div></div>
+  <div class="corpo"><p class="chi">SaaStr<span>12/11/2026</span></p><h2>Prima del rinnovo, un deck con i risultati dell'account</h2><p class="voto">5<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>SaaStr usa un agente AI come supporto alla vendita delle sponsorizzazioni del proprio evento. L'agente prepara per ogni sponsor un deck di valore con i dati dell'account, riassume le call, aggiorna le opportunità e prepara contratti e condizioni di pagamento. Il fondatore lo indica tra le cause del salto nei rinnovi.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Un'azienda con pochi clienti di valore alto può preparare prima del rinnovo un riepilogo dei risultati dell'account, generato dai dati del CRM e dalle call. Non si trasferisce il 70%: il numero è di un evento con un mercato di sponsor molto diverso e senza un confronto controllato.</p>
+    <h3>Il ritaglio della fonte</h3><p>La fonte non si apre in automatico (controllo del browser): il ritaglio va fatto a mano.</p>
+    <h3>Fonte e voto</h3><p><a href="https://www.saastr.com/our-agents-never-picked-canva-10-learnings-on-agent-pricing-getting-picked-and-security-from-this-weeks-the-agents-with-ulrik-lehrskov-schmidt/">saastr</a>, 12/11/2026. post di Jason Lemkin sul blog della sua azienda; ha interesse a promuovere prodotto ed evento; periodo di confronto non preciso. Voto: prova 1/3, si rifà 2/3, novità 1/2, canale 1/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261114-02" data-canale="competitive-intelligence" data-prova="DETTO">
+  <figure class="ante"><img src="esempi-img/RG-20261114-02-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Clozd · 14/11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">Competitive intelligence</span></div>
+  <div class="num">+52%<small>win rate dichiarato dopo il programma, senza baseline né periodo</small></div></div>
+  <div class="corpo"><p class="chi">Sitecore<span>14/11/2026</span></p><h2>Il win-loss parte da un foglio Excel</h2><p class="voto">5<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Il programma di win-loss di Sitecore è nato come attività manuale su Excel, senza un team dedicato alla competitive intelligence, ed è diventato un processo con metriche proprie, guidato dalla funzione Market Insights.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Un'azienda con 20-30 trattative l'anno può intervistare chi ha comprato e chi ha scelto un concorrente, e registrare i motivi in una tabella. Non si trasferisce il numero: manca la baseline e la fonte vende il servizio.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261114-02.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://tours.clozd.com/answers/how-sitecore-built-a-metrics-driven-win-loss-program-from-the-ground-up">ricerca-web</a>, 14/11/2026. pagina di Clozd, fornitore di win-loss: interesse commerciale; senza periodo, baseline né campione. Voto: prova 1/3, si rifà 2/3, novità 0/2, canale 2/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261108-06" data-canale="linkedin-newsletter" data-prova="DETTO">
+  <figure class="ante"><img src="esempi-img/RG-20261108-06-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Marketing Examples · senza data</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">LinkedIn e newsletter</span></div>
+  <div class="num">80 link<small>e la pagina passata dalla trentesima alla prima posizione su Google per la ricerca che contava</small></div></div>
+  <div class="corpo"><p class="chi">Rise at Seven<span>senza data</span></p><h2>Prima il titolo del giornalista, poi l'idea: da trentesimi a primi su Google</h2><p class="voto">5<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Un'agenzia inglese costruisce le campagne di PR partendo dal titolo che un giornalista vorrebbe scrivere, poi l'idea, poi la pagina. Il link dell'articolo punta alla pagina che deve salire su Google.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Un SaaS B2B con un dataset proprio può fare PR sui dati: un numero che la stampa di settore non ha, un titolo pronto, una pagina che lo spiega e porta al prodotto.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261108-06.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://marketingexamples.com/seo/digital-pr">marketing-examples</a>, senza data. esempio senza data; numeri della founder dell'agenzia, che vende il metodo. Voto: prova 1/3, si rifà 2/3, novità 1/2, canale 1/2.</p>
+  </details>
+</article>
+<article class="es" id="RG-20261108-05" data-canale="linkedin-newsletter" data-prova="DETTO">
+  <figure class="ante"><img src="esempi-img/RG-20261108-05-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Marketing Examples · senza data</figcaption></figure><div class="fig"><div class="tags"><span class="tag ">Dichiarato</span><span class="tag">LinkedIn e newsletter</span></div>
+  <div class="num">60%<small>del traffico da Hacker News in nove mesi, oltre 30.000 visite</small></div></div>
+  <div class="corpo"><p class="chi">Simple Analytics<span>senza data</span></p><h2>Il 60% del traffico da una community, senza chiedere un voto</h2><p class="voto">4<small>/10</small></p></div>
+  <details><summary>Cosa è successo, e come lo proverei</summary>
+    <h3>Cosa è successo</h3><p>Il founder di Simple Analytics ha usato Hacker News da membro della community: titoli piani, commenti utili con un link solo quando serviva, lanci su Show HN, mai richieste di voti. In nove mesi Hacker News è diventato il 60% del suo traffico.</p>
+    <h3>Come lo proverei in un'azienda B2B italiana</h3><p>Il principio si trasferisce alle community dove stanno i buyer italiani (gruppi di settore, community di SDR, forum professionali). Il caso però è vecchio ed è già stato raccontato da Marketing Examples.</p>
+    <h3>Il ritaglio della fonte</h3><p><img class="ritaglio" src="esempi-img/RG-20261108-05.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="1200" height="750"></p>
+    <h3>Fonte e voto</h3><p><a href="https://marketingexamples.com/content/hacker-news">marketing-examples</a>, senza data. esempio senza data, trovato con la sitemap. Voto: prova 1/3, si rifà 2/3, novità 0/2, canale 1/2.</p>
+  </details>
+</article>
+</div>
+    <p class="vuoto" id="vuoto" hidden>Nessun esempio con questi filtri. Togline uno.</p>
+    <div class="uscite">
+      <div><h3>Ogni venerdì, il radar nuovo</h3><p>I pezzi lunghi, sui conti di un'azienda di cui parlano tutti, escono una volta al mese su A Tavola con Lorenzo.</p><a class="btn pieno" href="https://lorenzoasuni.substack.com/subscribe">Iscriviti alla newsletter</a></div>
+      <div><h3>Rifai i conti sui tuoi numeri</h3><p>Funnel a ritroso, CAC, sconto contro volume e gli altri conti dell'Officina.</p><a class="btn" href="officina.html">Vai all'Officina</a></div>
+    </div>
+  </div>
+</main>
+<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span></div></footer>
+<script>
+(function () {
+  var f = { canale: '', prova: '' }, schede = document.querySelectorAll('.es');
+  function applica() {
+    var n = 0;
+    schede.forEach(function (s) { var ok = (!f.canale || s.dataset.canale === f.canale) && (!f.prova || s.dataset.prova === f.prova); s.hidden = !ok; if (ok) n++; });
+    document.getElementById('vuoto').hidden = n > 0;
+    document.querySelectorAll('.filtri button').forEach(function (b) { b.setAttribute('aria-pressed', String(f[b.dataset.f] === b.dataset.v)); });
+  }
+  document.querySelectorAll('.filtri button').forEach(function (b) { b.addEventListener('click', function () { f[b.dataset.f] = b.dataset.v; applica(); }); });
+  var q = new URLSearchParams(location.search); if (q.get('canale')) f.canale = q.get('canale');
+  applica();
+  var h = location.hash.slice(1), el = h && document.getElementById(h); if (el && el.querySelector('details')) el.querySelector('details').open = true;
+})();
+</script>
+</body>
+</html>

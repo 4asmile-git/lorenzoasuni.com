@@ -1,0 +1,207 @@
+<!doctype html>
+<html lang="it" data-pelle="notte">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Dizionario</title>
+<meta name="robots" content="noindex">
+<style>
+@font-face { font-family: 'Big Shoulders'; src: url('../../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948; --giallo: #F7C948; --rosso-fondo: #B3200D; --carta: #F4EFE4; --su-carta: #15110D; --r: 4px; }
+html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A; --giallo: #A3241F; --rosso-fondo: #C0302A; --carta: #FFFDF6; --su-carta: #363737; }
+html[data-pelle="tavola"] .domande .sn button[aria-pressed="true"] { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: 'Archivo', sans-serif; font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
+.wrap { max-width: 980px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+.testata { border-bottom: 1px solid var(--line); }
+.testata .wrap { display: flex; justify-content: space-between; align-items: center; gap: 12px; height: 60px; }
+.firma { font-family: 'Big Shoulders', sans-serif; font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
+@media (max-width: 480px) { .indietro + .indietro, .testata span .indietro:last-child { display: none; } }
+.indietro { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 14px; text-decoration: none; border: 1px solid var(--text); border-radius: 999px; padding: 6px 12px; white-space: nowrap; }
+h1 { font-family: 'Big Shoulders', sans-serif; font-weight: 900; text-transform: uppercase; font-size: clamp(48px, 8vw, 96px); line-height: .9; margin: 48px 0 14px; }
+h1 span { display: block; color: var(--riga2); }
+h2 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 28px; line-height: 1.05; margin: 36px 0 10px; }
+h3 { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 21px; margin: 0 0 4px; }
+.lead { font-size: 19px; max-width: 66ch; }
+.nota { font-size: 14px; color: var(--muted); }
+.stato { display: inline-block; font-family: 'JetBrains Mono', monospace; font-size: 12px; border: 1px solid var(--muted); color: var(--muted); padding: 3px 8px; border-radius: 999px; }
+.origine { overflow-wrap: anywhere; font-size: 13.5px; color: var(--muted); border-left: 3px solid var(--line); padding-left: 10px; margin: 10px 0 0; }
+table { width: 100%; border-collapse: collapse; margin: 10px 0 0; font-size: 15.5px; }
+th, td { text-align: left; vertical-align: top; padding: 10px 10px 10px 0; border-bottom: 1px solid var(--line); }
+th { font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 14px; color: var(--muted); }
+@media (max-width: 640px) { table, thead, tbody, tr, th, td { display: block; } thead { display: none; } tr { border-bottom: 1px solid var(--line); padding: 8px 0; } td { border: 0; padding: 3px 0; } td[data-t]::before { content: attr(data-t) ": "; font-family: 'Barlow Condensed', sans-serif; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; color: var(--muted); } }
+.voce { border-top: 1px solid var(--line); padding: 14px 0; }
+.voce p { margin: 4px 0 0; }
+.formula { font-family: 'JetBrains Mono', monospace; font-size: 13.5px; color: var(--muted); overflow-wrap: anywhere; }
+.btn { display: inline-flex; font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; padding: 8px 16px; border-radius: 999px; border: 2px solid var(--text); background: transparent; color: var(--text); cursor: pointer; text-decoration: none; }
+.btn.pieno { background: #B3200D; border-color: #B3200D; color: #FFF8EE; }
+.stampa { margin: 24px 0 60px; display: flex; gap: 10px; flex-wrap: wrap; }
+footer { border-top: 1px solid var(--line); padding: 22px 0 36px; font-size: 14px; color: var(--muted); margin-top: 40px; }
+/* Sblocco: lo stesso dei calcolatori */
+.sblocco { background: var(--carta); color: var(--su-carta); border-radius: var(--r); padding: 16px; margin: 20px 0; }
+.sblocco p { margin: 0 0 8px; font-size: 15px; }
+.sblocco .t { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; font-size: 22px; line-height: 1.1; }
+.sblocco .terzi { font-size: 13.5px; color: #5A4F42; border-left: 3px solid #5A4F42; padding-left: 8px; }
+.sblocco .riga { display: flex; gap: 10px; flex-wrap: wrap; align-items: center; }
+.sblocco .link { background: none; border: 0; text-decoration: underline; cursor: pointer; font: inherit; font-size: 15px; color: #15110D; padding: 0; }
+.sblocco [hidden] { display: none !important; }
+.sblocco .modulo { margin-top: 10px; }
+.sblocco .cornice { background: #fff; border: 1px solid #15110D; max-width: 480px; margin-bottom: 10px; }
+.sblocco iframe { display: block; width: 100%; height: 320px; border: 0; }
+@media (max-width: 420px) { .sblocco { padding: 12px; } .sblocco .cornice { margin: 0 -12px 10px; border-left: 0; border-right: 0; } .sblocco iframe { height: 400px; } }
+.sblocco .nota { color: #5A4F42; font-size: 12.5px; }
+.chiuso .contenuto { filter: blur(7px); opacity: .45; pointer-events: none; user-select: none; max-height: 520px; overflow: hidden; }
+.aperto-riga { font-size: 13.5px; color: var(--muted); }
+.link-r { background: none; border: 0; padding: 0; font: inherit; color: var(--text); text-decoration: underline; cursor: pointer; }
+/* Autotest */
+.domande { list-style: none; margin: 18px 0 0; padding: 0; counter-reset: d; }
+.domande li { border-top: 1px solid var(--line); padding: 14px 0; display: grid; grid-template-columns: 1fr auto; gap: 8px 16px; align-items: center; }
+.domande li p { margin: 0; }
+.domande .sn { display: flex; gap: 6px; }
+.domande .sn button { font-family: 'Barlow Condensed', sans-serif; font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; min-width: 52px; padding: 7px 12px; border-radius: 999px; border: 1px solid var(--line); background: var(--bg-2); color: var(--text); cursor: pointer; }
+.domande .sn button[aria-pressed="true"] { background: var(--giallo); color: #15110D; border-color: var(--giallo); }
+@media (max-width: 560px) { .domande li { grid-template-columns: 1fr; } }
+.esito { background: var(--bg-2); border-left: 4px solid var(--giallo); padding: 16px 18px; margin: 20px 0; border-radius: var(--r); }
+.esito h2 { margin-top: 0; }
+.esito ul { margin: 8px 0 0; padding-left: 18px; }
+.esito li { margin-bottom: 6px; }
+@media print {
+  body { background: #fff; color: #000; }
+  .testata, .stampa, footer, .sblocco, .aperto-riga, .domande .sn { display: none !important; }
+  .chiuso .contenuto { filter: none; opacity: 1; max-height: none; }
+  h1 span { color: #000; } th, .nota, .origine, .formula { color: #333; } th, td, .voce, .domande li { border-color: #bbb; }
+}
+</style>
+<script>(function () {
+  /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
+     nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
+     build_v3.py legge questa riga e scrive la privacy del fornitore scelto, quindi codice e privacy non si separano.
+     SPENTA finché ATTIVA è false: si accende solo alla pubblicazione, con l'OK di Lorenzo, dopo aver creato il sito
+     sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
+     In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
+     Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
+  var FORNITORE = 'plausible';
+  var ATTIVA = false;
+  var UMAMI_SITO = '';
+  var DOMINIO = 'lorenzoasuni.com';
+  var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
+  function plausible(nome, p) {
+    var corpo = { name: nome, url: location.origin + location.pathname, domain: DOMINIO };
+    if (nome === 'pageview') { if (document.referrer) corpo.referrer = document.referrer; }
+    else corpo.props = p;
+    var dati = JSON.stringify(corpo);
+    /* text/plain evita la richiesta preliminare del browser; Plausible lo legge comunque come JSON. */
+    if (!(navigator.sendBeacon && navigator.sendBeacon('https://plausible.io/api/event', new Blob([dati], { type: 'text/plain' }))))
+      fetch('https://plausible.io/api/event', { method: 'POST', body: dati, headers: { 'Content-Type': 'text/plain' }, keepalive: true });
+  }
+  function umami(nome, p) {
+    if (!UMAMI_SITO) return;
+    /* Pagina vista = evento senza nome. Il percorso sta già nell'url, quindi la proprietà "pagina" non si manda:
+       nel piano gratuito ogni proprietà conta come un evento in più. Niente titolo, schermo e lingua: non servono. */
+    var payload = { website: UMAMI_SITO, hostname: location.hostname, url: location.pathname, referrer: document.referrer || '' };
+    if (nome !== 'pageview') {
+      payload.name = nome;
+      var d = {}, n = 0;
+      for (var k in p) if (k !== 'pagina') { d[k] = p[k]; n++; }
+      if (n) payload.data = d;
+    }
+    fetch('https://gateway.umami.is/api/send', { method: 'POST', body: JSON.stringify({ type: 'event', payload: payload }), headers: { 'Content-Type': 'application/json' }, keepalive: true, credentials: 'omit' });
+  }
+  function invia(nome, p) {
+    if (!ATTIVA || !PRODUZIONE) return;
+    try { (FORNITORE === 'umami' ? umami : plausible)(nome, p || {}); } catch (e) {}
+  }
+  var visti = {};
+  function pagina() { var p = location.pathname.split('/').pop() || 'index.html'; return /materiali\//.test(location.pathname) ? 'materiali/' + p : p; }
+  window.traccia = function (nome, proprieta) {
+    var p = proprieta || {}; p.pagina = pagina();
+    if (SVILUPPO) { try { console.info('[traccia]', nome, p); } catch (e) {} }
+    invia(nome, p);
+  };
+  /* Pagina vista: una per caricamento, con la provenienza. Nessuna proprietà. */
+  if (SVILUPPO) { try { console.info('[traccia] pageview', { pagina: pagina() }); } catch (e) {} }
+  invia('pageview');
+  function unaVolta(chiave, nome, prop) { if (visti[chiave]) return; visti[chiave] = 1; window.traccia(nome, prop); }
+
+  /* Cambio di pelle: avviene solo da indirizzo (?pelle=tavola o ?pelle=notte). Questo script gira prima di quello
+     che salva la pelle, quindi vede ancora la scelta precedente. */
+  try {
+    var q = new URLSearchParams(location.search).get('pelle'), prima = localStorage.getItem('la-v3-pelle') || 'notte';
+    if ((q === 'tavola' || q === 'notte') && q !== prima) window.traccia('pelle_cambiata', { pelle: q });
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var isc = el.getAttribute('data-az-isc') || (el.closest('.sblocco') && el.getAttribute('data-az'));
+    if (isc === 'carica') return window.traccia('iscrizione_modulo_aperto', {});
+    if (isc === 'gia') return window.traccia('iscrizione_gia_iscritto', {});
+    if (isc === 'fatto') return window.traccia('iscrizione_fatto', {});
+    var card = el.closest('#podio .card');
+    if (card) return unaVolta('pron', 'pronostico_giocato', { scelta: card.getAttribute('data-id') });
+    if (el.id === 'salta-pron') return unaVolta('pron', 'pronostico_giocato', { scelta: 'salta' });
+    var href = el.getAttribute('href') || '';
+    if (/^https?:/.test(href)) {
+      var u; try { u = new URL(href); } catch (x) { return; }
+      var verso = /substack\.com$/.test(u.hostname) ? 'substack' : (u.hostname === 'github.com' ? 'github' : 'altro');
+      var prop = { verso: verso };
+      if (verso === 'github') prop.repo = u.pathname.split('/').slice(1, 3).join('/');
+      if (verso === 'altro') prop.dominio = u.hostname;
+      return window.traccia('uscita', prop);
+    }
+    if (/(^|\/)materiali\/[^/]+\.html/.test(href)) return window.traccia('materiale_aperto', { materiale: href.split('/').pop().replace('.html', '') });
+    if (pagina() === 'index.html' && el.classList.contains('btn') && href) return window.traccia('cta_home', { verso: href.split('?')[0] });
+  });
+
+  /* Calcolatore usato: il primo numero cambiato in un conto, una volta per conto e per visita. Solo il nome del conto. */
+  document.addEventListener('change', function (e) {
+    var c = e.target.closest && e.target.closest('[data-calc]');
+    if (c && e.target.hasAttribute('data-k')) unaVolta('calc-' + c.getAttribute('data-calc'), 'calcolo_usato', { calcolatore: c.getAttribute('data-calc') });
+  });
+})();
+</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+</head>
+<body>
+<header class="testata"><div class="wrap"><a class="firma" href="../index.html">Lorenzo Asuni</a><span><a class="indietro" href="../index.html">Torna alla home</a> <a class="indietro" href="../officina.html">Officina</a></span></div></header>
+<main id="contenuto" class="wrap">
+  <h1>Dizionario<span></span></h1>
+  <p class="lead">Le parole dei calcolatori, ognuna con la definizione che uso e la formula che c'è dietro. Quando in azienda non si usa la stessa definizione, i numeri non si possono confrontare.</p>
+  
+  <p class="aperto-riga"></p>
+  <div class="contenuto">
+<nav class="nota"><a href="#lead">Lead</a> · <a href="#mql">MQL</a> · <a href="#sql">SQL</a> · <a href="#opportunita">Opportunità</a> · <a href="#pipeline">Pipeline</a> · <a href="#copertura">Copertura di pipeline</a> · <a href="#win-rate">Win rate</a> · <a href="#show-rate">Show rate</a> · <a href="#ciclo-di-vendita">Ciclo di vendita</a> · <a href="#cac">CAC</a> · <a href="#payback">Payback</a> · <a href="#ltv">LTV</a> · <a href="#ote">OTE</a> · <a href="#quota">Quota</a> · <a href="#bdr">BDR</a> · <a href="#margine-lordo">Margine lordo</a> · <a href="#churn">Churn</a> · <a href="#ramp">Ramp</a></nav>
+  <div class="voce" id="lead"><h3>Lead</h3><p>Una persona o un'azienda che è entrata in contatto e di cui hai un recapito: ha compilato un modulo, ha risposto a una sequenza, è in una lista che stai lavorando. Da solo non dice niente sulla probabilità di comprare.</p><p class="formula">Nei calcolatori: "lead o conversazioni" è il primo gradino del funnel a ritroso.</p></div>
+  <div class="voce" id="mql"><h3>MQL</h3><p>Lead qualificato dal marketing: ha i requisiti che marketing e vendite hanno scritto insieme per passarlo alle vendite (per esempio settore, dimensione, un segnale di interesse).</p><p class="formula">Nessuna formula. Senza un accordo scritto ognuno lo conta a modo suo.</p></div>
+  <div class="voce" id="sql"><h3>SQL</h3><p>Lead qualificato dalle vendite: problema confermato con parole sue, ruolo che decide o arriva a chi decide, dentro il cliente ideale, appuntamento accettato con durata e agenda.</p><p class="formula">Nessuna formula. I quattro criteri sono nel modello "Accordo marketing e vendite".</p></div>
+  <div class="voce" id="opportunita"><h3>Opportunità</h3><p>Una trattativa aperta dopo un meeting tenuto, con un problema confermato e un passo successivo datato. È ciò che entra in pipeline.</p><p class="formula">opportunità = meeting tenuti × tasso opportunità</p></div>
+  <div class="voce" id="pipeline"><h3>Pipeline</h3><p>Il valore delle opportunità aperte che possono chiudere nel periodo.</p><p class="formula">pipeline = opportunità × valore medio di un contratto</p></div>
+  <div class="voce" id="copertura"><h3>Copertura di pipeline</h3><p>Quante volte la pipeline aperta copre quello che manca all'obiettivo. Quella necessaria dipende dal tuo win rate.</p><p class="formula">copertura = pipeline aperta ÷ (obiettivo − già chiuso); necessaria = 1 ÷ win rate</p></div>
+  <div class="voce" id="win-rate"><h3>Win rate</h3><p>Su 100 opportunità chiuse (vinte o perse) nel periodo, quante sono vinte. Si calcola sulle chiuse, non su quelle ancora aperte.</p><p class="formula">win rate = opportunità vinte ÷ opportunità chiuse</p></div>
+  <div class="voce" id="show-rate"><h3>Show rate</h3><p>Su 100 meeting fissati, quanti si tengono davvero. Gli spostamenti si contano a parte.</p><p class="formula">show rate = meeting tenuti ÷ meeting fissati</p></div>
+  <div class="voce" id="ciclo-di-vendita"><h3>Ciclo di vendita</h3><p>I giorni tra il primo meeting e la firma, in media sulle opportunità vinte.</p><p class="formula">ciclo = media dei giorni dal primo meeting alla firma</p></div>
+  <div class="voce" id="cac"><h3>CAC</h3><p>Quanto costa portare un cliente nuovo, contando campagne, strumenti, eventi, agenzie, il tempo delle persone di marketing e vendite e le provvigioni. Il CAC paid conta solo la spesa in campagne.</p><p class="formula">CAC = (programmi + persone × quota di tempo + provvigioni) ÷ clienti nuovi</p></div>
+  <div class="voce" id="payback"><h3>Payback</h3><p>I mesi che servono perché il margine portato da un cliente ripaghi il suo CAC.</p><p class="formula">payback = CAC ÷ (ricavo mensile per cliente × margine lordo)</p></div>
+  <div class="voce" id="ltv"><h3>LTV</h3><p>Il margine che un cliente porta in tutta la sua vita da cliente.</p><p class="formula">LTV = ricavo mensile × margine lordo × durata media (1 ÷ churn mensile)</p></div>
+  <div class="voce" id="ote"><h3>OTE</h3><p>Il compenso annuo di un venditore se raggiunge la quota piena: fisso più variabile.</p><p class="formula">OTE = fisso + variabile a target</p></div>
+  <div class="voce" id="quota"><h3>Quota</h3><p>Il fatturato che un venditore deve portare nell'anno. Il rapporto quota : OTE dice quanto fatturato porta ogni euro di compenso.</p><p class="formula">quota : OTE = quota annua ÷ OTE</p></div>
+  <div class="voce" id="bdr"><h3>BDR</h3><p>Chi fa le chiamate e scrive i primi messaggi per fissare meeting con aziende in target, che poi passa a chi vende. Si dice anche SDR.</p><p class="formula">Nei calcolatori: chiamate al giorno = chiamate al mese ÷ giorni lavorativi ÷ BDR</p></div>
+  <div class="voce" id="margine-lordo"><h3>Margine lordo</h3><p>Quello che resta del ricavo dopo i costi diretti per servire il cliente. Non contiene marketing e vendite.</p><p class="formula">margine lordo = (ricavo − costi diretti) ÷ ricavo</p></div>
+  <div class="voce" id="churn"><h3>Churn</h3><p>La quota di clienti che smettono di pagare in un mese. Da qui si ricava quanto dura in media un cliente.</p><p class="formula">durata media in mesi = 1 ÷ churn mensile</p></div>
+  <div class="voce" id="ramp"><h3>Ramp</h3><p>Il tempo che serve a un venditore nuovo per arrivare a regime. Nei calcolatori la produttività sale in linea retta fino al mese di regime.</p><p class="formula">mesi pieni nel primo anno = somma su 12 mesi di min(mese ÷ ramp, 1)</p></div>
+
+  </div>
+  <div class="stampa"><button type="button" class="btn" onclick="window.print()">Stampa o salva in PDF</button><a class="btn" href="../officina.html">Vai all'Officina</a></div>
+</main>
+<footer><div class="wrap">Lorenzo Asuni. Il fatturato, calcolatrice alla mano. Puoi usare e adattare questi modelli nella tua azienda. Nessun cookie di questo sito; terze parti solo se chiedi il modulo di Substack. <a href="../privacy.html">Privacy</a></div></footer>
+
+
+</body>
+</html>

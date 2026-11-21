@@ -1,0 +1,253 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Privacy</title>
+<meta name="description" content="Come questo sito tratta i dati: niente cookie, numeri dei conti nel browser, iscrizione tramite il modulo di Substack.">
+<meta name="robots" content="noindex">
+<script>(function () {
+  /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
+     nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
+     build_v3.py legge questa riga e scrive la privacy del fornitore scelto, quindi codice e privacy non si separano.
+     SPENTA finché ATTIVA è false: si accende solo alla pubblicazione, con l'OK di Lorenzo, dopo aver creato il sito
+     sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
+     In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
+     Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
+  var FORNITORE = 'plausible';
+  var ATTIVA = false;
+  var UMAMI_SITO = '';
+  var DOMINIO = 'lorenzoasuni.com';
+  var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
+  function plausible(nome, p) {
+    var corpo = { name: nome, url: location.origin + location.pathname, domain: DOMINIO };
+    if (nome === 'pageview') { if (document.referrer) corpo.referrer = document.referrer; }
+    else corpo.props = p;
+    var dati = JSON.stringify(corpo);
+    /* text/plain evita la richiesta preliminare del browser; Plausible lo legge comunque come JSON. */
+    if (!(navigator.sendBeacon && navigator.sendBeacon('https://plausible.io/api/event', new Blob([dati], { type: 'text/plain' }))))
+      fetch('https://plausible.io/api/event', { method: 'POST', body: dati, headers: { 'Content-Type': 'text/plain' }, keepalive: true });
+  }
+  function umami(nome, p) {
+    if (!UMAMI_SITO) return;
+    /* Pagina vista = evento senza nome. Il percorso sta già nell'url, quindi la proprietà "pagina" non si manda:
+       nel piano gratuito ogni proprietà conta come un evento in più. Niente titolo, schermo e lingua: non servono. */
+    var payload = { website: UMAMI_SITO, hostname: location.hostname, url: location.pathname, referrer: document.referrer || '' };
+    if (nome !== 'pageview') {
+      payload.name = nome;
+      var d = {}, n = 0;
+      for (var k in p) if (k !== 'pagina') { d[k] = p[k]; n++; }
+      if (n) payload.data = d;
+    }
+    fetch('https://gateway.umami.is/api/send', { method: 'POST', body: JSON.stringify({ type: 'event', payload: payload }), headers: { 'Content-Type': 'application/json' }, keepalive: true, credentials: 'omit' });
+  }
+  function invia(nome, p) {
+    if (!ATTIVA || !PRODUZIONE) return;
+    try { (FORNITORE === 'umami' ? umami : plausible)(nome, p || {}); } catch (e) {}
+  }
+  var visti = {};
+  function pagina() { var p = location.pathname.split('/').pop() || 'index.html'; return /materiali\//.test(location.pathname) ? 'materiali/' + p : p; }
+  window.traccia = function (nome, proprieta) {
+    var p = proprieta || {}; p.pagina = pagina();
+    if (SVILUPPO) { try { console.info('[traccia]', nome, p); } catch (e) {} }
+    invia(nome, p);
+  };
+  /* Pagina vista: una per caricamento, con la provenienza. Nessuna proprietà. */
+  if (SVILUPPO) { try { console.info('[traccia] pageview', { pagina: pagina() }); } catch (e) {} }
+  invia('pageview');
+  function unaVolta(chiave, nome, prop) { if (visti[chiave]) return; visti[chiave] = 1; window.traccia(nome, prop); }
+
+  /* Cambio di pelle: avviene solo da indirizzo (?pelle=tavola o ?pelle=notte). Questo script gira prima di quello
+     che salva la pelle, quindi vede ancora la scelta precedente. */
+  try {
+    var q = new URLSearchParams(location.search).get('pelle'), prima = localStorage.getItem('la-v3-pelle') || 'notte';
+    if ((q === 'tavola' || q === 'notte') && q !== prima) window.traccia('pelle_cambiata', { pelle: q });
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var isc = el.getAttribute('data-az-isc') || (el.closest('.sblocco') && el.getAttribute('data-az'));
+    if (isc === 'carica') return window.traccia('iscrizione_modulo_aperto', {});
+    if (isc === 'gia') return window.traccia('iscrizione_gia_iscritto', {});
+    if (isc === 'fatto') return window.traccia('iscrizione_fatto', {});
+    var card = el.closest('#podio .card');
+    if (card) return unaVolta('pron', 'pronostico_giocato', { scelta: card.getAttribute('data-id') });
+    if (el.id === 'salta-pron') return unaVolta('pron', 'pronostico_giocato', { scelta: 'salta' });
+    var href = el.getAttribute('href') || '';
+    if (/^https?:/.test(href)) {
+      var u; try { u = new URL(href); } catch (x) { return; }
+      var verso = /substack\.com$/.test(u.hostname) ? 'substack' : (u.hostname === 'github.com' ? 'github' : 'altro');
+      var prop = { verso: verso };
+      if (verso === 'github') prop.repo = u.pathname.split('/').slice(1, 3).join('/');
+      if (verso === 'altro') prop.dominio = u.hostname;
+      return window.traccia('uscita', prop);
+    }
+    if (/(^|\/)materiali\/[^/]+\.html/.test(href)) return window.traccia('materiale_aperto', { materiale: href.split('/').pop().replace('.html', '') });
+    if (pagina() === 'index.html' && el.classList.contains('btn') && href) return window.traccia('cta_home', { verso: href.split('?')[0] });
+  });
+
+  /* Calcolatore usato: il primo numero cambiato in un conto, una volta per conto e per visita. Solo il nome del conto. */
+  document.addEventListener('change', function (e) {
+    var c = e.target.closest && e.target.closest('[data-calc]');
+    if (c && e.target.hasAttribute('data-k')) unaVolta('calc-' + c.getAttribute('data-calc'), 'calcolo_usato', { calcolatore: c.getAttribute('data-calc') });
+  });
+})();
+</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<style>
+@font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
+  --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
+  --carta: #F4EFE4; --su-carta: #15110D; --griglia: rgba(244,239,228,.06); --r: 4px;
+  --display: 'Big Shoulders', 'Barlow Condensed', sans-serif; --cond: 'Barlow Condensed', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--giallo); color: #15110D; padding: 8px 12px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
+h1, h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; }
+h2 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 18px; }
+h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.08; margin: 0 0 8px; }
+.lead { font-size: 19px; max-width: 64ch; }
+.nota { font-size: 14px; color: var(--muted); }
+.bozza { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--muted); padding: 1px 5px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 12px 22px; border-radius: var(--r); border: 2px solid var(--text); text-decoration: none; background: transparent; color: var(--text); cursor: pointer; }
+.btn.pieno { background: var(--rosso-fondo); border-color: var(--rosso-fondo); color: var(--su-rosso); }
+.btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.pieno:hover { background: var(--su-rosso); color: var(--rosso-fondo); border-color: var(--su-rosso); }
+.btn.piccolo { font-size: 15px; padding: 8px 14px; }
+.sezione { padding: 84px 0; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .sezione { padding: 60px 0; } }
+.testata { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
+.testata .riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 58px; }
+.firma { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
+.menu { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
+.menu a { text-decoration: none; color: var(--muted); }
+.menu a:hover { color: var(--text); }
+.menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
+@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+.quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
+   Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
+html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A;
+  --rosso: #C0302A; --rosso-fondo: #C0302A; --su-rosso: #FFFFFF; --arancio: #A3241F; --giallo: #A3241F; --verde: #2F6B45;
+  --carta: #FFFDF6; --su-carta: #363737; --griglia: rgba(54,55,55,.05); }
+html[data-pelle="tavola"] .tabellone, html[data-pelle="tavola"] .c-uscite .uscita { --giallo: #F7C948; --text: #F4EFE4; --muted: #BDB39F; color: #F4EFE4; }
+html[data-pelle="tavola"] .tabellone .trow .l { color: #F4EFE4; }
+html[data-pelle="tavola"] .apertura { background: var(--bg); }
+html[data-pelle="tavola"] .apertura video { filter: grayscale(.2) contrast(1.05); opacity: .16; }
+html[data-pelle="tavola"] .apertura .cosa { color: var(--muted); }
+html[data-pelle="tavola"] .credito { color: var(--muted); }
+html[data-pelle="tavola"] .fascia { background: var(--bg-2); color: var(--text); border-top: 0; }
+html[data-pelle="tavola"] .fascia h2 { color: var(--rosso); }
+html[data-pelle="tavola"] .tovaglia-bordo, html[data-pelle="tavola"] .arrivo .bandiera { background-color: #FFFDF6;
+  background-image: linear-gradient(90deg, rgba(192,48,42,.45) 50%, transparent 50%), linear-gradient(rgba(192,48,42,.45) 50%, transparent 50%);
+  background-size: 22px 22px; height: 22px; }
+html[data-pelle="tavola"] .tovaglia-bordo { display: block; margin: -84px 0 62px; }
+@media (max-width: 760px) { html[data-pelle="tavola"] .tovaglia-bordo { margin: -60px 0 40px; } }
+.tovaglia-bordo { display: none; }
+html[data-pelle="tavola"] .tag.visto { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .btn.pieno:hover { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .bozza { color: var(--muted); border-color: var(--muted); }
+html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transparent, rgba(30,24,20,.82)); }
+
+.intro { padding: 56px 0 10px; }
+.intro h1 { font-size: clamp(48px, 8vw, 104px); margin-bottom: 14px; }
+.priv { padding: 10px 0 40px; }
+.priv .wrap > * { max-width: 760px; }
+.priv h2 { font-size: clamp(26px, 3.6vw, 38px); margin: 44px 0 10px; }
+.priv p, .priv li { font-size: 17px; line-height: 1.6; }
+.priv ul { padding-left: 20px; }
+.priv table { width: 100%; border-collapse: collapse; margin: 14px 0; font-size: 15px; }
+.priv td, .priv th { text-align: left; vertical-align: top; padding: 9px 10px 9px 0; border-bottom: 1px solid var(--line); }
+.priv td:first-child { width: 38%; overflow-wrap: anywhere; }
+.priv code { font-family: var(--mono); font-size: 13px; }
+.segn { background: transparent; color: var(--giallo); border: 1px dashed var(--giallo); padding: 0 4px; font-family: var(--mono); font-size: 13px; }
+html[data-pelle="tavola"] .segn { color: #A3241F; border-color: #A3241F; }
+.priv .indice { list-style: none; padding: 0; display: flex; flex-wrap: wrap; gap: 6px 16px; font-family: var(--mono); font-size: 13px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="testata"><div class="wrap riga">
+  <a class="firma" href="index.html">Lorenzo Asuni</a>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="esempi.html">Esempi</a></li><li><a href="repository.html">Da copiare</a></li></ul></nav>
+</div></header>
+<main id="contenuto">
+  <section class="intro quadretti"><div class="wrap">
+    <h1>Privacy</h1>
+    <p class="lead">Cosa succede ai tuoi dati quando visiti questo sito. In breve: il sito non installa cookie, non ha un modulo suo e non riceve la tua email. I numeri che scrivi nei conti restano nel tuo browser. Quando chiedi il modulo di Substack, da quel momento entra Substack, con le sue regole.</p>
+    <p class="nota">Ultimo aggiornamento: 21/11/2026.</p>
+  </div></section>
+  <section class="priv"><div class="wrap">
+    <ul class="indice"><li><a href="#titolare">Titolare</a></li><li><a href="#dati">Dati e finalità</a></li><li><a href="#substack">Substack</a></li><li><a href="#browser">Cookie e archiviazione locale</a></li><li><a href="#misura">Misura delle visite</a></li><li><a href="#basi">Basi giuridiche</a></li><li><a href="#conservazione">Conservazione</a></li><li><a href="#diritti">Diritti e reclamo</a></li></ul>
+
+    <h2 id="titolare">Chi tratta i dati</h2>
+    <p>Titolare del trattamento: 4AS MILE S.r.l., Via Renato Prunas 10, 09126 Cagliari, P.IVA 03941490926.</p>
+    <p>Per qualsiasi domanda su questa pagina o sui tuoi dati scrivi a <a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a>.</p>
+
+    <h2 id="dati">Quali dati e perché</h2>
+    <ul>
+      <li><strong>Dati di navigazione.</strong> Come ogni sito, il server che ospita queste pagine registra in automatico alcune informazioni tecniche a ogni richiesta: indirizzo IP, data e ora, pagina chiesta, tipo di browser. Servono a far funzionare il sito e a proteggerlo da abusi. Il sito è ospitato su GitHub Pages, un servizio di GitHub Inc., società con sede negli Stati Uniti, che registra l'indirizzo IP di chi visita le pagine per ragioni di sicurezza e lo tratta secondo la sua <a href="https://docs.github.com/it/site-policy/privacy-policies/github-general-privacy-statement">informativa</a>, compreso il trasferimento dei dati fuori dall'Unione europea.</li>
+      <li><strong>Numeri dei conti.</strong> I conti dell'Officina girano nel tuo browser: i numeri che scrivi non arrivano a me né a nessun altro. Se copi il link con i tuoi numeri, i numeri stanno nella parte dell'indirizzo dopo il simbolo #, che il browser non manda al server. Arrivano solo a chi mandi tu il link.</li>
+      <li><strong>Iscrizione alla newsletter.</strong> Il sito non ha un modulo suo. L'iscrizione passa dal modulo di Substack, descritto <a href="#substack">qui sotto</a>.</li>
+      <li><strong>Video, immagini e caratteri.</strong> Sono tutti su questo sito. Aprire una pagina non fa partire richieste verso altri servizi.</li>
+      <li><strong>Link verso altri siti.</strong> I link a Substack, GitHub e ai repository di altri portano su siti con le loro regole. Prima del clic non succede nulla; dopo, vale l'informativa del sito in cui arrivi.</li>
+    </ul>
+
+    <h2 id="substack">Il modulo di Substack</h2>
+    <p>La newsletter A Tavola con Lorenzo sta su Substack, una piattaforma di Substack Inc., società con sede negli Stati Uniti. Il modulo di iscrizione si carica nella pagina solo quando premi "Iscriviti con Substack". Prima di quel clic il tuo browser non contatta Substack.</p>
+    <p>Dopo il clic, il browser scarica il modulo da Substack e dai servizi che Substack usa (nella verifica del 15/11/2026: i domini di Substack, una rete di distribuzione dei contenuti, i caratteri di Google e un servizio di monitoraggio degli errori). Substack in quel momento può impostare i suoi cookie, che sono suoi e non di questo sito. L'email che scrivi nel modulo va a Substack: questo sito non la vede e non la conserva. Substack poi mi mostra l'elenco degli iscritti alla newsletter, come a ogni autore.</p>
+    <p>Substack tratta i dati secondo la sua <a href="https://substack.com/privacy">informativa</a>, che descrive anche il trasferimento dei dati fuori dall'Unione europea e le garanzie che usa.</p>
+    <p>Dopo l'iscrizione premi "Fatto" o "Sono già iscritto": Substack non dice a questa pagina se l'iscrizione è andata a buon fine, quindi ti credo sulla parola e lo segno nel tuo browser (vedi sotto).</p>
+
+    <h2 id="browser">Cookie e archiviazione locale</h2>
+    <p>Questo sito non installa cookie, né suoi né di altri. Usa l'archiviazione locale del browser per ricordare alcune scelte tra una pagina e l'altra. Questi dati restano sul tuo dispositivo, non vengono mandati a nessuno e servono solo a darti quello che hai chiesto.</p>
+    <table><thead><tr><th>Chiave</th><th>Cosa ricorda</th></tr></thead><tbody><tr><td><code>la-v3-pelle</code></td><td>la pelle scelta per il sito (notte o tavola)</td></tr><tr><td><code>la-v3-pronostico</code></td><td>la carta che hai scelto nel pronostico del radar</td></tr><tr><td><code>la-off-sblocco</code></td><td>il fatto che hai detto di esserti iscritto, o di esserlo già, e quando: serve a tenere aperti risultati e modelli. Non contiene l'email</td></tr><tr><td><code>la-off-valori</code></td><td>i numeri che hai scritto nei conti, per ritrovarli alla visita dopo</td></tr><tr><td><code>la-off-risultati</code></td><td>i risultati dei conti, per il foglio da stampare</td></tr><tr><td><code>la-off-stima-* e la-off-stima-val-*</code></td><td>la stima che hai segnato prima di vedere un conto, e se l'hai già data</td></tr><tr><td><code>la-autotest</code></td><td>le risposte alle dieci domande dell'autotest</td></tr></tbody></table>
+    <p>Li cancelli quando vuoi: nell'Officina c'è il pulsante per svuotare i conti, e in ogni caso basta cancellare i dati del sito dalle impostazioni del browser.</p>
+
+    <h2 id="misura">Misura delle visite</h2>
+    <p>Oggi questo sito non misura le visite: nessun servizio di statistica riceve dati quando apri una pagina. Se in futuro userò uno strumento di misura, lo descriverò qui prima di accenderlo e aggiornerò la data in cima alla pagina.</p>
+    
+
+    <h2 id="basi">Basi giuridiche</h2>
+    <ul>
+      <li>Dati di navigazione: legittimo interesse a far funzionare il sito, a proteggerlo e a capire quali pagine servono (art. 6, par. 1, lett. f del Regolamento UE 2016/679).</li>
+      <li>Archiviazione locale: è necessaria a darti il servizio che chiedi, cioè ricordare i tuoi conti e le tue scelte; non richiede consenso (art. 122 del Codice privacy).</li>
+      <li>Iscrizione alla newsletter: la chiedi tu sul modulo di Substack, per ricevere la newsletter (art. 6, par. 1, lett. a e b del Regolamento).</li>
+    </ul>
+
+    <h2 id="conservazione">Per quanto tempo</h2>
+    <ul>
+      <li>Dati di navigazione: per il tempo stabilito da GitHub nella sua informativa.</li>
+      <li>Misura delle visite: oggi nessuna misura, quindi nessun dato conservato.</li>
+      <li>Archiviazione locale: finché non la cancelli tu.</li>
+      <li>Iscrizione: finché resti iscritto. Ti disiscrivi con il link in fondo a ogni email.</li>
+    </ul>
+
+    <h2 id="diritti">I tuoi diritti e il reclamo</h2>
+    <p>Puoi chiedere di accedere ai tuoi dati, di correggerli, di cancellarli, di limitarne il trattamento, di riceverli in un formato leggibile e di opporti al trattamento (artt. 15-22 del Regolamento). Scrivi a <a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a>: rispondo entro un mese. Per i dati dell'iscrizione puoi rivolgerti anche direttamente a Substack.</p>
+    <p>Se pensi che i tuoi dati siano trattati male, puoi presentare reclamo al <a href="https://www.garanteprivacy.it">Garante per la protezione dei dati personali</a>.</p>
+  </div></section>
+</main>
+<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span></div></footer>
+
+</body>
+</html>

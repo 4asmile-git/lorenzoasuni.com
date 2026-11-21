@@ -1,0 +1,230 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Da copiare: repository di marketing e vendite</title>
+<meta name="description" content="Repository pubblici di marketing e vendite verificati su GitHub, e i modelli e calcolatori di Lorenzo da copiare.">
+<meta name="robots" content="noindex">
+<script>(function () {
+  /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
+     nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
+     build_v3.py legge questa riga e scrive la privacy del fornitore scelto, quindi codice e privacy non si separano.
+     SPENTA finché ATTIVA è false: si accende solo alla pubblicazione, con l'OK di Lorenzo, dopo aver creato il sito
+     sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
+     In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
+     Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
+  var FORNITORE = 'plausible';
+  var ATTIVA = false;
+  var UMAMI_SITO = '';
+  var DOMINIO = 'lorenzoasuni.com';
+  var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
+  function plausible(nome, p) {
+    var corpo = { name: nome, url: location.origin + location.pathname, domain: DOMINIO };
+    if (nome === 'pageview') { if (document.referrer) corpo.referrer = document.referrer; }
+    else corpo.props = p;
+    var dati = JSON.stringify(corpo);
+    /* text/plain evita la richiesta preliminare del browser; Plausible lo legge comunque come JSON. */
+    if (!(navigator.sendBeacon && navigator.sendBeacon('https://plausible.io/api/event', new Blob([dati], { type: 'text/plain' }))))
+      fetch('https://plausible.io/api/event', { method: 'POST', body: dati, headers: { 'Content-Type': 'text/plain' }, keepalive: true });
+  }
+  function umami(nome, p) {
+    if (!UMAMI_SITO) return;
+    /* Pagina vista = evento senza nome. Il percorso sta già nell'url, quindi la proprietà "pagina" non si manda:
+       nel piano gratuito ogni proprietà conta come un evento in più. Niente titolo, schermo e lingua: non servono. */
+    var payload = { website: UMAMI_SITO, hostname: location.hostname, url: location.pathname, referrer: document.referrer || '' };
+    if (nome !== 'pageview') {
+      payload.name = nome;
+      var d = {}, n = 0;
+      for (var k in p) if (k !== 'pagina') { d[k] = p[k]; n++; }
+      if (n) payload.data = d;
+    }
+    fetch('https://gateway.umami.is/api/send', { method: 'POST', body: JSON.stringify({ type: 'event', payload: payload }), headers: { 'Content-Type': 'application/json' }, keepalive: true, credentials: 'omit' });
+  }
+  function invia(nome, p) {
+    if (!ATTIVA || !PRODUZIONE) return;
+    try { (FORNITORE === 'umami' ? umami : plausible)(nome, p || {}); } catch (e) {}
+  }
+  var visti = {};
+  function pagina() { var p = location.pathname.split('/').pop() || 'index.html'; return /materiali\//.test(location.pathname) ? 'materiali/' + p : p; }
+  window.traccia = function (nome, proprieta) {
+    var p = proprieta || {}; p.pagina = pagina();
+    if (SVILUPPO) { try { console.info('[traccia]', nome, p); } catch (e) {} }
+    invia(nome, p);
+  };
+  /* Pagina vista: una per caricamento, con la provenienza. Nessuna proprietà. */
+  if (SVILUPPO) { try { console.info('[traccia] pageview', { pagina: pagina() }); } catch (e) {} }
+  invia('pageview');
+  function unaVolta(chiave, nome, prop) { if (visti[chiave]) return; visti[chiave] = 1; window.traccia(nome, prop); }
+
+  /* Cambio di pelle: avviene solo da indirizzo (?pelle=tavola o ?pelle=notte). Questo script gira prima di quello
+     che salva la pelle, quindi vede ancora la scelta precedente. */
+  try {
+    var q = new URLSearchParams(location.search).get('pelle'), prima = localStorage.getItem('la-v3-pelle') || 'notte';
+    if ((q === 'tavola' || q === 'notte') && q !== prima) window.traccia('pelle_cambiata', { pelle: q });
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var isc = el.getAttribute('data-az-isc') || (el.closest('.sblocco') && el.getAttribute('data-az'));
+    if (isc === 'carica') return window.traccia('iscrizione_modulo_aperto', {});
+    if (isc === 'gia') return window.traccia('iscrizione_gia_iscritto', {});
+    if (isc === 'fatto') return window.traccia('iscrizione_fatto', {});
+    var card = el.closest('#podio .card');
+    if (card) return unaVolta('pron', 'pronostico_giocato', { scelta: card.getAttribute('data-id') });
+    if (el.id === 'salta-pron') return unaVolta('pron', 'pronostico_giocato', { scelta: 'salta' });
+    var href = el.getAttribute('href') || '';
+    if (/^https?:/.test(href)) {
+      var u; try { u = new URL(href); } catch (x) { return; }
+      var verso = /substack\.com$/.test(u.hostname) ? 'substack' : (u.hostname === 'github.com' ? 'github' : 'altro');
+      var prop = { verso: verso };
+      if (verso === 'github') prop.repo = u.pathname.split('/').slice(1, 3).join('/');
+      if (verso === 'altro') prop.dominio = u.hostname;
+      return window.traccia('uscita', prop);
+    }
+    if (/(^|\/)materiali\/[^/]+\.html/.test(href)) return window.traccia('materiale_aperto', { materiale: href.split('/').pop().replace('.html', '') });
+    if (pagina() === 'index.html' && el.classList.contains('btn') && href) return window.traccia('cta_home', { verso: href.split('?')[0] });
+  });
+
+  /* Calcolatore usato: il primo numero cambiato in un conto, una volta per conto e per visita. Solo il nome del conto. */
+  document.addEventListener('change', function (e) {
+    var c = e.target.closest && e.target.closest('[data-calc]');
+    if (c && e.target.hasAttribute('data-k')) unaVolta('calc-' + c.getAttribute('data-calc'), 'calcolo_usato', { calcolatore: c.getAttribute('data-calc') });
+  });
+})();
+</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<style>
+@font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
+  --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
+  --carta: #F4EFE4; --su-carta: #15110D; --griglia: rgba(244,239,228,.06); --r: 4px;
+  --display: 'Big Shoulders', 'Barlow Condensed', sans-serif; --cond: 'Barlow Condensed', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--giallo); color: #15110D; padding: 8px 12px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
+h1, h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; }
+h2 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 18px; }
+h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.08; margin: 0 0 8px; }
+.lead { font-size: 19px; max-width: 64ch; }
+.nota { font-size: 14px; color: var(--muted); }
+.bozza { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--muted); padding: 1px 5px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 12px 22px; border-radius: var(--r); border: 2px solid var(--text); text-decoration: none; background: transparent; color: var(--text); cursor: pointer; }
+.btn.pieno { background: var(--rosso-fondo); border-color: var(--rosso-fondo); color: var(--su-rosso); }
+.btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.pieno:hover { background: var(--su-rosso); color: var(--rosso-fondo); border-color: var(--su-rosso); }
+.btn.piccolo { font-size: 15px; padding: 8px 14px; }
+.sezione { padding: 84px 0; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .sezione { padding: 60px 0; } }
+.testata { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
+.testata .riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 58px; }
+.firma { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
+.menu { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
+.menu a { text-decoration: none; color: var(--muted); }
+.menu a:hover { color: var(--text); }
+.menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
+@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+.quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
+   Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
+html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A;
+  --rosso: #C0302A; --rosso-fondo: #C0302A; --su-rosso: #FFFFFF; --arancio: #A3241F; --giallo: #A3241F; --verde: #2F6B45;
+  --carta: #FFFDF6; --su-carta: #363737; --griglia: rgba(54,55,55,.05); }
+html[data-pelle="tavola"] .tabellone, html[data-pelle="tavola"] .c-uscite .uscita { --giallo: #F7C948; --text: #F4EFE4; --muted: #BDB39F; color: #F4EFE4; }
+html[data-pelle="tavola"] .tabellone .trow .l { color: #F4EFE4; }
+html[data-pelle="tavola"] .apertura { background: var(--bg); }
+html[data-pelle="tavola"] .apertura video { filter: grayscale(.2) contrast(1.05); opacity: .16; }
+html[data-pelle="tavola"] .apertura .cosa { color: var(--muted); }
+html[data-pelle="tavola"] .credito { color: var(--muted); }
+html[data-pelle="tavola"] .fascia { background: var(--bg-2); color: var(--text); border-top: 0; }
+html[data-pelle="tavola"] .fascia h2 { color: var(--rosso); }
+html[data-pelle="tavola"] .tovaglia-bordo, html[data-pelle="tavola"] .arrivo .bandiera { background-color: #FFFDF6;
+  background-image: linear-gradient(90deg, rgba(192,48,42,.45) 50%, transparent 50%), linear-gradient(rgba(192,48,42,.45) 50%, transparent 50%);
+  background-size: 22px 22px; height: 22px; }
+html[data-pelle="tavola"] .tovaglia-bordo { display: block; margin: -84px 0 62px; }
+@media (max-width: 760px) { html[data-pelle="tavola"] .tovaglia-bordo { margin: -60px 0 40px; } }
+.tovaglia-bordo { display: none; }
+html[data-pelle="tavola"] .tag.visto { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .btn.pieno:hover { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .bozza { color: var(--muted); border-color: var(--muted); }
+html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transparent, rgba(30,24,20,.82)); }
+
+.intro { padding: 56px 0 10px; }
+.intro h1 { font-size: clamp(56px, 9vw, 120px); margin-bottom: 14px; }
+.blocco-r { padding: 40px 0 10px; }
+.blocco-r h2 { font-size: clamp(34px, 5vw, 56px); margin-bottom: 8px; }
+.repo { list-style: none; margin: 18px 0 0; padding: 0; border-top: 1px solid var(--line); }
+.repo li { display: grid; grid-template-columns: minmax(0, 1.1fr) minmax(0, 1.4fr) auto; gap: 6px 22px; padding: 16px 0; border-bottom: 1px solid var(--line); align-items: start; }
+@media (max-width: 860px) { .repo li { grid-template-columns: 1fr; } }
+.repo .nome { font-family: var(--mono); font-size: 15px; overflow-wrap: anywhere; }
+.repo .nome a { color: var(--text); }
+.repo .dati { font-family: var(--mono); font-size: 12.5px; color: var(--muted); margin-top: 4px; display: block; }
+.repo p { margin: 0; font-size: 15.5px; }
+.repo p + p { color: var(--muted); margin-top: 4px; }
+.repo .lic { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .05em; font-size: 13px; border: 1px solid var(--line); padding: 3px 8px; border-radius: 2px; white-space: nowrap; }
+.gruppo-r { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 20px; margin: 34px 0 0; }
+.uscite { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; margin: 40px 0 70px; }
+@media (max-width: 760px) { .uscite { grid-template-columns: 1fr; } }
+.uscite > div { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
+.uscite p { margin: 0 0 12px; }
+.top3 li { grid-template-columns: 44px minmax(0, 1.1fr) minmax(0, 1.4fr); }
+@media (max-width: 860px) { .top3 li { grid-template-columns: 34px 1fr; } .top3 li > div:last-child { grid-column: 2; } }
+.top3 .pos { font-family: var(--display); font-weight: 900; font-size: 34px; line-height: 1; color: var(--giallo); }
+.passate { margin: 8px 0 0; padding-left: 18px; font-size: 15px; }
+</style>
+</head>
+<body>
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="testata"><div class="wrap riga">
+  <a class="firma" href="index.html">Lorenzo Asuni</a>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="esempi.html">Esempi</a></li></ul></nav>
+</div></header>
+<main id="contenuto">
+  <section class="intro quadretti"><div class="wrap">
+    <h1>Da copiare</h1>
+    <p class="lead">Ogni settimana tre repository di marketing e vendite in crescita o curiosi, poi lo scaffale di quelli che tengo come riferimento, e i miei, da prendere e adattare. Stelle e date le leggo su GitHub il giorno del giro: cambiano ogni giorno.</p>
+  </div></section>
+  <section class="blocco-r" id="top3"><div class="wrap">
+    <h2>Top 3 della settimana</h2>
+    <p class="nota">Giro del 15/11/2026. Prima lettura: nessuna crescita settimanale misurata ancora. Due in crescita per stelle al giorno dalla nascita (repository nati negli ultimi 90 giorni), uno curioso tra quelli sotto le 3.000 stelle aggiornati negli ultimi 30 giorni. Ognuno aperto e letto prima di sceglierlo.</p>
+    <ol class="repo top3"><li><span class="pos">1</span><div><span class="nome"><a href="https://github.com/GortexAI/franco">GortexAI/franco</a></span><span class="dati">in crescita · 693 stelle · 22,4 stelle al giorno dalla nascita · licenza MIT</span></div><div><p>Un agente di outbound che lavora su una lista di aziende: trova un motivo per scrivere, manda una sequenza breve dalla tua casella, legge le risposte. Ogni fatto che usa ha la sua fonte.</p><p>La modalità con i testi approvati: aziende ricercate a mano, un'osservazione con fonte per ciascuna, sequenza inviata parola per parola. Per l'invio automatico in Italia prima si guarda il tema legale.</p></div></li><li><span class="pos">2</span><div><span class="nome"><a href="https://github.com/dansugc/reverse-engineer-marketing">dansugc/reverse-engineer-marketing</a></span><span class="dati">in crescita · 694 stelle · 24,8 stelle al giorno dalla nascita · licenza MIT</span></div><div><p>Dai un indirizzo e ricostruisce il marketing di un'azienda da fonti pubbliche: annunci attivi, pixel, sitemap, storia del posizionamento, con la prova per ogni affermazione.</p><p>Il metodo per l'analisi dei concorrenti: partire dalle librerie degli annunci e dagli archivi del sito, non dalle opinioni. Ultimo aggiornamento il 18/10: va ricontrollato al prossimo giro.</p></div></li><li><span class="pos">3</span><div><span class="nome"><a href="https://github.com/GetBrew/growth-engineer">GetBrew/growth-engineer</a></span><span class="dati">curioso · 218 stelle · aggiornato il 13/11 · licenza MIT</span></div><div><p>Un catalogo aperto di strumenti di go-to-market e di flussi di lavoro, scritti come file Markdown che un agente può eseguire.</p><p>Il formato: ogni strumento e ogni flusso in un file leggibile da una persona e da un agente. È anche la vetrina del sito growth.engineer.</p></div></li></ol>
+    <p class="nota">È il primo giro: dal prossimo la crescita si misura sulle stelle prese tra un giro e l'altro, e qui restano le settimane passate.</p>
+  </div></section>
+  <section class="blocco-r" id="miei"><div class="wrap">
+    <h2>I miei</h2>
+    <p class="nota">Calcolatori, skill e lo scheletro del sistema con cui lavoro, ripuliti da ogni riferimento ai clienti. <span class="bozza">in preparazione, non ancora pubblici</span></p>
+    <ul class="repo"><li><div><span class="nome">calcolatori-revops</span><span class="dati">licenza MIT, proposta</span></div><div><p>Le formule dei conti dell'Officina in un file JavaScript solo, con 101 casi di test fatti a mano.</p><p>Lo copi nel foglio di calcolo o nel cruscotto interno e hai gli stessi conti, già controllati.</p></div><span class="lic">in preparazione</span></li><li><div><span class="nome">skill-strategia-gtm</span><span class="dati">licenza CC BY 4.0, proposta</span></div><div><p>Undici skill per Claude: cliente ideale, posizionamento, piano di lancio, concorrenti dalle fonti pubbliche, punteggio dei canali, controllo del funnel, assessment del primo mese.</p><p>Le installi nel tuo progetto e le usi sulla tua azienda, con i tuoi dati.</p></div><span class="lic">in preparazione</span></li><li><div><span class="nome">skill-vendite-e-call</span><span class="dati">licenza CC BY 4.0, proposta</span></div><div><p>Cinque skill sulle call di vendita e sull'outbound, più il metodo che le tiene insieme.</p><p>Una griglia scritta per ascoltare le call del tuo team, invece del parere a sensazione.</p></div><span class="lic">in preparazione</span></li><li><div><span class="nome">sistema-consulente</span><span class="dati">licenza CC BY 4.0, proposta</span></div><div><p>Lo scheletro di come lavoro con più clienti: un agente per cliente, l'indice di dove sta ogni pezzo di sapere, le call che diventano decisioni, i controlli del venerdì.</p><p>La forma, da riempire con i tuoi clienti.</p></div><span class="lic">in preparazione</span></li></ul>
+  </div></section>
+  <section class="blocco-r" id="riferimento"><div class="wrap">
+    <h2>Di riferimento</h2>
+    <p class="nota">Lo scaffale stabile: stelle e date lette il 15/11/2026. Scelti tra i più seguiti e tra quelli scritti da marketer e operatori riconosciuti. Ho escluso le liste abbandonate e i repository che servono solo a vendere un prodotto. Dove la licenza è propria, leggila prima di usarlo in azienda.</p>
+    <h3 class="gruppo-r">Skill e playbook di marketer e operatori</h3><ul class="repo"><li><div><span class="nome"><a href="https://github.com/coreyhaines31/marketingskills">coreyhaines31/marketingskills</a></span><span class="dati">60.406 stelle · ultimo aggiornamento 11/11/2026 · verificato il 15/11/2026</span></div><div><p>Skill di marketing per Claude Code e altri agenti, di Corey Haines: conversione, copy, SEO, analytics, crescita.</p><p>Le skill su pagina prezzi e onboarding si usano subito sul proprio sito.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/AgriciDaniel/claude-seo">AgriciDaniel/claude-seo</a></span><span class="dati">29.464 stelle · ultimo aggiornamento 14/11/2026 · verificato il 15/11/2026</span></div><div><p>Un pacchetto di skill per la SEO tecnica e dei contenuti, con sotto-agenti per ogni controllo.</p><p>Un controllo SEO del sito senza agenzia, da rifare ogni trimestre.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/AgriciDaniel/claude-ads">AgriciDaniel/claude-ads</a></span><span class="dati">11.034 stelle · ultimo aggiornamento 01/11/2026 · verificato il 15/11/2026</span></div><div><p>Skill per gestire le campagne a pagamento su dodici piattaforme, da Google a Meta a LinkedIn.</p><p>Una revisione delle campagne con una griglia, prima di aumentare il budget.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/ericosiu/ai-marketing-skills">ericosiu/ai-marketing-skills</a></span><span class="dati">3.824 stelle · ultimo aggiornamento 13/11/2026 · verificato il 15/11/2026</span></div><div><p>Skill di marketing e vendite del team di Single Brain: esperimenti di crescita, pipeline, contenuti, outbound.</p><p>Lo schema per tenere un registro degli esperimenti con ipotesi e data di lettura.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/growthenginenowoslawski/coldoutboundskills">growthenginenowoslawski/coldoutboundskills</a></span><span class="dati">819 stelle · ultimo aggiornamento 05/10/2026 · verificato il 15/11/2026</span></div><div><p>Skill per il cold email e l'outbound di GrowthEngineX, costruite su oltre mille campagne B2B dichiarate.</p><p>La parte su infrastruttura e consegna delle email, prima di mandare la prima sequenza.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/zapier/gtm-cheat-codes">zapier/gtm-cheat-codes</a></span><span class="dati">362 stelle · ultimo aggiornamento 13/07/2026 · verificato il 15/11/2026</span></div><div><p>Una guida di Zapier per i team commerciali che usano agenti di programmazione, con skill installabili.</p><p>Idee per automatizzare il lavoro ripetitivo di marketing e vendite, una alla volta.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/GTM-Strategist/gtm-strategist-skills">GTM-Strategist/gtm-strategist-skills</a></span><span class="dati">282 stelle · ultimo aggiornamento 07/08/2026 · verificato il 15/11/2026</span></div><div><p>Dodici skill che seguono il metodo GTM Strategist di Maja Voje, dalla strategia al processo di vendita.</p><p>Un percorso ordinato per scrivere il go-to-market di un prodotto nuovo.</p></div><span class="lic">MIT</span></li></ul><h3 class="gruppo-r">Strumenti open source da tenere in casa</h3><ul class="repo"><li><div><span class="nome"><a href="https://github.com/n8n-io/n8n">n8n-io/n8n</a></span><span class="dati">210.544 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Automazione dei flussi tra CRM, moduli, fogli e agenti.</p><p>Il collante tra i moduli del sito e il CRM, senza pagare a operazione.</p></div><span class="lic">licenza propria (fair-code)</span></li><li><div><span class="nome"><a href="https://github.com/twentyhq/twenty">twentyhq/twenty</a></span><span class="dati">60.950 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Un CRM aperto, alternativo a Salesforce.</p><p>Un CRM da ospitare in casa quando i dati non possono uscire.</p></div><span class="lic">licenza propria</span></li><li><div><span class="nome"><a href="https://github.com/calcom/cal.diy">calcom/cal.diy</a></span><span class="dati">50.048 stelle · ultimo aggiornamento 13/11/2026 · verificato il 15/11/2026</span></div><div><p>Prenotazione degli appuntamenti (prima cal.com).</p><p>Le agende dei venditori con le regole di disponibilità e i promemoria che riducono i no-show.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/PostHog/posthog">PostHog/posthog</a></span><span class="dati">40.793 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Analisi del prodotto, esperimenti e feature flag.</p><p>Capire dove si fermano gli utenti della prova gratuita.</p></div><span class="lic">licenza propria</span></li><li><div><span class="nome"><a href="https://github.com/umami-software/umami">umami-software/umami</a></span><span class="dati">40.154 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Statistiche del sito senza cookie.</p><p>Le visite e le campagne del sito, senza banner dei cookie.</p></div><span class="lic">MIT</span></li><li><div><span class="nome"><a href="https://github.com/plausible/analytics">plausible/analytics</a></span><span class="dati">29.847 stelle · ultimo aggiornamento 13/11/2026 · verificato il 15/11/2026</span></div><div><p>Statistiche del sito leggere e senza cookie.</p><p>Come sopra; si può anche pagare la versione ospitata.</p></div><span class="lic">AGPL-3.0</span></li><li><div><span class="nome"><a href="https://github.com/dubinc/dub.link">dubinc/dub.link</a></span><span class="dati">25.170 stelle · ultimo aggiornamento 27/10/2026 · verificato il 15/11/2026</span></div><div><p>Link tracciati per sapere quale campagna ha portato chi (prima dubinc/dub).</p><p>Un link per campagna, con i clic attribuiti, anche negli eventi e nelle email.</p></div><span class="lic">licenza propria</span></li><li><div><span class="nome"><a href="https://github.com/knadh/listmonk">knadh/listmonk</a></span><span class="dati">24.303 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Newsletter e liste di email su un server proprio.</p><p>Le email ai clienti senza un abbonamento che cresce con la lista.</p></div><span class="lic">AGPL-3.0</span></li><li><div><span class="nome"><a href="https://github.com/formbricks/formbricks">formbricks/formbricks</a></span><span class="dati">13.247 stelle · ultimo aggiornamento 15/11/2026 · verificato il 15/11/2026</span></div><div><p>Sondaggi nel prodotto e sul sito.</p><p>La domanda "come ci hai conosciuto?" fatta bene, per l'attribuzione.</p></div><span class="lic">licenza propria</span></li><li><div><span class="nome"><a href="https://github.com/mautic/mautic">mautic/mautic</a></span><span class="dati">10.988 stelle · ultimo aggiornamento 14/11/2026 · verificato il 15/11/2026</span></div><div><p>Marketing automation: email, punteggio dei contatti, campagne.</p><p>Il punteggio dei lead e le sequenze di nurturing senza HubSpot.</p></div><span class="lic">licenza propria</span></li><li><div><span class="nome"><a href="https://github.com/growthbook/growthbook">growthbook/growthbook</a></span><span class="dati">8.596 stelle · ultimo aggiornamento 14/11/2026 · verificato il 15/11/2026</span></div><div><p>Feature flag ed esperimenti A/B.</p><p>Test sulla pagina prezzi con una lettura statistica seria.</p></div><span class="lic">licenza propria</span></li></ul>
+    <div class="uscite">
+      <div><h3>Rifai i conti sui tuoi numeri</h3><p>I dieci conti dell'Officina, con la formula sotto ogni risultato.</p><a class="btn" href="officina.html">Vai all'Officina</a></div>
+      <div><h3>Ogni mese, i conti di un'azienda</h3><p>A Tavola con Lorenzo, su Substack.</p><a class="btn pieno" href="https://lorenzoasuni.substack.com/subscribe">Iscriviti alla newsletter</a></div>
+    </div>
+  </div></section>
+</main>
+<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span></div></footer>
+
+</body>
+</html>

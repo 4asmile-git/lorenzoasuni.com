@@ -1,0 +1,1028 @@
+<!doctype html>
+<html lang="it">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Officina: dieci conti sul fatturato</title>
+<meta name="description" content="Funnel a ritroso, CAC, sconto contro volume, venditori da assumere, provvigioni e altri conti, con la formula sotto ogni risultato.">
+<meta name="robots" content="noindex">
+<script>(function () {
+  /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
+     nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
+     build_v3.py legge questa riga e scrive la privacy del fornitore scelto, quindi codice e privacy non si separano.
+     SPENTA finché ATTIVA è false: si accende solo alla pubblicazione, con l'OK di Lorenzo, dopo aver creato il sito
+     sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
+     In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
+     Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
+  var FORNITORE = 'plausible';
+  var ATTIVA = false;
+  var UMAMI_SITO = '';
+  var DOMINIO = 'lorenzoasuni.com';
+  var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
+  var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
+  function plausible(nome, p) {
+    var corpo = { name: nome, url: location.origin + location.pathname, domain: DOMINIO };
+    if (nome === 'pageview') { if (document.referrer) corpo.referrer = document.referrer; }
+    else corpo.props = p;
+    var dati = JSON.stringify(corpo);
+    /* text/plain evita la richiesta preliminare del browser; Plausible lo legge comunque come JSON. */
+    if (!(navigator.sendBeacon && navigator.sendBeacon('https://plausible.io/api/event', new Blob([dati], { type: 'text/plain' }))))
+      fetch('https://plausible.io/api/event', { method: 'POST', body: dati, headers: { 'Content-Type': 'text/plain' }, keepalive: true });
+  }
+  function umami(nome, p) {
+    if (!UMAMI_SITO) return;
+    /* Pagina vista = evento senza nome. Il percorso sta già nell'url, quindi la proprietà "pagina" non si manda:
+       nel piano gratuito ogni proprietà conta come un evento in più. Niente titolo, schermo e lingua: non servono. */
+    var payload = { website: UMAMI_SITO, hostname: location.hostname, url: location.pathname, referrer: document.referrer || '' };
+    if (nome !== 'pageview') {
+      payload.name = nome;
+      var d = {}, n = 0;
+      for (var k in p) if (k !== 'pagina') { d[k] = p[k]; n++; }
+      if (n) payload.data = d;
+    }
+    fetch('https://gateway.umami.is/api/send', { method: 'POST', body: JSON.stringify({ type: 'event', payload: payload }), headers: { 'Content-Type': 'application/json' }, keepalive: true, credentials: 'omit' });
+  }
+  function invia(nome, p) {
+    if (!ATTIVA || !PRODUZIONE) return;
+    try { (FORNITORE === 'umami' ? umami : plausible)(nome, p || {}); } catch (e) {}
+  }
+  var visti = {};
+  function pagina() { var p = location.pathname.split('/').pop() || 'index.html'; return /materiali\//.test(location.pathname) ? 'materiali/' + p : p; }
+  window.traccia = function (nome, proprieta) {
+    var p = proprieta || {}; p.pagina = pagina();
+    if (SVILUPPO) { try { console.info('[traccia]', nome, p); } catch (e) {} }
+    invia(nome, p);
+  };
+  /* Pagina vista: una per caricamento, con la provenienza. Nessuna proprietà. */
+  if (SVILUPPO) { try { console.info('[traccia] pageview', { pagina: pagina() }); } catch (e) {} }
+  invia('pageview');
+  function unaVolta(chiave, nome, prop) { if (visti[chiave]) return; visti[chiave] = 1; window.traccia(nome, prop); }
+
+  /* Cambio di pelle: avviene solo da indirizzo (?pelle=tavola o ?pelle=notte). Questo script gira prima di quello
+     che salva la pelle, quindi vede ancora la scelta precedente. */
+  try {
+    var q = new URLSearchParams(location.search).get('pelle'), prima = localStorage.getItem('la-v3-pelle') || 'notte';
+    if ((q === 'tavola' || q === 'notte') && q !== prima) window.traccia('pelle_cambiata', { pelle: q });
+  } catch (e) {}
+
+  document.addEventListener('click', function (e) {
+    var el = e.target.closest('a, button'); if (!el) return;
+    var isc = el.getAttribute('data-az-isc') || (el.closest('.sblocco') && el.getAttribute('data-az'));
+    if (isc === 'carica') return window.traccia('iscrizione_modulo_aperto', {});
+    if (isc === 'gia') return window.traccia('iscrizione_gia_iscritto', {});
+    if (isc === 'fatto') return window.traccia('iscrizione_fatto', {});
+    var card = el.closest('#podio .card');
+    if (card) return unaVolta('pron', 'pronostico_giocato', { scelta: card.getAttribute('data-id') });
+    if (el.id === 'salta-pron') return unaVolta('pron', 'pronostico_giocato', { scelta: 'salta' });
+    var href = el.getAttribute('href') || '';
+    if (/^https?:/.test(href)) {
+      var u; try { u = new URL(href); } catch (x) { return; }
+      var verso = /substack\.com$/.test(u.hostname) ? 'substack' : (u.hostname === 'github.com' ? 'github' : 'altro');
+      var prop = { verso: verso };
+      if (verso === 'github') prop.repo = u.pathname.split('/').slice(1, 3).join('/');
+      if (verso === 'altro') prop.dominio = u.hostname;
+      return window.traccia('uscita', prop);
+    }
+    if (/(^|\/)materiali\/[^/]+\.html/.test(href)) return window.traccia('materiale_aperto', { materiale: href.split('/').pop().replace('.html', '') });
+    if (pagina() === 'index.html' && el.classList.contains('btn') && href) return window.traccia('cta_home', { verso: href.split('?')[0] });
+  });
+
+  /* Calcolatore usato: il primo numero cambiato in un conto, una volta per conto e per visita. Solo il nome del conto. */
+  document.addEventListener('change', function (e) {
+    var c = e.target.closest && e.target.closest('[data-calc]');
+    if (c && e.target.hasAttribute('data-k')) unaVolta('calc-' + c.getAttribute('data-calc'), 'calcolo_usato', { calcolatore: c.getAttribute('data-calc') });
+  });
+})();
+</script>
+<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')==='tavola')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){}})();</script>
+<style>
+@font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
+@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
+@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+
+:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
+  --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
+  --carta: #F4EFE4; --su-carta: #15110D; --griglia: rgba(244,239,228,.06); --r: 4px;
+  --display: 'Big Shoulders', 'Barlow Condensed', sans-serif; --cond: 'Barlow Condensed', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace; }
+* { box-sizing: border-box; }
+html { scroll-behavior: smooth; }
+@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 64px; }
+body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
+a { color: inherit; }
+img { display: block; max-width: 100%; }
+.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
+@media (max-width: 600px) { .wrap { padding: 0 16px; } }
+.skip { position: absolute; left: -999px; top: 8px; background: var(--giallo); color: #15110D; padding: 8px 12px; z-index: 100; }
+.skip:focus { left: 8px; }
+:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
+h1, h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; }
+h2 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 18px; }
+h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.08; margin: 0 0 8px; }
+.lead { font-size: 19px; max-width: 64ch; }
+.nota { font-size: 14px; color: var(--muted); }
+.bozza { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--muted); padding: 1px 5px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
+.btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 12px 22px; border-radius: var(--r); border: 2px solid var(--text); text-decoration: none; background: transparent; color: var(--text); cursor: pointer; }
+.btn.pieno { background: var(--rosso-fondo); border-color: var(--rosso-fondo); color: var(--su-rosso); }
+.btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
+.btn.pieno:hover { background: var(--su-rosso); color: var(--rosso-fondo); border-color: var(--su-rosso); }
+.btn.piccolo { font-size: 15px; padding: 8px 14px; }
+.sezione { padding: 84px 0; border-top: 1px solid var(--line); }
+@media (max-width: 760px) { .sezione { padding: 60px 0; } }
+.testata { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
+.testata .riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 58px; }
+.firma { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
+.menu { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
+.menu a { text-decoration: none; color: var(--muted); }
+.menu a:hover { color: var(--text); }
+.menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
+@media (max-width: 860px) { .menu li:not(.forte) { display: none; } }
+.quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
+footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
+footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
+
+/* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
+   Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
+html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A;
+  --rosso: #C0302A; --rosso-fondo: #C0302A; --su-rosso: #FFFFFF; --arancio: #A3241F; --giallo: #A3241F; --verde: #2F6B45;
+  --carta: #FFFDF6; --su-carta: #363737; --griglia: rgba(54,55,55,.05); }
+html[data-pelle="tavola"] .tabellone, html[data-pelle="tavola"] .c-uscite .uscita { --giallo: #F7C948; --text: #F4EFE4; --muted: #BDB39F; color: #F4EFE4; }
+html[data-pelle="tavola"] .tabellone .trow .l { color: #F4EFE4; }
+html[data-pelle="tavola"] .apertura { background: var(--bg); }
+html[data-pelle="tavola"] .apertura video { filter: grayscale(.2) contrast(1.05); opacity: .16; }
+html[data-pelle="tavola"] .apertura .cosa { color: var(--muted); }
+html[data-pelle="tavola"] .credito { color: var(--muted); }
+html[data-pelle="tavola"] .fascia { background: var(--bg-2); color: var(--text); border-top: 0; }
+html[data-pelle="tavola"] .fascia h2 { color: var(--rosso); }
+html[data-pelle="tavola"] .tovaglia-bordo, html[data-pelle="tavola"] .arrivo .bandiera { background-color: #FFFDF6;
+  background-image: linear-gradient(90deg, rgba(192,48,42,.45) 50%, transparent 50%), linear-gradient(rgba(192,48,42,.45) 50%, transparent 50%);
+  background-size: 22px 22px; height: 22px; }
+html[data-pelle="tavola"] .tovaglia-bordo { display: block; margin: -84px 0 62px; }
+@media (max-width: 760px) { html[data-pelle="tavola"] .tovaglia-bordo { margin: -60px 0 40px; } }
+.tovaglia-bordo { display: none; }
+html[data-pelle="tavola"] .tag.visto { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .btn.pieno:hover { background: var(--text); color: #FFFDF6; border-color: var(--text); }
+html[data-pelle="tavola"] .bozza { color: var(--muted); border-color: var(--muted); }
+html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transparent, rgba(30,24,20,.82)); }
+/* Calcolatori dell'Officina (incollato da build_officina.py) */
+.calc2 { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: start; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; position: relative; transition: border-color .4s; }
+.calc2.arrivato { border-color: var(--giallo); }
+@media (max-width: 900px) { .calc2 { grid-template-columns: 1fr; padding: 16px; } }
+.c-esempio { font-size: 13.5px; color: var(--muted); margin: 0 0 12px; }
+.c-griglia { display: grid; grid-template-columns: 1fr 1fr; gap: 12px 14px; }
+@media (max-width: 520px) { .c-griglia { grid-template-columns: 1fr; } }
+.calc2 .campo label { display: block; font-size: 14px; color: var(--muted); margin-bottom: 5px; line-height: 1.3; min-height: 2.6em; }
+@media (max-width: 520px) { .calc2 .campo label { min-height: 0; } }
+.calc2 .campo input { width: 100%; font-family: var(--mono); font-size: 18px; padding: 9px 12px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 3px; }
+.calc2 .campo input[aria-invalid="true"] { border-color: var(--rosso); }
+.c-err { display: block; min-height: 0; font-size: 13px; color: var(--giallo); margin-top: 3px; }
+.c-err:empty { display: none; }
+.c-uscite .uscita { background: #0D0B09; color: #F4EFE4; border-radius: var(--r); padding: 16px 18px; }
+[data-pelle="fedele"] .c-uscite .uscita { background: #0A0022; }
+.c-main { padding-bottom: 10px; border-bottom: 1px dashed #3A332A; margin-bottom: 4px; }
+.c-main b { display: block; font-family: var(--mono); font-weight: 500; font-size: 40px; line-height: 1.05; color: var(--giallo); overflow-wrap: anywhere; }
+.c-main span { display: block; font-size: 15px; color: #D9D0BE; margin-top: 4px; }
+.c-uscite .orow { display: flex; justify-content: space-between; gap: 14px; padding: 8px 0; border-bottom: 1px dashed #3A332A; align-items: baseline; font-size: 15px; }
+.c-uscite .orow:last-child { border-bottom: 0; }
+.c-uscite .orow .v { font-family: var(--mono); font-weight: 500; font-size: 16px; color: #F4EFE4; text-align: right; }
+@media (max-width: 520px) { .c-uscite .orow { flex-direction: column; gap: 2px; } .c-uscite .orow .v { text-align: left; } .c-main b { font-size: 34px; } }
+.c-come { margin-top: 12px; border-top: 1px solid var(--line); padding-top: 10px; }
+.c-come summary { cursor: pointer; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
+.c-come ul { margin: 10px 0 0; padding-left: 18px; font-family: var(--mono); font-size: 13px; color: var(--muted); }
+.c-come li { margin-bottom: 6px; overflow-wrap: anywhere; }
+.c-azioni { display: flex; flex-wrap: wrap; gap: 8px 10px; align-items: center; margin-top: 14px; }
+.c-azioni .btn.piccolo { font-size: 13.5px; padding: 7px 13px; text-align: left; }
+.c-link, .c-salta { background: transparent; border: 0; color: var(--text); text-decoration: underline; cursor: pointer; font: inherit; font-size: 14px; padding: 4px 0; }
+.c-copiato { font-size: 13px; color: var(--muted); overflow-wrap: anywhere; flex-basis: 100%; }
+.c-copiato:empty { display: none; }
+/* Indovina prima di calcolare */
+.c-stima { background: var(--bg-3); border-radius: var(--r); padding: 12px 14px; margin-bottom: 12px; border-left: 4px solid var(--giallo); }
+.c-stima label { display: block; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 17px; margin-bottom: 8px; }
+.c-stima-riga { display: flex; gap: 10px; align-items: center; flex-wrap: wrap; }
+.c-stima input { width: 130px; font-family: var(--mono); font-size: 18px; padding: 8px 10px; background: var(--bg); color: var(--text); border: 1px solid var(--line); border-radius: 3px; }
+.c-scarto { margin: 8px 0 0; font-size: 15px; }
+.c-scarto:empty { display: none; }
+.calc2.coperto .c-uscite .uscita, .calc2.coperto .c-come, .calc2.coperto .c-azioni { filter: blur(7px); opacity: .5; pointer-events: none; user-select: none; }
+@media (prefers-reduced-motion: reduce) { .calc2 { transition: none; } }
+/* Elenco dei calcolatori in home */
+.calc-indice { display: grid; grid-template-columns: repeat(4, 1fr); gap: 14px; margin-top: 22px; }
+@media (max-width: 1000px) { .calc-indice { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .calc-indice { grid-template-columns: 1fr; } }
+.calc-indice a { display: flex; flex-direction: column; gap: 6px; padding: 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-2); text-decoration: none; }
+.calc-indice a:hover { border-color: var(--text); }
+.calc-indice strong { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .03em; font-size: 19px; line-height: 1.1; }
+.calc-indice span { font-size: 14.5px; color: var(--muted); }
+/* Il foglio stampabile */
+.foglio { background: var(--carta); color: var(--su-carta); border-radius: var(--r); padding: 24px; }
+.foglio h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 40px; margin: 0 0 4px; line-height: 1; }
+.foglio .nota { color: #5A4F42; }
+.f-voce { border-top: 1px solid rgba(21,17,13,.25); padding: 14px 0; break-inside: avoid; }
+.f-voce h3 { margin: 0 0 4px; font-size: 20px; }
+.f-main { margin: 0 0 8px; } .f-main b { font-family: var(--mono); font-weight: 500; font-size: 22px; }
+.f-voce dl { display: grid; grid-template-columns: 1fr auto; gap: 2px 16px; margin: 0; font-size: 14px; }
+.f-voce dd { margin: 0; font-family: var(--mono); text-align: right; }
+.f-data { font-family: var(--mono); font-size: 12px; color: #5A4F42; margin: 6px 0 0; }
+.foglio-azioni { display: flex; gap: 10px; flex-wrap: wrap; margin-top: 14px; }
+.foglio-azioni button { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; padding: 8px 16px; border-radius: 999px; border: 2px solid var(--su-carta); background: transparent; color: var(--su-carta); cursor: pointer; }
+@media print {
+  body { background: #fff !important; color: #000 !important; }
+  body > *:not(main), main > *:not(#foglio), .foglio-azioni, .skip { display: none !important; }
+  #foglio { padding: 0 !important; }
+  .foglio { background: #fff; padding: 0; }
+}
+/* Sblocco con l'email verso la newsletter (quinto giro) */
+.sr { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+.c-sblocco { display: none; background: var(--carta); color: var(--su-carta); border-radius: var(--r); padding: 14px 16px; margin-bottom: 12px; }
+.calc2.chiuso .c-sblocco { display: block; }
+.c-sbl-t { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 21px; line-height: 1.1; margin: 0 0 6px; }
+.c-sbl-p { font-size: 14.5px; margin: 0 0 10px; }
+.c-sbl-riga { display: flex; gap: 8px; flex-wrap: wrap; }
+.c-sbl-riga input { flex: 1 1 200px; min-width: 0; font-family: var(--body); font-size: 16px; padding: 9px 12px; border: 1px solid var(--su-carta); border-radius: 3px; background: #fff; color: #15110D; }
+.c-sbl-riga input[aria-invalid="true"] { border: 2px solid #B3200D; }
+.c-sblocco .btn.pieno { background: #B3200D; border-color: #B3200D; color: #FFF8EE; }
+.c-sblocco .btn.pieno:hover { background: #15110D; border-color: #15110D; color: #FFF8EE; }
+.c-sbl-ok { display: flex; gap: 8px; align-items: flex-start; font-size: 14px; margin-top: 10px; line-height: 1.4; cursor: pointer; }
+.c-sbl-ok input { width: 18px; height: 18px; margin: 1px 0 0; flex: none; accent-color: #B3200D; }
+.c-sblocco .c-err { color: #B3200D; font-size: 14px; font-weight: 700; margin: 8px 0 0; }
+.c-sbl-nota { font-size: 12.5px; color: #5A4F42; margin: 8px 0 0; }
+.c-sbl-fatto { font-size: 13.5px; color: var(--muted); margin: 0 0 8px; }
+.c-sbl-fatto:empty { display: none; }
+.calc2.chiuso .c-azioni { display: none; }
+/* Sesto giro: modulo di Substack caricato al clic */
+.c-sbl-terzi { font-size: 13.5px; color: #5A4F42; border-left: 3px solid #5A4F42; padding-left: 8px; }
+.c-sbl-riga .c-link { color: #15110D; }
+.c-sbl-modulo { margin-top: 10px; }
+.c-sbl-iframe { background: #fff; border: 1px solid #15110D; border-radius: 2px; max-width: 480px; margin-bottom: 10px; }
+.c-sbl-iframe iframe { display: block; width: 100%; height: 320px; border: 0; background: #fff; }
+@media (max-width: 420px) { .c-sbl-iframe iframe { height: 360px; } }
+.c-sblocco [hidden] { display: none !important; }
+@media (max-width: 420px) { .c-sbl-iframe iframe { height: 430px; } .c-sblocco { padding: 12px; } }
+@media (max-width: 420px) { .calc2 { padding: 10px; } .c-sblocco { padding: 10px; } .c-sbl-iframe { margin: 0 -10px 10px; border-left: 0; border-right: 0; } .c-sbl-iframe iframe { height: 400px; } }
+/* Settimo giro: richiamo al dizionario accanto al termine */
+.calc2 .campo label .diz { font-family: var(--mono); font-size: 11px; color: var(--muted); text-decoration: underline dotted; margin-left: 3px; white-space: nowrap; }
+.calc2 .campo label .diz:hover { color: var(--text); }
+
+/* v3: un riquadro d'iscrizione per pagina */
+.c-chiuso-nota { display: none; font-size: 14.5px; background: var(--bg-3); border-left: 3px solid var(--giallo); padding: 10px 12px; margin: 0 0 10px; border-radius: 2px; }
+.calc2.chiuso .c-chiuso-nota { display: block; }
+.calc2.non-iscritto .c-link[data-az="link"] { display: none; }
+.c-dopo { font-size: 15px; margin: 12px 0 0; border-top: 1px solid var(--line); padding-top: 10px; }
+.iscrizione { background: var(--carta); color: var(--su-carta); border-radius: var(--r); padding: 18px; margin: 0 0 28px; }
+.iscrizione[hidden] { display: none; }
+.iscrizione h2 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.1; margin: 0 0 8px; color: #15110D; }
+.iscrizione p { margin: 0 0 8px; font-size: 15.5px; max-width: 70ch; }
+.iscrizione .isc-terzi { font-size: 13.5px; color: #5A4F42; border-left: 3px solid #5A4F42; padding-left: 8px; }
+.iscrizione .riga { display: flex; gap: 12px; flex-wrap: wrap; align-items: center; margin-top: 10px; }
+.iscrizione .btn.pieno { background: #B3200D; border-color: #B3200D; color: #FFF8EE; }
+.iscrizione .btn.pieno:hover { background: #15110D; border-color: #15110D; color: #FFF8EE; }
+.iscrizione .c-link { color: #15110D; font-size: 15px; }
+.iscrizione [hidden] { display: none !important; }
+.isc-iframe { background: #fff; border: 1px solid #15110D; max-width: 480px; margin: 10px 0; }
+.isc-iframe iframe { display: block; width: 100%; height: 320px; border: 0; }
+.iscrizione.fatto .isc-chiuso { display: none; }
+.isc-fatto { font-size: 14.5px; margin: 0; }
+.isc-fatto:empty { display: none; }
+@media (max-width: 420px) { .iscrizione { padding: 12px; } .isc-iframe { margin: 10px -12px; border-left: 0; border-right: 0; } .isc-iframe iframe { height: 400px; } }
+
+.intro { padding: 56px 0 10px; }
+.intro h1 { font-size: clamp(56px, 9vw, 120px); margin-bottom: 14px; }
+.indice2 { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin: 18px 0 30px; }
+@media (max-width: 760px) { .indice2 { grid-template-columns: 1fr; } }
+.indice2 > div { border-top: 2px solid var(--line); padding-top: 10px; }
+.indice2 h2 { font-family: var(--cond); font-size: 24px; text-transform: uppercase; margin: 0 0 4px; line-height: 1.1; }
+.indice2 p { font-size: 14.5px; color: var(--muted); margin: 0 0 8px; }
+.indice2 ul { margin: 0; padding-left: 18px; }
+.indice2 li { margin-bottom: 4px; }
+.scaffale-testa { border-top: 1px solid var(--line); margin-top: 56px; padding-top: 16px; }
+.scaffale-testa h2 { font-size: clamp(36px, 5vw, 56px); margin-bottom: 6px; }
+.blocco { padding: 34px 0 6px; }
+.blocco h3 { font-size: 28px; }
+.blocco .domanda { color: var(--muted); margin: 0 0 14px; max-width: 70ch; }
+.materiali { list-style: none; margin: 10px 0 0; padding: 0; display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; }
+@media (max-width: 900px) { .materiali { grid-template-columns: 1fr 1fr; } }
+@media (max-width: 520px) { .materiali { grid-template-columns: 1fr; } }
+.materiali a { display: flex; flex-direction: column; gap: 4px; padding: 12px 14px; border: 1px solid var(--line); border-radius: var(--r); background: var(--bg-2); text-decoration: none; height: 100%; }
+.materiali a:hover { border-color: var(--text); }
+.materiali strong { font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: 18px; }
+.materiali span { font-size: 14px; color: var(--muted); }
+#foglio { padding: 56px 0 80px; }
+.foglio-azioni[hidden] { display: none; }
+</style>
+</head>
+<body data-iscrizione-sempre>
+<a class="skip" href="#contenuto">Vai al contenuto</a>
+<header class="testata"><div class="wrap riga">
+  <a class="firma" href="index.html">Lorenzo Asuni</a>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li><a href="esempi.html">Esempi</a></li><li><a href="repository.html">Da copiare</a></li></ul></nav>
+</div></header>
+<main id="contenuto">
+  <section class="intro quadretti"><div class="wrap">
+    <h1>Officina</h1>
+    <p class="lead">Dieci conti sul fatturato, dal numero che vuoi a quanti meeting, venditori e soldi servono per farlo. Ogni risultato mostra come è calcolato, e i numeri passano da un conto all'altro. I calcoli girano nel tuo browser e non vengono inviati.</p>
+    <p>Non sai da dove partire? <a href="materiali/autotest.html">Le dieci domande, senza iscrizione</a>, ti dicono quale conto aprire per primo.</p>
+    <div class="indice2">
+      <div><h2>Per chi guida l'azienda</h2><p>Conti per cui un CEO ha i dati, o li ottiene con una domanda sola.</p><ul><li><a href="#calc-funnel">Funnel a ritroso</a></li><li><a href="#calc-cac">CAC completo</a></li><li><a href="#calc-sconto">Sconto contro volume</a></li><li><a href="#calc-capacita">Capacità e ramp dei venditori</a></li><li><a href="#calc-provvigioni">Piano provvigioni</a></li><li><a href="#calc-copertura">Copertura di pipeline</a></li><li><a href="#calc-sensibilita">Quale tasso sposta di più</a></li></ul></div>
+      <div><h2>Per chi gestisce le vendite</h2><p>Conti che chiedono dati di chi lavora ogni giorno su chiamate, meeting e campagne.</p><ul><li><a href="#calc-bdr">Chiamate al giorno del BDR</a></li><li><a href="#calc-noShow">Costo dei no-show e dei lead richiamati tardi</a></li><li><a href="#calc-budgetPaid">Budget paid a ritroso</a></li></ul></div>
+    </div>
+<div class="iscrizione" id="iscrizione" role="region" aria-labelledby="isc-t" hidden>
+  <div class="isc-chiuso">
+    <h2 id="isc-t">I risultati si aprono con l'iscrizione</h2>
+    <p>Lascia l'email una volta sola, ad A Tavola con Lorenzo, e si aprono tutti i conti di questa pagina, il foglio da stampare, il link con i tuoi numeri e i modelli. Il primo conto, il funnel a ritroso, è aperto a tutti. La newsletter è un pezzo al mese sui conti di un'azienda di cui parlano tutti. Nessuna offerta e nessuna chiamata commerciale.</p>
+    <p class="isc-terzi">Il modulo è di Substack, la piattaforma della newsletter: si carica solo se lo chiedi, e l'email la lasci a Substack, non a questo sito. <a href="privacy.html#substack">Come sono trattati i dati</a>.</p>
+    <div class="riga"><button type="button" class="btn pieno" data-az-isc="carica">Iscriviti con Substack</button><button type="button" class="c-link" data-az-isc="gia">Sono già iscritto</button></div>
+    <div class="isc-modulo" hidden><div class="isc-iframe"></div><p>Substack non dice a questa pagina se l'iscrizione è andata a buon fine, quindi te lo chiedo:</p><button type="button" class="btn pieno" data-az-isc="fatto">Fatto, mostrami i risultati</button></div>
+  </div>
+  <p class="isc-fatto" aria-live="polite"></p>
+</div>
+  </div></section>
+  <div class="wrap scaffale-testa" id="scaffale-guida"><h2>Per chi guida l'azienda</h2><p class="nota">Conti per cui un CEO ha i dati, o li ottiene con una domanda sola.</p></div>
+  <section class="blocco" id="calc-funnel"><div class="wrap"><h3>Funnel a ritroso</h3><p class="domanda">Quanti meeting servono per il fatturato che vuoi, e da quando devono partire se il ciclo di vendita è lungo. Questo conto è aperto a tutti.</p><div class="calc2" data-calc="funnel" data-stima></div></div></section>
+  <section class="blocco" id="calc-cac"><div class="wrap"><h3>CAC completo</h3><p class="domanda">Quanto ti costa davvero un cliente nuovo, con persone, strumenti e provvigioni, e in quanti mesi lo ripaghi.</p><div class="calc2" data-calc="cac"></div></div></section>
+  <section class="blocco" id="calc-sconto"><div class="wrap"><h3>Sconto contro volume</h3><p class="domanda">Quanti contratti in più servono per pagare uno sconto, e quando non bastano mai.</p><div class="calc2" data-calc="sconto"></div></div></section>
+  <section class="blocco" id="calc-capacita"><div class="wrap"><h3>Capacità e ramp dei venditori</h3><p class="domanda">Quanti venditori servono per l'obiettivo, contando i mesi in cui un nuovo assunto non rende ancora.</p><div class="calc2" data-calc="capacita"></div></div></section>
+  <section class="blocco" id="calc-provvigioni"><div class="wrap"><h3>Piano provvigioni</h3><p class="domanda">Quanto costa un venditore al 50, al 100 e al 150% della quota, e quanto margine resta.</p><div class="calc2" data-calc="provvigioni"></div></div></section>
+  <section class="blocco" id="calc-copertura"><div class="wrap"><h3>Copertura di pipeline</h3><p class="domanda">La pipeline aperta basta per chiudere l'obiettivo, con il win rate che hai davvero?</p><div class="calc2" data-calc="copertura"></div></div></section>
+  <section class="blocco" id="calc-sensibilita"><div class="wrap"><h3>Quale tasso sposta di più</h3><p class="domanda">Quanti euro vale un punto in più su ogni tasso del funnel.</p><div class="calc2" data-calc="sensibilita"></div></div></section>
+  <div class="wrap"><h3 style="margin-top:34px">Materiali per chi guida l&#39;azienda</h3><ul class="materiali"><li><a href="materiali/autotest.html"><strong>Le dieci domande</strong><span>Marketing e vendite lavorano sugli stessi numeri? Senza iscrizione.</span></a></li><li><a href="materiali/dizionario.html"><strong>Dizionario</strong><span>Le parole dei conti, con la formula. Senza iscrizione.</span></a></li><li><a href="materiali/accordo-lead.html"><strong>Accordo marketing e vendite</strong><span>Quando un lead è pronto da passare alle vendite.</span></a></li><li><a href="materiali/revisione-settimanale.html"><strong>Revisione settimanale</strong><span>L'ordine del giorno della riunione, in 45 minuti.</span></a></li></ul></div>
+  <div class="wrap scaffale-testa" id="scaffale-vendite"><h2>Per chi gestisce le vendite</h2><p class="nota">Conti che chiedono dati di chi lavora ogni giorno su chiamate, meeting e campagne.</p></div>
+  <section class="blocco" id="calc-bdr"><div class="wrap"><h3>Chiamate al giorno del BDR</h3><p class="domanda">Il BDR è chi fa le chiamate per fissare i meeting. Parti dai meeting che vuoi e risali alle chiamate.</p><div class="calc2" data-calc="bdr"></div></div></section>
+  <section class="blocco" id="calc-noShow"><div class="wrap"><h3>Costo dei no-show e dei lead richiamati tardi</h3><p class="domanda">Quanto fatturato perdi con i meeting che saltano e con i lead richiamati tardi. I tassi del tempo di risposta li metti tu: non esiste una curva valida per tutti.</p><div class="calc2" data-calc="noShow"></div></div></section>
+  <section class="blocco" id="calc-budgetPaid"><div class="wrap"><h3>Budget paid a ritroso</h3><p class="domanda">Quanto spendere in campagne per i clienti che vuoi, e quanto costa ogni passaggio del funnel.</p><div class="calc2" data-calc="budgetPaid"></div></div></section>
+  <div class="wrap"><h3 style="margin-top:34px">Materiali per chi gestisce le vendite</h3><ul class="materiali"><li><a href="materiali/fasi-pipeline.html"><strong>Fasi di pipeline</strong><span>Cosa deve essere vero per passare alla fase dopo.</span></a></li><li><a href="materiali/motivi-perdita.html"><strong>Motivi di perdita</strong><span>Un elenco chiuso, uno per contratto perso.</span></a></li><li><a href="materiali/scheda-bdr.html"><strong>Scheda del BDR</strong><span>Ritmi, numeri di lavoro e dieci domande sul cold calling.</span></a></li></ul></div>
+  <section id="foglio"><div class="wrap">
+    <div class="foglio">
+      <h2>Il tuo foglio</h2>
+      <p class="nota">I risultati che hai visto, in questo browser. Stampalo o salvalo in PDF per la riunione.</p>
+      <div id="foglio-righe"></div>
+      <div class="foglio-azioni"><button type="button" data-az-foglio="stampa">Stampa il foglio</button><button type="button" data-az-foglio="svuota">Svuota il foglio</button></div>
+    </div>
+  </div></section>
+</main>
+<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti solo se chiedi il modulo di Substack.</span></div></footer>
+<script>
+/* Calcolatori RevOps dell'Officina: solo formule, nessun DOM.
+   Lo stesso file viene incollato nelle pagine da build_officina.py e testato con node (test_revops_calc.js).
+   Convenzioni: le percentuali entrano come numeri da 0 a 100; ogni funzione restituisce { ok, errori, ... }. */
+(function (root) {
+  'use strict';
+
+  /* Validazione: vuoto, non numerico, sotto il minimo, sopra il massimo, percentuali oltre 100 */
+  function controlla(valori, regole) {
+    var errori = {};
+    Object.keys(regole).forEach(function (k) {
+      var r = regole[k], v = valori[k];
+      if (r.facoltativo && (v === '' || v === null || v === undefined)) return;
+      if (v === '' || v === null || v === undefined || isNaN(+v)) { errori[k] = 'Inserisci un numero'; return; }
+      v = +v;
+      if (r.pct && (v <= 0 || v > 100)) { errori[k] = 'Una percentuale tra 0 e 100, zero escluso'; return; }
+      if (r.pct0 && (v < 0 || v > 100)) { errori[k] = 'Una percentuale tra 0 e 100'; return; }
+      if (r.pos && v <= 0) { errori[k] = 'Serve un numero maggiore di zero'; return; }
+      if (r.min0 && v < 0) { errori[k] = 'Non può essere negativo'; return; }
+      if (r.max !== undefined && v > r.max) { errori[k] = 'Al massimo ' + r.max; return; }
+      if (r.intero && Math.floor(v) !== v) { errori[k] = 'Serve un numero intero'; return; }
+    });
+    return errori;
+  }
+  function esito(errori, dati) { var ok = Object.keys(errori).length === 0; dati = dati || {}; dati.ok = ok; dati.errori = errori; return dati; }
+  var SETTIMANE_MESE = 52 / 12;   /* 4,33 */
+  var GIORNI_MESE = 365 / 12;     /* 30,42 */
+
+  /* 1. Funnel a ritroso: dal fatturato nuovo alle attività */
+  function funnel(v) {
+    var e = controlla(v, {
+      obiettivo: { pos: 1 }, dealMedio: { pos: 1 }, winRate: { pct: 1 }, oppDaMeeting: { pct: 1 },
+      showRate: { pct: 1 }, meetingDaContatto: { pct: 1 }, mesi: { pos: 1, max: 36 },
+      venditori: { pos: 1, intero: 1, facoltativo: 1 }, cicloGiorni: { min0: 1, facoltativo: 1 }
+    });
+    if (Object.keys(e).length) return esito(e);
+    var deal = Math.ceil(v.obiettivo / v.dealMedio);
+    var opp = deal / (v.winRate / 100);
+    var tenuti = opp / (v.oppDaMeeting / 100);
+    var fissati = tenuti / (v.showRate / 100);
+    var contatti = fissati / (v.meetingDaContatto / 100);
+    var mesi = +v.mesi, vend = v.venditori ? +v.venditori : 1;
+    var giorniPeriodo = mesi * GIORNI_MESE;
+    var ciclo = v.cicloGiorni ? +v.cicloGiorni : 0;
+    var giorniUtili = giorniPeriodo - ciclo;
+    var r = {
+      deal: deal, opp: opp, tenuti: tenuti, fissati: fissati, contatti: contatti,
+      pipeline: opp * v.dealMedio,
+      fissatiMese: fissati / mesi, fissatiSettimana: fissati / (mesi * SETTIMANE_MESE),
+      contattiSettimana: contatti / (mesi * SETTIMANE_MESE),
+      tenutiMesePerVenditore: tenuti / mesi / vend, dealPerVenditore: deal / vend,
+      giorniUtili: giorniUtili,
+      fissatiSettimanaUtile: giorniUtili > 0 ? fissati / (giorniUtili / 7) : null,
+      pipelineGiaServe: giorniUtili <= 0
+    };
+    return esito(e, r);
+  }
+
+  /* 2. CAC completo, payback e LTV */
+  function cac(v) {
+    var e = controlla(v, {
+      paidMese: { min0: 1 }, strumentiMese: { min0: 1 }, eventiMese: { min0: 1 }, agenzieMese: { min0: 1 },
+      costoPersoneAnno: { min0: 1 }, quotaTempo: { pct0: 1 }, provvigioni: { min0: 1 }, mesi: { pos: 1, max: 36 },
+      clientiNuovi: { pos: 1 }, clientiPaid: { min0: 1, facoltativo: 1 },
+      ricavoMeseCliente: { pos: 1 }, margine: { pct: 1 }, churnMese: { pct0: 1, facoltativo: 1 }, durataMesi: { pos: 1, facoltativo: 1 }
+    });
+    if (!Object.keys(e).length && !(+v.churnMese > 0) && !(+v.durataMesi > 0)) e.durataMesi = 'Serve il churn mensile o la durata media';
+    if (Object.keys(e).length) return esito(e);
+    var programma = (+v.paidMese + +v.strumentiMese + +v.eventiMese + +v.agenzieMese) * v.mesi;
+    var persone = v.costoPersoneAnno * (v.quotaTempo / 100) * v.mesi / 12;
+    var totale = programma + persone + +v.provvigioni;
+    var cacBlended = totale / v.clientiNuovi;
+    var cacPaid = v.clientiPaid > 0 ? (v.paidMese * v.mesi) / v.clientiPaid : null;
+    var margineMese = v.ricavoMeseCliente * (v.margine / 100);
+    var durata = +v.churnMese > 0 ? 100 / v.churnMese : +v.durataMesi;
+    var ltv = margineMese * durata;
+    return esito(e, {
+      programma: programma, persone: persone, totale: totale, cacBlended: cacBlended, cacPaid: cacPaid,
+      payback: cacBlended / margineMese, durata: durata, ltv: ltv, rapporto: ltv / cacBlended
+    });
+  }
+
+  /* 3. Chiamate al giorno del BDR (quello di prima, invariato) */
+  function bdr(v) {
+    var e = controlla(v, { meetingMese: { pos: 1 }, bdr: { pos: 1, intero: 1 }, conversazioni: { pct: 1 }, meetingDaConv: { pct: 1 }, giorni: { pos: 1, max: 31 } });
+    if (Object.keys(e).length) return esito(e);
+    var mese = v.meetingMese / ((v.conversazioni / 100) * (v.meetingDaConv / 100));
+    return esito(e, {
+      chiamateGiorno: Math.ceil(mese / v.giorni / v.bdr),
+      conversazioniGiorno: (mese * v.conversazioni / 100) / v.giorni / v.bdr,
+      chiamateMese: mese
+    });
+  }
+
+  /* 4. Copertura di pipeline */
+  function copertura(v) {
+    var e = controlla(v, { obiettivo: { pos: 1 }, giaChiuso: { min0: 1 }, pipelineAperta: { min0: 1 }, winRate: { pct: 1 } });
+    if (Object.keys(e).length) return esito(e);
+    var mancante = v.obiettivo - v.giaChiuso;
+    if (mancante <= 0) return esito(e, { mancante: 0, raggiunto: true, necessaria: 0, copertura: null, coperturaNecessaria: 100 / v.winRate, buco: 0, attesa: v.pipelineAperta * v.winRate / 100 });
+    var necessaria = mancante / (v.winRate / 100);
+    return esito(e, {
+      mancante: mancante, raggiunto: false, necessaria: necessaria,
+      copertura: v.pipelineAperta / mancante, coperturaNecessaria: 100 / v.winRate,
+      buco: Math.max(0, necessaria - v.pipelineAperta), attesa: v.pipelineAperta * v.winRate / 100
+    });
+  }
+
+  /* 5. Velocità di vendita */
+  function velocita(v) {
+    var e = controlla(v, { opp: { pos: 1 }, dealMedio: { pos: 1 }, winRate: { pct: 1 }, cicloGiorni: { pos: 1 } });
+    if (Object.keys(e).length) return esito(e);
+    var giorno = v.opp * v.dealMedio * (v.winRate / 100) / v.cicloGiorni;
+    return esito(e, { giorno: giorno, mese: giorno * GIORNI_MESE, anno: giorno * 365 });
+  }
+
+  /* 6. Capacità dei venditori e ramp dei nuovi */
+  function contributoPrimoAnno(ramp) {
+    /* produttività che sale in linea retta fino al 100% al mese "ramp", poi piena; somma dei 12 mesi in mesi pieni */
+    var s = 0;
+    for (var m = 1; m <= 12; m++) s += ramp > 0 ? Math.min(m / ramp, 1) : 1;
+    return s;
+  }
+  function capacita(v) {
+    var e = controlla(v, { quotaAnnua: { pos: 1 }, raggiungimento: { pct: 1, max: 100 }, rampMesi: { min0: 1, max: 12, intero: 1 }, venditori: { min0: 1, intero: 1 }, obiettivoAnnuo: { pos: 1 } });
+    if (Object.keys(e).length) return esito(e);
+    var effettiva = v.quotaAnnua * v.raggiungimento / 100;
+    var attuali = v.venditori * effettiva;
+    var mesiPieni = contributoPrimoAnno(+v.rampMesi);
+    var nuovo = effettiva * mesiPieni / 12;
+    var mancante = Math.max(0, v.obiettivoAnnuo - attuali);
+    return esito(e, {
+      effettiva: effettiva, attuali: attuali, mesiPieni: mesiPieni, nuovo: nuovo, mancante: mancante,
+      daAssumere: mancante > 0 ? Math.ceil(mancante / nuovo) : 0,
+      necessariAPieno: Math.ceil(v.obiettivoAnnuo / effettiva)
+    });
+  }
+
+  /* 7. Budget paid a ritroso */
+  function budgetPaid(v) {
+    var e = controlla(v, { clienti: { pos: 1 }, cpl: { pos: 1 }, leadMeeting: { pct: 1 }, showRate: { pct: 1 }, oppDaMeeting: { pct: 1 }, winRate: { pct: 1 }, mesi: { pos: 1, max: 36 } });
+    if (Object.keys(e).length) return esito(e);
+    var p = function (k) { return v[k] / 100; };
+    var lead = v.clienti / (p('leadMeeting') * p('showRate') * p('oppDaMeeting') * p('winRate'));
+    var spesa = lead * v.cpl;
+    return esito(e, {
+      lead: lead, spesa: spesa, spesaMese: spesa / v.mesi,
+      costoMeetingFissato: v.cpl / p('leadMeeting'),
+      costoMeetingTenuto: v.cpl / (p('leadMeeting') * p('showRate')),
+      costoOpp: v.cpl / (p('leadMeeting') * p('showRate') * p('oppDaMeeting')),
+      costoCliente: spesa / v.clienti
+    });
+  }
+
+  /* 8. Sensibilità: un punto in più su ogni tasso, quanto fatturato sposta */
+  var TASSI = [['leadMeeting', 'Da lead a meeting'], ['showRate', 'Show rate'], ['oppDaMeeting', 'Da meeting a opportunità'], ['winRate', 'Win rate']];
+  function sensibilita(v) {
+    var regole = { lead: { pos: 1 }, dealMedio: { pos: 1 }, punti: { pos: 1, max: 20 } };
+    TASSI.forEach(function (t) { regole[t[0]] = { pct: 1 }; });
+    var e = controlla(v, regole);
+    if (Object.keys(e).length) return esito(e);
+    function fatt(x) { return v.lead * TASSI.reduce(function (a, t) { return a * x[t[0]] / 100; }, 1) * v.dealMedio; }
+    var base = fatt(v);
+    var leve = TASSI.map(function (t) {
+      var x = {}; TASSI.forEach(function (u) { x[u[0]] = +v[u[0]]; });
+      x[t[0]] = Math.min(100, x[t[0]] + +v.punti);
+      var f = fatt(x);
+      return { chiave: t[0], nome: t[1], da: +v[t[0]], a: x[t[0]], fatturato: f, delta: f - base, deltaPct: (f - base) / base * 100 };
+    }).sort(function (a, b) { return b.delta - a.delta; });
+    return esito(e, { base: base, clienti: base / v.dealMedio, leve: leve });
+  }
+
+
+  /* 9. Costo dei no-show e dei lead lasciati raffreddare */
+  function noShow(v) {
+    var e = controlla(v, { meetingMese: { pos: 1 }, showOggi: { pct: 1 }, showObiettivo: { pct: 1 }, oppDaMeeting: { pct: 1 }, winRate: { pct: 1 }, dealMedio: { pos: 1 },
+      leadMese: { pos: 1, facoltativo: 1 }, tassoEntro: { pct0: 1, facoltativo: 1 }, tassoDopo: { pct0: 1, facoltativo: 1 }, quotaTardi: { pct0: 1, facoltativo: 1 } });
+    if (!Object.keys(e).length && +v.showObiettivo < +v.showOggi) e.showObiettivo = 'L\'obiettivo deve essere almeno lo show rate di oggi';
+    var b = ['leadMese', 'tassoEntro', 'tassoDopo', 'quotaTardi'], pieni = b.filter(function (k) { return v[k] !== '' && v[k] !== null && v[k] !== undefined; }).length;
+    if (!Object.keys(e).length && pieni > 0 && pieni < 4) b.forEach(function (k) { if (v[k] === '' || v[k] === null || v[k] === undefined) e[k] = 'Per il tempo di risposta servono tutti e quattro i campi'; });
+    if (Object.keys(e).length) return esito(e);
+    var o = v.oppDaMeeting / 100, w = v.winRate / 100, d = +v.dealMedio;
+    var nonTenuti = v.meetingMese * (1 - v.showOggi / 100);
+    var recuperabili = v.meetingMese * (v.showObiettivo - v.showOggi) / 100;
+    var r = {
+      nonTenuti: nonTenuti, recuperabili: recuperabili,
+      pipelinePersaMese: recuperabili * o * d, fatturatoPersoMese: recuperabili * o * w * d,
+      fatturatoPersoAnno: recuperabili * o * w * d * 12,
+      valorePuntoMese: v.meetingMese * 0.01 * o * w * d, valorePuntoAnno: v.meetingMese * 0.01 * o * w * d * 12,
+      risposta: null
+    };
+    if (pieni === 4) {
+      var diff = Math.max(0, (v.tassoEntro - v.tassoDopo) / 100);
+      var meetingPersi = v.leadMese * (v.quotaTardi / 100) * diff;
+      r.risposta = { senzaPerdita: diff === 0, meetingPersiMese: meetingPersi,
+        pipelinePersaMese: meetingPersi * (v.showOggi / 100) * o * d,
+        fatturatoPersoMese: meetingPersi * (v.showOggi / 100) * o * w * d };
+      r.risposta.fatturatoPersoAnno = r.risposta.fatturatoPersoMese * 12;
+    }
+    return esito(e, r);
+  }
+
+  /* 10. Piano provvigioni */
+  function provvigioni(v) {
+    var e = controlla(v, { ote: { pos: 1 }, fissoPct: { pct0: 1 }, quotaAnnua: { pos: 1 }, acceleratore: { pos: 1, max: 5 }, soglia: { pct0: 1 }, margine: { pct: 1 } });
+    if (Object.keys(e).length) return esito(e);
+    var fisso = v.ote * v.fissoPct / 100, variabile = v.ote - fisso, soglia = v.soglia / 100;
+    function livello(a) {
+      var prov = a < soglia ? 0 : (a <= 1 ? variabile * a : variabile * (1 + (a - 1) * v.acceleratore));
+      var costo = fisso + prov, fatt = v.quotaAnnua * a;
+      return { raggiungimento: a * 100, provvigione: prov, costo: costo, fatturato: fatt, costoPct: costo / fatt * 100, margineResta: fatt * v.margine / 100 - costo };
+    }
+    return esito(e, { fisso: fisso, variabile: variabile, quotaSuOte: v.quotaAnnua / v.ote, livelli: [livello(0.5), livello(1), livello(1.5)] });
+  }
+
+  /* 11. Sconto contro volume */
+  function sconto(v) {
+    var e = controlla(v, { prezzo: { pos: 1 }, margine: { pct: 1 }, sconto: { pct0: 1 }, contratti: { pos: 1, facoltativo: 1 } });
+    if (Object.keys(e).length) return esito(e);
+    var m = v.margine / 100, s = v.sconto / 100;
+    var prima = v.prezzo * m, dopo = v.prezzo * (m - s);
+    if (s >= m) return esito(e, { impossibile: true, prima: prima, dopo: dopo, prezzoScontato: v.prezzo * (1 - s) });
+    var fattore = m / (m - s);
+    var r = { impossibile: false, prima: prima, dopo: dopo, prezzoScontato: v.prezzo * (1 - s), fattore: fattore, extraPct: (fattore - 1) * 100 };
+    if (v.contratti) { r.necessari = Math.ceil(v.contratti * fattore - 1e-9); r.extra = r.necessari - v.contratti; }
+    return esito(e, r);
+  }
+
+  var api = { controlla: controlla, funnel: funnel, cac: cac, bdr: bdr, copertura: copertura, velocita: velocita, capacita: capacita, contributoPrimoAnno: contributoPrimoAnno, budgetPaid: budgetPaid, sensibilita: sensibilita, noShow: noShow, provvigioni: provvigioni, sconto: sconto, SETTIMANE_MESE: SETTIMANE_MESE, GIORNI_MESE: GIORNI_MESE };
+  if (typeof module !== 'undefined' && module.exports) module.exports = api; else root.RC = api;
+})(this);
+
+/* Interfaccia dei calcolatori dell'Officina. Usa RC (revops_calc.js). Nessuna terza parte, nessun dato inviato.
+   Stato nel browser (localStorage in try/catch); link condivisibile con i soli numeri inseriti nell'URL. */
+(function () {
+  'use strict';
+  var RC = window.RC;
+  var PAGINA_OFFICINA = 'officina.html';
+  function leggi(k) { try { return window.localStorage.getItem(k); } catch (e) { return null; } }
+  function scrivi(k, v) { try { window.localStorage.setItem(k, v); } catch (e) {} }
+  function togli(k) { try { window.localStorage.removeItem(k); } catch (e) {} }
+  function leggiJ(k, d) { try { return JSON.parse(leggi(k) || 'null') || d; } catch (e) { return d; } }
+
+  /* Numeri in italiano: "150.000", "12,5", "15%" e "€ 2.000" sono tutti accettati */
+  function analizza(s) {
+    s = String(s == null ? '' : s).trim().replace(/[\s€%]/g, '');
+    if (s === '') return '';
+    if (/^-?\d{1,3}(\.\d{3})+(,\d+)?$/.test(s)) s = s.replace(/\./g, '');
+    s = s.replace(',', '.');
+    return /^-?\d*\.?\d+$/.test(s) ? +s : NaN;
+  }
+  var nf0 = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 0, useGrouping: 'always' });
+  var nf1 = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 1, useGrouping: 'always' });
+  var nf2 = new Intl.NumberFormat('it-IT', { maximumFractionDigits: 2, useGrouping: 'always' });
+  var eur = new Intl.NumberFormat('it-IT', { style: 'currency', currency: 'EUR', maximumFractionDigits: 0, useGrouping: 'always' });
+  function su(x) { return Math.ceil(x - 1e-9); }            /* per eccesso, senza errori di virgola mobile */
+  function n0(x) { return nf0.format(x); }
+  function n1(x) { return nf1.format(x); }
+  function e0(x) { return eur.format(x); }
+  function p(x) { return nf2.format(x) + '%'; }
+  function scrivibile(x) { return nf2.format(x); }
+
+  /* Le definizioni: campi, uscite, formule, collegamenti ("porta questo numero nel prossimo") */
+  var CALC = {
+    funnel: {
+      titolo: 'Funnel a ritroso', domanda: 'Quanti meeting servono per fare il fatturato che vuoi?',
+      campi: [['obiettivo', 'Fatturato nuovo da chiudere nel periodo (€)', 300000, 'eur'], ['mesi', 'Durata del periodo (mesi)', 6, 'n'],
+        ['dealMedio', 'Valore medio di un contratto (€)', 15000, 'eur'], ['winRate', 'Win rate: su 100 opportunità, quante firmano', 25, 'pct'],
+        ['oppDaMeeting', 'Su 100 meeting tenuti, quante opportunità', 50, 'pct'], ['showRate', 'Su 100 meeting fissati, quanti si tengono', 80, 'pct'],
+        ['meetingDaContatto', 'Su 100 lead o conversazioni, quanti meeting fissati', 10, 'pct'],
+        ['venditori', 'Venditori (facoltativo)', 2, 'int', 1], ['cicloGiorni', 'Ciclo di vendita in giorni, dal meeting alla firma (facoltativo)', 90, 'n', 1]],
+      fn: 'funnel',
+      principale: function (r) { return [n0(su(r.fissati)), 'meeting fissati nel periodo, ' + n1(r.fissatiSettimana) + ' a settimana']; },
+      righe: function (v, r) {
+        var out = [['Contratti da chiudere', n0(r.deal)], ['Opportunità in pipeline', n0(su(r.opp)) + ' · ' + e0(r.pipeline)],
+          ['Meeting tenuti', n0(su(r.tenuti))], ['Meeting fissati al mese', n1(r.fissatiMese)],
+          ['Lead o conversazioni', n0(su(r.contatti)) + ' · ' + n1(r.contattiSettimana) + ' a settimana']];
+        if (v.venditori) out.push(['Meeting tenuti al mese per venditore', n1(r.tenutiMesePerVenditore)], ['Contratti per venditore', n1(r.dealPerVenditore)]);
+        if (v.cicloGiorni) out.push(r.pipelineGiaServe
+          ? ['Ciclo più lungo del periodo', 'la pipeline deve esserci già oggi']
+          : ['Meeting da fissare a settimana per firmare entro il periodo', n1(r.fissatiSettimanaUtile) + ' nei primi ' + n0(r.giorniUtili) + ' giorni']);
+        return out;
+      },
+      formule: function (v, r) {
+        var f = ['contratti = fatturato ÷ valore medio, per eccesso = ' + e0(v.obiettivo) + ' ÷ ' + e0(v.dealMedio) + ' = ' + n0(r.deal),
+          'opportunità = contratti ÷ win rate = ' + n0(r.deal) + ' ÷ ' + p(v.winRate) + ' = ' + n1(r.opp),
+          'meeting tenuti = opportunità ÷ tasso opportunità = ' + n1(r.opp) + ' ÷ ' + p(v.oppDaMeeting) + ' = ' + n1(r.tenuti),
+          'meeting fissati = tenuti ÷ show rate = ' + n1(r.tenuti) + ' ÷ ' + p(v.showRate) + ' = ' + n1(r.fissati),
+          'lead o conversazioni = fissati ÷ tasso meeting = ' + n1(r.fissati) + ' ÷ ' + p(v.meetingDaContatto) + ' = ' + n1(r.contatti),
+          'a settimana = totale ÷ (mesi × 4,33)'];
+        if (v.cicloGiorni) f.push('giorni utili = mesi × 30,4 − ciclo = ' + n1(v.mesi * RC.GIORNI_MESE) + ' − ' + n0(v.cicloGiorni) + ' = ' + n1(r.giorniUtili));
+        return f;
+      },
+      porte: [
+        ['bdr', 'Quante chiamate al giorno', function (v, r) { return { meetingMese: Math.round(r.fissatiMese * 10) / 10, meetingDaConv: v.meetingDaContatto }; }],
+        ['cac', 'Quanto costa un cliente', function (v, r) { return { clientiNuovi: r.deal, mesi: v.mesi }; }],
+        ['budgetPaid', 'Il budget paid per questi contratti', function (v, r) { return { clienti: r.deal, leadMeeting: v.meetingDaContatto, showRate: v.showRate, oppDaMeeting: v.oppDaMeeting, winRate: v.winRate, mesi: v.mesi }; }],
+        ['noShow', 'Quanto costano i no-show', function (v, r) { return { meetingMese: Math.round(r.fissatiMese * 10) / 10, showOggi: v.showRate, oppDaMeeting: v.oppDaMeeting, winRate: v.winRate, dealMedio: v.dealMedio }; }],
+        ['sensibilita', 'Quale tasso sposta di più', function (v, r) { return { lead: su(r.contatti), leadMeeting: v.meetingDaContatto, showRate: v.showRate, oppDaMeeting: v.oppDaMeeting, winRate: v.winRate, dealMedio: v.dealMedio }; }]
+      ],
+      stima: { campo: 'fissati', domanda: 'Prima di guardare: quanti meeting fissati servono nel periodo?' }
+    },
+    cac: {
+      titolo: 'CAC completo', domanda: 'Quanto ti costa davvero un cliente nuovo, e in quanti mesi lo ripaghi?',
+      campi: [['mesi', 'Periodo (mesi)', 12, 'n'], ['paidMese', 'Spesa paid al mese (€)', 5000, 'eur'], ['strumentiMese', 'Strumenti al mese: CRM, dati, sequenze (€)', 1000, 'eur'],
+        ['eventiMese', 'Eventi e fiere, media al mese (€)', 2000, 'eur'], ['agenzieMese', 'Agenzie e consulenti al mese (€)', 2000, 'eur'],
+        ['costoPersoneAnno', 'Costo pieno annuo delle persone di marketing e vendite (€)', 300000, 'eur'], ['quotaTempo', 'Quota del loro tempo sui clienti nuovi (%)', 50, 'pct0'],
+        ['provvigioni', 'Provvigioni pagate nel periodo (€)', 30000, 'eur'], ['clientiNuovi', 'Clienti nuovi nel periodo', 20, 'n'], ['clientiPaid', 'Di cui arrivati dal paid (facoltativo)', 8, 'n', 1],
+        ['ricavoMeseCliente', 'Ricavo medio al mese per cliente (€)', 2000, 'eur'], ['margine', 'Margine lordo (%)', 75, 'pct'],
+        ['churnMese', 'Clienti persi al mese (%)', 2, 'pct0', 1], ['durataMesi', 'In alternativa: durata media di un cliente, in mesi', '', 'n', 1]],
+      fn: 'cac',
+      principale: function (r) { return [e0(r.cacBlended), 'CAC blended, ripagato in ' + n1(r.payback) + ' mesi']; },
+      righe: function (v, r) {
+        var out = [['Costo totale di acquisizione', e0(r.totale)], ['di cui programmi', e0(r.programma)], ['di cui persone', e0(r.persone)]];
+        if (r.cacPaid !== null) out.push(['CAC del paid (solo la spesa in campagne)', e0(r.cacPaid)]);
+        out.push(['Durata media di un cliente', n1(r.durata) + ' mesi'], ['LTV sul margine', e0(r.ltv)], ['LTV : CAC', n1(r.rapporto) + ' a 1']);
+        return out;
+      },
+      formule: function (v, r) {
+        return ['programmi = (paid + strumenti + eventi + agenzie) × mesi = ' + e0(r.programma),
+          'persone = costo annuo × quota di tempo × mesi ÷ 12 = ' + e0(r.persone),
+          'CAC blended = (programmi + persone + provvigioni) ÷ clienti nuovi = ' + e0(r.totale) + ' ÷ ' + n0(v.clientiNuovi) + ' = ' + e0(r.cacBlended),
+          'CAC paid = spesa paid del periodo ÷ clienti dal paid (non contiene persone né strumenti)',
+          'payback = CAC ÷ (ricavo mensile × margine) = ' + e0(r.cacBlended) + ' ÷ ' + e0(v.ricavoMeseCliente * v.margine / 100) + ' = ' + n1(r.payback) + ' mesi',
+          'durata = 1 ÷ churn mensile, oppure la durata inserita = ' + n1(r.durata) + ' mesi',
+          'LTV = ricavo mensile × margine × durata = ' + e0(r.ltv)];
+      },
+      porte: [['capacita', 'Quanti venditori servono', function () { return {}; }]]
+    },
+    bdr: {
+      titolo: 'Chiamate al giorno del BDR', domanda: 'Quante chiamate servono per i meeting che vuoi?',
+      campi: [['meetingMese', 'Meeting fissati al mese', 10, 'n'], ['bdr', 'BDR (chi fa le chiamate)', 1, 'int'], ['conversazioni', 'Su 100 chiamate, in quante parli con la persona giusta', 10, 'pct'],
+        ['meetingDaConv', 'Su 100 conversazioni, quanti meeting', 15, 'pct'], ['giorni', 'Giorni lavorativi al mese', 20, 'n']],
+      fn: 'bdr',
+      principale: function (r) { return [n0(r.chiamateGiorno), 'chiamate al giorno per BDR']; },
+      righe: function (v, r) { return [['Conversazioni al giorno per BDR', n1(r.conversazioniGiorno)], ['Chiamate al mese in tutto', n0(su(r.chiamateMese))]]; },
+      formule: function (v, r) { return ['chiamate al mese = meeting ÷ (conversazioni su 100 × meeting su 100 ÷ 10.000) = ' + n1(r.chiamateMese), 'al giorno per BDR = chiamate al mese ÷ giorni ÷ BDR, per eccesso']; },
+      porte: []
+    },
+    copertura: {
+      titolo: 'Copertura di pipeline', domanda: 'La pipeline aperta basta per chiudere l\'obiettivo?',
+      campi: [['obiettivo', 'Obiettivo del periodo (€)', 500000, 'eur'], ['giaChiuso', 'Già chiuso (€)', 200000, 'eur'], ['pipelineAperta', 'Pipeline aperta che può chiudere nel periodo (€)', 600000, 'eur'], ['winRate', 'Win rate storico (%)', 25, 'pct']],
+      fn: 'copertura',
+      principale: function (r) { return r.raggiunto ? ['Fatto', 'obiettivo già raggiunto'] : [n1(r.copertura) + 'x', 'copertura di oggi, ne serve ' + n1(r.coperturaNecessaria) + 'x']; },
+      righe: function (v, r) { return r.raggiunto ? [['Chiusura attesa dalla pipeline aperta', e0(r.attesa)]] : [['Manca da chiudere', e0(r.mancante)], ['Pipeline necessaria', e0(r.necessaria)], ['Buco di pipeline', e0(r.buco)], ['Chiusura attesa dalla pipeline aperta', e0(r.attesa)]]; },
+      formule: function (v, r) { return ['mancante = obiettivo − già chiuso', 'pipeline necessaria = mancante ÷ win rate', 'copertura = pipeline aperta ÷ mancante; quella necessaria è 1 ÷ win rate', 'chiusura attesa = pipeline aperta × win rate']; },
+      porte: []
+    },
+    velocita: {
+      titolo: 'Velocità di vendita', domanda: 'Quanto fatturato produce la pipeline ogni giorno?',
+      campi: [['opp', 'Opportunità aperte', 40, 'n'], ['dealMedio', 'Valore medio di un contratto (€)', 20000, 'eur'], ['winRate', 'Win rate (%)', 25, 'pct'], ['cicloGiorni', 'Ciclo di vendita (giorni)', 90, 'n']],
+      fn: 'velocita',
+      principale: function (r) { return [e0(r.giorno), 'di fatturato al giorno']; },
+      righe: function (v, r) { return [['Al mese', e0(r.mese)], ['All\'anno, allo stesso ritmo', e0(r.anno)]]; },
+      formule: function (v, r) { return ['velocità = opportunità × valore medio × win rate ÷ ciclo in giorni = ' + n0(v.opp) + ' × ' + e0(v.dealMedio) + ' × ' + p(v.winRate) + ' ÷ ' + n0(v.cicloGiorni), 'al mese = al giorno × 30,4; all\'anno = al giorno × 365', 'Ogni fattore pesa uguale: +10% su uno qualsiasi dà +10%; accorciare il ciclo del 10% dà +11%.']; },
+      porte: []
+    },
+    capacita: {
+      titolo: 'Capacità e ramp dei venditori', domanda: 'Quanti venditori servono, contando che un nuovo non rende subito?',
+      campi: [['obiettivoAnnuo', 'Obiettivo di fatturato nuovo nell\'anno (€)', 1500000, 'eur'], ['quotaAnnua', 'Quota annua di un venditore a regime (€)', 400000, 'eur'],
+        ['raggiungimento', 'Quanto della quota si raggiunge davvero (%)', 80, 'pct'], ['venditori', 'Venditori già a regime', 3, 'int'], ['rampMesi', 'Mesi per arrivare a regime', 6, 'int']],
+      fn: 'capacita',
+      principale: function (r) { return [n0(r.daAssumere), r.daAssumere === 1 ? 'venditore da assumere a inizio anno' : 'venditori da assumere a inizio anno']; },
+      righe: function (v, r) { return [['Capacità di un venditore a regime', e0(r.effettiva)], ['Capacità del team di oggi', e0(r.attuali)], ['Un nuovo assunto nel primo anno', e0(r.nuovo) + ' (' + n1(r.mesiPieni) + ' mesi pieni su 12)'], ['Venditori a regime che servirebbero', n0(r.necessariAPieno)]]; },
+      formule: function (v, r) { return ['capacità a regime = quota × raggiungimento', 'mesi pieni del primo anno = somma dei 12 mesi con la produttività che sale in linea retta fino al mese di regime = ' + n1(r.mesiPieni), 'da assumere = (obiettivo − capacità di oggi) ÷ contributo di un nuovo nel primo anno, per eccesso']; },
+      porte: [['provvigioni', 'Il piano provvigioni con questa quota', function (v) { return { quotaAnnua: v.quotaAnnua }; }]]
+    },
+    budgetPaid: {
+      titolo: 'Budget paid a ritroso', domanda: 'Quanto devi spendere in campagne per i clienti che vuoi?',
+      campi: [['clienti', 'Clienti nuovi da portare con il paid', 10, 'n'], ['mesi', 'Periodo (mesi)', 5, 'n'], ['cpl', 'Costo per lead (€)', 100, 'eur'],
+        ['leadMeeting', 'Su 100 lead, quanti meeting fissati', 10, 'pct'], ['showRate', 'Su 100 meeting fissati, quanti si tengono', 80, 'pct'],
+        ['oppDaMeeting', 'Su 100 meeting tenuti, quante opportunità', 50, 'pct'], ['winRate', 'Win rate (%)', 25, 'pct']],
+      fn: 'budgetPaid',
+      principale: function (r) { return [e0(r.spesa), 'di spesa nel periodo, ' + e0(r.spesaMese) + ' al mese']; },
+      righe: function (v, r) { return [['Lead necessari', n0(su(r.lead))], ['Costo di un meeting fissato', e0(r.costoMeetingFissato)], ['Costo di un meeting tenuto', e0(r.costoMeetingTenuto)], ['Costo di un\'opportunità', e0(r.costoOpp)], ['Spesa media per cliente', e0(r.costoCliente)]]; },
+      formule: function (v, r) { return ['lead = clienti ÷ (lead→meeting × show × meeting→opportunità × win rate)', 'spesa = lead × costo per lead', 'costo di un passaggio = costo per lead ÷ i tassi fino a quel passaggio', 'La spesa media per cliente non contiene persone e strumenti: per quelli c\'è il CAC completo.']; },
+      porte: [['cac', 'Il CAC con persone e strumenti', function (v, r) { return { paidMese: Math.round(r.spesaMese), clientiPaid: v.clienti, mesi: v.mesi }; }]]
+    },
+    sensibilita: {
+      titolo: 'Quale tasso sposta di più', domanda: 'Un punto in più dove rende di più: show rate, win rate o meeting?',
+      campi: [['lead', 'Lead o conversazioni nel periodo', 1000, 'n'], ['dealMedio', 'Valore medio di un contratto (€)', 10000, 'eur'], ['leadMeeting', 'Su 100 lead, quanti meeting fissati', 10, 'pct'],
+        ['showRate', 'Show rate (%)', 80, 'pct'], ['oppDaMeeting', 'Su 100 meeting tenuti, quante opportunità', 50, 'pct'], ['winRate', 'Win rate (%)', 25, 'pct'], ['punti', 'Punti percentuali in più da provare', 1, 'n']],
+      fn: 'sensibilita',
+      principale: function (r) { return ['+' + e0(r.leve[0].delta), 'di fatturato con un punto in più su: ' + r.leve[0].nome.toLowerCase() + '. Sotto, gli euro per punto di ogni tasso']; },
+      righe: function (v, r) { return [['Fatturato di partenza', e0(r.base) + ' (' + n1(r.clienti) + ' clienti)']].concat(r.leve.map(function (l) { return [l.nome + ' da ' + p(l.da) + ' a ' + p(l.a), '+' + e0(l.delta) + ' (+' + n1(l.deltaPct) + '%)']; })); },
+      formule: function () { return ['fatturato = lead × lead→meeting × show × meeting→opportunità × win rate × valore medio', 'Un punto in più su un tasso vale (tasso + 1) ÷ tasso: sul tasso più basso il guadagno in proporzione è il più alto.', 'Non dice quale punto costa meno fatica: quello lo sai tu.']; },
+      porte: []
+    },
+    noShow: {
+      titolo: 'Costo dei no-show e dei lead richiamati tardi', domanda: 'Quanto fatturato perdi con i meeting che saltano e con i lead richiamati tardi?',
+      campi: [['meetingMese', 'Meeting fissati al mese', 40, 'n'], ['showOggi', 'Show rate di oggi (%)', 70, 'pct'], ['showObiettivo', 'Show rate obiettivo (%)', 85, 'pct'],
+        ['oppDaMeeting', 'Su 100 meeting tenuti, quante opportunità', 50, 'pct'], ['winRate', 'Win rate (%)', 25, 'pct'], ['dealMedio', 'Valore medio di un contratto (€)', 10000, 'eur'],
+        ['leadMese', 'Lead in ingresso al mese (facoltativo, per il tempo di risposta)', '', 'n', 1], ['tassoEntro', 'Su 100 lead richiamati entro una soglia che scegli tu (per esempio un\'ora), quanti meeting', '', 'pct0', 1],
+        ['tassoDopo', 'Su 100 lead richiamati dopo la soglia, quanti meeting', '', 'pct0', 1], ['quotaTardi', 'Lead richiamati dopo la soglia (%)', '', 'pct0', 1]],
+      fn: 'noShow',
+      principale: function (r) { var t = r.fatturatoPersoAnno + (r.risposta ? r.risposta.fatturatoPersoAnno : 0); return [e0(t), 'di fatturato all\'anno lasciato sul tavolo' + (r.risposta ? ', no-show e ritardi insieme' : ' dai no-show')]; },
+      righe: function (v, r) {
+        var out = [['Meeting non tenuti al mese, oggi', n1(r.nonTenuti)], ['Meeting in più al mese con lo show obiettivo', n1(r.recuperabili)],
+          ['Pipeline persa al mese', e0(r.pipelinePersaMese)], ['Fatturato perso al mese', e0(r.fatturatoPersoMese)], ['Ogni punto di show rate recuperato', e0(r.valorePuntoMese) + ' al mese, ' + e0(r.valorePuntoAnno) + ' all\'anno']];
+        if (r.risposta) out.push(r.risposta.senzaPerdita ? ['Tempo di risposta', 'con i tuoi tassi richiamare tardi non costa meeting'] : ['Meeting persi al mese per i ritardi', n1(r.risposta.meetingPersiMese)], ['Fatturato perso per i ritardi', e0(r.risposta.fatturatoPersoMese) + ' al mese, ' + e0(r.risposta.fatturatoPersoAnno) + ' all\'anno']);
+        return out;
+      },
+      formule: function (v, r) {
+        var f = ['meeting in più = meeting fissati × (show obiettivo − show di oggi)', 'fatturato perso = meeting in più × tasso opportunità × win rate × valore medio', 'un punto di show = meeting fissati × 1% × tasso opportunità × win rate × valore medio'];
+        f.push('Tempo di risposta: non esiste una curva valida per tutti, quindi usa i tuoi due tassi. meeting persi = lead × quota richiamata tardi × (tasso entro − tasso dopo); poi show di oggi, opportunità, win rate e valore medio.');
+        return f;
+      },
+      porte: [['funnel', 'Rifai il funnel a ritroso con lo show obiettivo', function (v) { return { showRate: v.showObiettivo, oppDaMeeting: v.oppDaMeeting, winRate: v.winRate, dealMedio: v.dealMedio }; }]]
+    },
+    provvigioni: {
+      titolo: 'Piano provvigioni', domanda: 'Quanto costa un venditore a metà, al 100% e al 150% della quota, e quanto margine resta?',
+      campi: [['ote', 'OTE: compenso annuo a quota piena, fisso più variabile (€)', 80000, 'eur'], ['fissoPct', 'Parte fissa dell\'OTE (%)', 60, 'pct0'], ['quotaAnnua', 'Quota annua di fatturato (€)', 400000, 'eur'],
+        ['acceleratore', 'Acceleratore oltre il 100%: moltiplicatore del variabile (1 = nessuno)', 2, 'n'], ['soglia', 'Soglia minima: sotto questa % di quota niente variabile', 50, 'pct0'], ['margine', 'Margine lordo (%)', 70, 'pct']],
+      fn: 'provvigioni',
+      principale: function (r) { return [n1(r.livelli[1].costoPct) + '%', 'costo del venditore sul fatturato che porta, a quota piena']; },
+      righe: function (v, r) {
+        var out = [['Fisso e variabile a target', e0(r.fisso) + ' + ' + e0(r.variabile)], ['Quota : OTE', n1(r.quotaSuOte) + ' a 1']];
+        r.livelli.forEach(function (l) { out.push(['Al ' + n0(l.raggiungimento) + '% della quota', 'provvigione ' + e0(l.provvigione) + ' · costo ' + e0(l.costo) + ' · ' + n1(l.costoPct) + '% · margine che resta ' + e0(l.margineResta)]); });
+        return out;
+      },
+      formule: function () { return ['fisso = OTE × parte fissa; variabile a target = OTE − fisso', 'provvigione = 0 sotto la soglia; variabile × raggiungimento fino al 100%; oltre, variabile × (1 + (raggiungimento − 100%) × acceleratore)', 'costo delle vendite = (fisso + provvigione) ÷ fatturato portato', 'margine che resta = fatturato × margine lordo − costo del venditore (senza gli altri costi)']; },
+      porte: [['capacita', 'Quanti venditori servono con questa quota', function (v) { return { quotaAnnua: v.quotaAnnua }; }]]
+    },
+    sconto: {
+      titolo: 'Sconto contro volume', domanda: 'Quanti contratti in più servono per pagare uno sconto?',
+      campi: [['prezzo', 'Prezzo di listino di un contratto (€)', 10000, 'eur'], ['margine', 'Margine lordo (%)', 60, 'pct'], ['sconto', 'Sconto (%)', 10, 'pct0'], ['contratti', 'Contratti che chiudi oggi nel periodo (facoltativo)', 50, 'n', 1]],
+      fn: 'sconto',
+      principale: function (r) { return r.impossibile ? ['Mai', 'lo sconto mangia tutto il margine: nessun volume lo ripaga'] : ['+' + n1(r.extraPct) + '%', 'di contratti in più per tenere lo stesso margine']; },
+      righe: function (v, r) {
+        var out = [['Prezzo scontato', e0(r.prezzoScontato)], ['Margine per contratto, prima e dopo', e0(r.prima) + ' → ' + e0(r.dopo)]];
+        if (!r.impossibile && r.necessari !== undefined) out.push(['Contratti necessari', n0(r.necessari) + ' invece di ' + n0(v.contratti) + ' (' + n0(r.extra) + ' in più)']);
+        return out;
+      },
+      formule: function () { return ['margine per contratto = prezzo × margine; dopo lo sconto = prezzo × (margine − sconto)', 'contratti necessari = contratti di oggi × margine ÷ (margine − sconto), per eccesso', 'Se lo sconto è uguale o più alto del margine, ogni contratto in più perde soldi.']; },
+      porte: [['funnel', 'Rifai il funnel a ritroso con il prezzo scontato', function (v, r) { return r.impossibile ? {} : { dealMedio: Math.round(r.prezzoScontato) }; }]]
+    }
+  };
+
+  /* Famiglie dell'Officina */
+  var FAMIGLIA = { funnel: 'pipeline', bdr: 'pipeline', copertura: 'pipeline', velocita: 'pipeline', noShow: 'pipeline', sensibilita: 'pipeline', cac: 'costi', budgetPaid: 'costi', sconto: 'costi', capacita: 'persone', provvigioni: 'persone' };
+  /* Richiami al dizionario accanto ai termini dei campi */
+  var DIZ = { winRate: 'win-rate', showRate: 'show-rate', showOggi: 'show-rate', showObiettivo: 'show-rate', oppDaMeeting: 'opportunita', opp: 'opportunita', pipelineAperta: 'pipeline',
+    cicloGiorni: 'ciclo-di-vendita', quotaAnnua: 'quota', rampMesi: 'ramp', ote: 'ote', meetingDaContatto: 'lead', lead: 'lead', leadMese: 'lead', leadMeeting: 'lead', clientiNuovi: 'cac', churnMese: 'churn', durataMesi: 'ltv', margine: 'margine-lordo', bdr: 'bdr', ricavoMeseCliente: 'payback' };
+  var DIZ_PAG = 'materiali/dizionario.html';
+
+  /* Stato e foglio riassuntivo */
+  var STATO = 'la-off-valori', RIS = 'la-off-risultati';
+  var valoriSalvati = leggiJ(STATO, {});
+  var risultati = leggiJ(RIS, {});
+
+  /* Valori dall'URL: #c=funnel&obiettivo=300000... solo numeri */
+  var daUrl = (function () {
+    var h = (location.hash || '').replace(/^#/, ''); if (h.indexOf('c=') !== 0) return null;
+    var q = {}; h.split('&').forEach(function (x) { var kv = x.split('='); q[decodeURIComponent(kv[0])] = decodeURIComponent(kv[1] || ''); });
+    if (!CALC[q.c]) return null;
+    var vals = {}; CALC[q.c].campi.forEach(function (c) { if (q[c[0]] !== undefined && /^[\d.,]*$/.test(q[c[0]])) vals[c[0]] = q[c[0]]; });
+    return { id: q.c, vals: vals };
+  })();
+  if (daUrl) { valoriSalvati[daUrl.id] = Object.assign({}, valoriSalvati[daUrl.id] || {}, daUrl.vals); scrivi(STATO, JSON.stringify(valoriSalvati)); }
+
+  /* Sblocco con il modulo di iscrizione di Substack (strada A, decisa da Lorenzo il 14/11).
+     Il modulo si carica solo al clic. Substack non manda alla pagina un segnale di iscrizione riuscita
+     (nessuno documentato, nessun messaggio osservato): lo sblocco è sulla fiducia e la pagina lo dice. */
+  var SUBSTACK_EMBED = 'https://lorenzoasuni.substack.com/embed';
+  var SBL = 'la-off-sblocco';
+  var sblocco = leggiJ(SBL, null);
+  /* INTERRUTTORE DELL'ISCRIZIONE (v3, review del 14/11).
+     true  = il primo conto (funnel a ritroso) si legge per intero senza iscrizione; tutto il resto dietro una richiesta sola.
+     false = tutti i risultati dietro l'iscrizione, come deciso da Lorenzo il 14/11 (quinto e sesto giro). */
+  var PRIMO_CONTO_LIBERO = true;
+  var APERTI_SENZA_ISCRIZIONE = PRIMO_CONTO_LIBERO ? ['funnel'] : [];
+  function iscritto() { return !!sblocco; }
+  function aperto(id) { return iscritto() || APERTI_SENZA_ISCRIZIONE.indexOf(id) >= 0; }
+
+  var montati = {};
+  function monta(el) {
+    var id = el.getAttribute('data-calc'), C = CALC[id]; if (!C) return;
+    var conStima = el.hasAttribute('data-stima') && C.stima;
+    var salv = valoriSalvati[id] || {};
+    var h = '<div class="c-campi"><p class="c-esempio">Valori di esempio, non benchmark: mettici i tuoi.</p><div class="c-griglia">';
+    C.campi.forEach(function (c) {
+      var val = salv[c[0]] !== undefined ? salv[c[0]] : (c[2] === '' ? '' : scrivibile(c[2]));
+      var uid = id + '-' + c[0];
+      var diz = DIZ[c[0]] ? ' <a class="diz" href="' + DIZ_PAG + '#' + DIZ[c[0]] + '" title="Definizione nel dizionario" aria-label="Definizione nel dizionario">def.</a>' : '';
+      h += '<div class="campo"><label for="' + uid + '">' + c[1] + diz + '</label><input id="' + uid + '" data-k="' + c[0] + '" type="text" inputmode="decimal" autocomplete="off" value="' + val + '" aria-describedby="' + uid + '-e"><span class="c-err" id="' + uid + '-e" aria-live="polite"></span></div>';
+    });
+    h += '</div></div><div class="c-uscite">';
+    if (conStima) h += '<div class="c-stima"><label for="' + id + '-stima">' + C.stima.domanda + '</label><div class="c-stima-riga"><input id="' + id + '-stima" type="text" inputmode="decimal"><button type="button" class="btn piccolo" data-az="stima">Confronta</button><button type="button" class="c-salta" data-az="salta">Salta</button></div><p class="c-scarto" aria-live="polite"></p></div>';
+    h += '<p class="c-chiuso-nota">Il risultato si apre con l\'iscrizione alla newsletter, una volta per tutti i conti: <a href="#iscrizione">vai al riquadro</a>.</p>';
+    h += '<div class="uscita" aria-live="polite"><div class="c-main"><b data-o="main"></b><span data-o="main-l"></span></div><div data-o="righe"></div></div>';
+    h += '<details class="c-come"><summary>Come è calcolato</summary><ul data-o="formule"></ul></details>';
+    h += '<div class="c-azioni">';
+    (C.porte || []).forEach(function (pt) { h += '<button type="button" class="btn piccolo" data-porta="' + pt[0] + '">Usa questi numeri in: ' + pt[1] + '</button>'; });
+    h += '<button type="button" class="c-link" data-az="link">Copia il link con i tuoi numeri</button><span class="c-copiato" aria-live="polite"></span></div><p class="c-dopo" hidden>Vuoi tenere questi conti? Il foglio da stampare, il link con i tuoi numeri, gli altri nove conti e i modelli si aprono con l\'iscrizione alla newsletter: <a href="' + PAGINA_OFFICINA + '#iscrizione">nell\'Officina</a>.</p></div>';
+    el.innerHTML = h;
+    montati[id] = { el: el, C: C, stima: conStima };
+    statoCopertura(id);
+    el.addEventListener('input', function (e) { if (e.target.getAttribute('data-k')) aggiorna(id, true); });
+    el.addEventListener('click', function (e) {
+      var b = e.target.closest('button'); if (!b) return;
+      var az = b.getAttribute('data-az'), porta = b.getAttribute('data-porta');
+      if (az === 'stima' || az === 'salta') stima(id, az === 'salta');
+      if (az === 'link') copiaLink(id);
+      if (porta) portaNel(id, porta);
+    });
+    aggiorna(id, false);
+  }
+  function valori(id) {
+    var v = {}, grezzi = {};
+    montati[id].el.querySelectorAll('input[data-k]').forEach(function (i) { grezzi[i.getAttribute('data-k')] = i.value; v[i.getAttribute('data-k')] = analizza(i.value); });
+    return { v: v, grezzi: grezzi };
+  }
+  function aggiorna(id, salva) {
+    var m = montati[id], C = m.C, x = valori(id), r = RC[C.fn](x.v);
+    m.el.querySelectorAll('.c-err').forEach(function (s) { s.textContent = ''; });
+    m.el.querySelectorAll('input[data-k]').forEach(function (i) { i.removeAttribute('aria-invalid'); });
+    var main = m.el.querySelector('[data-o="main"]'), mainL = m.el.querySelector('[data-o="main-l"]');
+    if (!r.ok) {
+      Object.keys(r.errori).forEach(function (k) { var s = m.el.querySelector('#' + id + '-' + k + '-e'); var u = { mesi: ' mesi', giorni: ' giorni', rampMesi: ' mesi' }[k]; if (s) s.textContent = r.errori[k] + (/^Al massimo/.test(r.errori[k]) && u ? u : ''); var i = m.el.querySelector('#' + id + '-' + k); if (i) i.setAttribute('aria-invalid', 'true'); });
+      main.textContent = '...'; mainL.textContent = 'Manca un dato o un numero non torna: lo trovi segnato sotto il campo.';
+      m.el.querySelector('[data-o="righe"]').innerHTML = ''; m.el.querySelector('[data-o="formule"]').innerHTML = '';
+      m.ultimo = null; return;
+    }
+    var pr = C.principale(r);
+    main.textContent = pr[0]; mainL.textContent = pr[1];
+    m.el.querySelector('[data-o="righe"]').innerHTML = C.righe(x.v, r).map(function (rg) { return '<div class="orow"><span>' + rg[0] + '</span><span class="v">' + rg[1] + '</span></div>'; }).join('');
+    m.el.querySelector('[data-o="formule"]').innerHTML = C.formule(x.v, r).map(function (f) { return '<li>' + f + '</li>'; }).join('');
+    m.ultimo = { v: x.v, r: r };
+    if (m.stima) scarto(id);
+    if (salva) { valoriSalvati[id] = x.grezzi; scrivi(STATO, JSON.stringify(valoriSalvati)); }
+    if (salva && iscritto()) {
+      risultati[id] = { titolo: C.titolo, principale: pr, righe: C.righe(x.v, r), quando: new Date().toLocaleDateString('it-IT') };
+      scrivi(RIS, JSON.stringify(risultati)); disegnaFoglio();
+    }
+  }
+  function scarto(id) {
+    var m = montati[id], C = m.C, out = m.el.querySelector('.c-scarto'), g = +leggi('la-off-stima-val-' + id);
+    if (!m.stima || !(g > 0) || !m.ultimo || !aperto(id)) { if (out && m.stima && g > 0 && !aperto(id)) out.textContent = 'Stima segnata: ' + n0(g) + '. Lo scarto lo vedi con il risultato.'; return; }
+    var vero = su(m.ultimo.r[C.stima.campo]), sc = (g - vero) / vero * 100;
+    out.textContent = 'La tua stima: ' + n0(g) + '. Il conto: ' + n0(vero) + '. ' + (Math.abs(sc) < 10 ? 'Scarto sotto il 10%: hai l\'occhio allenato.' : (sc < 0 ? 'Ne servono il ' + n0(-sc / (1 + sc / 100)) + '% in più di quanto pensavi.' : 'Ne servono meno di quanto pensavi: scarto del ' + n0(sc) + '%.'));
+  }
+  function stima(id, salta) {
+    var m = montati[id], out = m.el.querySelector('.c-scarto');
+    if (!salta) {
+      var g = analizza(m.el.querySelector('#' + id + '-stima').value);
+      if (!(g > 0)) { out.textContent = 'Scrivi una stima, anche a occhio.'; return; }
+      if (!m.ultimo) { out.textContent = 'Prima sistema i dati segnati.'; return; }
+      scrivi('la-off-stima-val-' + id, String(g));
+    }
+    scrivi('la-off-stima-' + id, '1');
+    statoCopertura(id); scarto(id);
+  }
+  /* Copertura: la stima (se c'è) viene prima, poi l'iscrizione. Il calcolo gira comunque. */
+  function statoCopertura(id) {
+    var m = montati[id], el = m.el;
+    var stimaAperta = m.stima && !leggi('la-off-stima-' + id);
+    var chiuso = !aperto(id);
+    el.classList.toggle('coperto', stimaAperta || chiuso);
+    el.classList.toggle('chiuso', chiuso);
+    el.classList.toggle('in-stima', !!stimaAperta);
+    el.classList.toggle('non-iscritto', !iscritto());
+    var nascosto = !!(stimaAperta || chiuso);
+    ['.uscita', '.c-come', '.c-azioni'].forEach(function (q) { var x = el.querySelector(q); if (!x) return; if (nascosto) { x.setAttribute('aria-hidden', 'true'); x.setAttribute('inert', ''); } else { x.removeAttribute('aria-hidden'); x.removeAttribute('inert'); } });
+    var dopo = el.querySelector('.c-dopo'); if (dopo) dopo.hidden = nascosto || iscritto() || !document.body.hasAttribute('data-home');
+    if (!chiuso && m.ultimo) aggiorna(id, false);
+    pannello();
+  }
+  /* Un riquadro d'iscrizione per pagina */
+  function pannello() {
+    var p = document.getElementById('iscrizione'); if (!p) return;
+    var serve = document.body.hasAttribute('data-iscrizione-sempre') || Object.keys(montati).some(function (k) { return !aperto(k); });
+    p.hidden = !serve;
+    p.classList.toggle('fatto', iscritto());
+    var f = p.querySelector('.isc-fatto'); if (f) f.innerHTML = iscritto() ? 'Iscrizione segnata in questo browser: risultati, foglio, link e modelli sono aperti. <button type="button" class="c-link" data-az-isc="richiudi">Richiudi</button>' : '';
+  }
+  function caricaModulo() {
+    var p = document.getElementById('iscrizione'), box = p.querySelector('.isc-modulo'), dove = p.querySelector('.isc-iframe');
+    if (!dove.firstChild) {
+      var f = document.createElement('iframe');
+      f.src = SUBSTACK_EMBED; f.title = 'Modulo di iscrizione di Substack ad A Tavola con Lorenzo';
+      f.setAttribute('frameborder', '0'); f.setAttribute('scrolling', 'no'); f.setAttribute('loading', 'eager');
+      f.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+      dove.appendChild(f);
+    }
+    box.hidden = false;
+    p.querySelector('[data-az-isc="carica"]').hidden = true;
+  }
+  function sblocca(come) {
+    sblocco = { come: come, quando: new Date().toISOString() };
+    scrivi(SBL, JSON.stringify(sblocco));
+    Object.keys(montati).forEach(function (k) { statoCopertura(k); aggiorna(k, false); if (montati[k].stima) scarto(k); });
+    disegnaFoglio(); pannello();
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-az-isc]'); if (!b) return;
+    var az = b.getAttribute('data-az-isc');
+    if (az === 'carica') caricaModulo();
+    if (az === 'fatto') sblocca('iscritto con il modulo');
+    if (az === 'gia') sblocca('già iscritto');
+    if (az === 'richiudi') { sblocco = null; togli(SBL); Object.keys(montati).forEach(statoCopertura); disegnaFoglio(); pannello(); }
+  });
+  function linkDi(id) {
+    var x = valori(id), parti = ['c=' + id];
+    Object.keys(x.grezzi).forEach(function (k) { var s = String(x.grezzi[k]).replace(/[^\d.,]/g, ''); if (s) parti.push(k + '=' + encodeURIComponent(s)); });
+    var base = location.href.split('#')[0].replace(/[^/]*$/, '') + PAGINA_OFFICINA;
+    return base + '#' + parti.join('&');
+  }
+  function copiaLink(id) {
+    if (!iscritto()) return;
+    var l = linkDi(id), s = montati[id].el.querySelector('.c-copiato');
+    function mostra(t) { s.textContent = t; }
+    try { navigator.clipboard.writeText(l).then(function () { mostra('Link copiato. Contiene solo i numeri che hai scritto.'); }, function () { mostra(l); }); }
+    catch (e) { mostra(l); }
+  }
+  function portaNel(da, a) {
+    var C = CALC[da], m = montati[da]; if (!m.ultimo || !aperto(da)) return;
+    var pt = C.porte.filter(function (x) { return x[0] === a; })[0], nuovi = pt[2](m.ultimo.v, m.ultimo.r);
+    var dest = Object.assign({}, valoriSalvati[a] || {});
+    Object.keys(nuovi).forEach(function (k) { dest[k] = scrivibile(nuovi[k]); });
+    valoriSalvati[a] = dest; scrivi(STATO, JSON.stringify(valoriSalvati));
+    if (montati[a]) {
+      Object.keys(nuovi).forEach(function (k) { var i = montati[a].el.querySelector('#' + a + '-' + k); if (i) i.value = scrivibile(nuovi[k]); });
+      aggiorna(a, true);
+      var sez = document.getElementById('calc-' + a) || montati[a].el;
+      var fam = sez.closest ? sez.closest('.famiglia') : null;
+      if (fam && fam.hidden) { var tutte = document.querySelector('.famiglie [data-fam="tutte"]'); if (tutte) tutte.click(); }
+      sez.scrollIntoView({ behavior: matchMedia('(prefers-reduced-motion: reduce)').matches ? 'auto' : 'smooth', block: 'start' });
+      montati[a].el.classList.add('arrivato'); setTimeout(function () { montati[a].el.classList.remove('arrivato'); }, 1600);
+    } else {
+      location.href = PAGINA_OFFICINA + '#calc-' + a;
+    }
+  }
+
+  /* Il foglio: i tuoi numeri, da stampare */
+  function disegnaFoglio() {
+    var f = document.getElementById('foglio-righe'); var n = Object.keys(risultati).length;
+    document.querySelectorAll('[data-foglio-conta]').forEach(function (s) { s.textContent = n === 0 ? 'nessun calcolatore usato' : (n === 1 ? '1 calcolatore usato' : n + ' calcolatori usati'); });
+    if (!f) return;
+    var az = document.querySelector('.foglio-azioni'); if (az) az.hidden = !iscritto();
+    if (!iscritto()) { f.innerHTML = '<p class="nota">Il foglio si apre con l\'iscrizione, dal <a href="#iscrizione">riquadro in alto</a>.</p>'; return; }
+    if (!n) { f.innerHTML = '<p class="nota">' + (sblocco ? 'Ancora vuoto: usa un calcolatore e i tuoi numeri compaiono qui.' : 'Ancora vuoto. Compaiono qui i risultati che hai visto, cioè dopo l\'iscrizione alla newsletter.') + '</p>'; return; }
+    f.innerHTML = Object.keys(CALC).filter(function (k) { return risultati[k]; }).map(function (k) {
+      var x = risultati[k];
+      return '<section class="f-voce"><h3>' + x.titolo + '</h3><p class="f-main"><b>' + x.principale[0] + '</b> ' + x.principale[1] + '</p><dl>' + x.righe.map(function (r) { return '<dt>' + r[0] + '</dt><dd>' + r[1] + '</dd>'; }).join('') + '</dl><p class="f-data">calcolato il ' + x.quando + '</p></section>';
+    }).join('');
+  }
+  document.addEventListener('click', function (e) {
+    var b = e.target.closest('[data-az-foglio]'); if (!b) return;
+    var az = b.getAttribute('data-az-foglio');
+    if (az === 'stampa') window.print();
+    if (az === 'svuota') { risultati = {}; valoriSalvati = {}; togli(RIS); togli(STATO); Object.keys(CALC).forEach(function (k) { togli('la-off-stima-' + k); togli('la-off-stima-val-' + k); }); location.hash = ''; location.reload(); }
+  });
+
+  document.querySelectorAll('[data-calc]').forEach(monta);
+  disegnaFoglio(); pannello();
+  /* l'ancora si risolve prima che i calcolatori abbiano altezza: si riallinea dopo il montaggio */
+  var bersaglio = daUrl ? document.getElementById('calc-' + daUrl.id) : (location.hash && /^#[\w-]+$/.test(location.hash) ? document.getElementById(location.hash.slice(1)) : null);
+  if (bersaglio) setTimeout(function () { bersaglio.scrollIntoView(); }, 50);
+  window.OFFICINA = { PRIMO_CONTO_LIBERO: PRIMO_CONTO_LIBERO, CALC: CALC, analizza: analizza, aggiorna: aggiorna, montati: montati };
+})();
+
+</script>
+</body>
+</html>

@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>Lorenzo Asuni. Il fatturato di una società tech, calcolatrice alla mano.</title>
+<title>Lorenzo Asuni. Il fatturato di una società tech, AI e calcolatrice alla mano.</title>
 <meta name="description" content="Lavoro dentro aziende tech B2B per far crescere il fatturato. Un conto da fare sui tuoi numeri, dieci domande, gli esempi della settimana con il voto.">
 <script>(function () {
   /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
@@ -93,111 +93,10 @@
   });
 })();
 </script>
-<script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')!=='notte')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){document.documentElement.setAttribute('data-pelle','tavola');}})();</script>
-<style>
-@font-face { font-family: 'Big Shoulders'; src: url('../fonts/big-shoulders-v4-latin-900.woff2') format('woff2'); font-weight: 900; font-display: swap; }
-@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-600.woff2') format('woff2'); font-weight: 600; font-display: swap; }
-@font-face { font-family: 'Barlow Condensed'; src: url('../fonts/barlow-condensed-v13-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
-@font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
-@font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
-
-:root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
-  --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
-  --carta: #F4EFE4; --su-carta: #15110D; --griglia: rgba(244,239,228,.06); --r: 4px;
-  --display: 'Big Shoulders', 'Barlow Condensed', sans-serif; --cond: 'Barlow Condensed', sans-serif; --body: 'Archivo', sans-serif; --mono: 'JetBrains Mono', monospace; }
-* { box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-@media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
-section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 64px; }
-body { margin: 0; background: var(--bg); color: var(--text); font-family: var(--body); font-size: 17px; line-height: 1.55; -webkit-font-smoothing: antialiased; overflow-x: hidden; }
-a { color: inherit; }
-img { display: block; max-width: 100%; }
-.wrap { max-width: 1120px; margin: 0 auto; padding: 0 24px; }
-@media (max-width: 600px) { .wrap { padding: 0 16px; } }
-.skip { position: absolute; left: -999px; top: 8px; background: var(--giallo); color: #15110D; padding: 8px 12px; z-index: 100; }
-.skip:focus { left: 8px; }
-:focus-visible { outline: 3px solid var(--giallo); outline-offset: 2px; }
-h1, h2 { font-family: var(--display); font-weight: 900; text-transform: uppercase; line-height: .92; margin: 0; }
-h2 { font-size: clamp(40px, 6vw, 72px); margin-bottom: 18px; }
-h3 { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .02em; font-size: 24px; line-height: 1.08; margin: 0 0 8px; }
-.lead { font-size: 19px; max-width: 64ch; }
-.nota { font-size: 14px; color: var(--muted); }
-.bozza { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px dashed var(--muted); padding: 1px 5px; border-radius: 2px; white-space: nowrap; vertical-align: middle; }
-.btn { display: inline-flex; align-items: center; justify-content: center; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 18px; padding: 12px 22px; border-radius: var(--r); border: 2px solid var(--text); text-decoration: none; background: transparent; color: var(--text); cursor: pointer; }
-.btn.pieno { background: var(--rosso-fondo); border-color: var(--rosso-fondo); color: var(--su-rosso); }
-.btn:hover { background: var(--text); color: var(--bg); border-color: var(--text); }
-.btn.pieno:hover { background: var(--su-rosso); color: var(--rosso-fondo); border-color: var(--su-rosso); }
-.btn.piccolo { font-size: 15px; padding: 8px 14px; }
-.sezione { padding: 84px 0; border-top: 1px solid var(--line); }
-@media (max-width: 760px) { .sezione { padding: 60px 0; } }
-.testata { position: sticky; top: 0; z-index: 50; background: var(--bg); border-bottom: 1px solid var(--line); }
-.testata .riga { display: flex; align-items: center; justify-content: space-between; gap: 16px; height: 58px; }
-.firma { font-family: var(--display); font-weight: 900; text-transform: uppercase; font-size: 22px; text-decoration: none; white-space: nowrap; }
-.menu { display: flex; gap: 18px; list-style: none; margin: 0; padding: 0; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 15px; }
-.menu a { text-decoration: none; color: var(--muted); }
-.menu a:hover { color: var(--text); }
-.menu .forte a { color: var(--text); border: 1px solid var(--text); padding: 5px 10px; border-radius: var(--r); }
-.menu .cyber a { color: var(--giallo); border: 1px solid var(--giallo); padding: 5px 10px; border-radius: var(--r); }
-.menu .cyber a:hover { color: var(--bg); background: var(--giallo); }
-html[data-pelle="tavola"] .menu .cyber a { color: #A3241F; border-color: #A3241F; }
-@media (max-width: 860px) {
-  .testata .riga { flex-wrap: wrap; height: auto; padding-top: 10px; row-gap: 4px; }
-  .testata nav { width: 100%; }
-  .menu { gap: 18px; font-size: 13px; overflow-x: auto; white-space: nowrap; scrollbar-width: none; padding: 2px 0 10px; -webkit-overflow-scrolling: touch; }
-  .menu::-webkit-scrollbar { display: none; }
-  .menu li { flex: none; }
-  .menu .forte { order: -1; }
-  .menu .cyber { order: -1; }
-  .menu .cyber a { padding: 3px 8px; }
-  .menu .forte a { padding: 3px 8px; }
-  section[id], [id^="calc-"], #iscrizione, #foglio { scroll-margin-top: 96px; }
-}
-.quadretti { background-image: repeating-linear-gradient(0deg, transparent 0 39px, var(--griglia) 39px 40px), repeating-linear-gradient(90deg, transparent 0 39px, var(--griglia) 39px 40px); }
-footer { border-top: 1px solid var(--line); padding: 26px 0 40px; font-size: 14px; color: var(--muted); }
-footer .wrap { display: flex; flex-wrap: wrap; gap: 8px 24px; justify-content: space-between; }
-
-/* Movimento: solo dove racconta un dato, e mai con prefers-reduced-motion */
-.btn { transition: background-color .18s, color .18s, border-color .18s, transform .12s; }
-.btn:active { transform: translateY(1px); }
-.pelli a { color: inherit; }
-.giro { position: fixed; left: 0; right: 0; top: 0; height: 3px; z-index: 60; transform-origin: 0 50%; transform: scaleX(0); background: var(--riga2, var(--giallo)); pointer-events: none; }
-@media (prefers-reduced-motion: no-preference) {
-  .flap i.gira { animation: palette .07s linear infinite; }
-  .flap i.fermo { animation: arresto .32s cubic-bezier(.3,1.6,.5,1); }
-  @keyframes palette { 0% { transform: rotateX(0); } 50% { transform: rotateX(80deg); } 100% { transform: rotateX(0); } }
-  @keyframes arresto { 0% { transform: rotateX(70deg); } 100% { transform: rotateX(0); } }
-  .podio:not(.coperto) .voto { animation: voto .45s cubic-bezier(.2,1.4,.4,1) both; }
-  .podio:not(.coperto) .card:nth-child(2) .voto { animation-delay: .15s; }
-  .podio:not(.coperto) .card:nth-child(3) .voto { animation-delay: .3s; }
-  @keyframes voto { 0% { transform: rotateX(90deg); opacity: 0; } 100% { transform: none; opacity: 1; } }
-  [data-o="main"].aggiornato { animation: lampo .6s ease-out; }
-  @keyframes lampo { 0% { background: color-mix(in srgb, var(--giallo) 45%, transparent); } 100% { background: transparent; } }
-}
-
-/* Seconda pelle "tavola": colori ricavati dal Substack di Lorenzo e dalle card a quadretti.
-   Si attiva solo da indirizzo (?pelle=tavola, ?pelle=notte per tornare) ed è ricordata tra le pagine. */
-html[data-pelle="tavola"] { --bg: #F7F2DF; --bg-2: #FFFDF6; --bg-3: #EFE7CF; --line: #D8CBA8; --text: #363737; --muted: #6B6358; --riga2: #C0302A;
-  --rosso: #C0302A; --rosso-fondo: #C0302A; --su-rosso: #FFFFFF; --arancio: #A3241F; --giallo: #A3241F; --verde: #2F6B45;
-  --carta: #FFFDF6; --su-carta: #363737; --griglia: rgba(54,55,55,.05); }
-html[data-pelle="tavola"] .tabellone, html[data-pelle="tavola"] .c-uscite .uscita { --giallo: #F7C948; --text: #F4EFE4; --muted: #BDB39F; color: #F4EFE4; }
-html[data-pelle="tavola"] .tabellone .trow .l { color: #F4EFE4; }
-html[data-pelle="tavola"] .apertura { background: var(--bg); }
-html[data-pelle="tavola"] .apertura video { filter: grayscale(.2) contrast(1.05); opacity: .16; }
-html[data-pelle="tavola"] .apertura .cosa { color: var(--muted); }
-html[data-pelle="tavola"] .credito { color: var(--muted); }
-html[data-pelle="tavola"] .fascia { background: var(--bg-2); color: var(--text); border-top: 0; }
-html[data-pelle="tavola"] .fascia h2 { color: var(--rosso); }
-html[data-pelle="tavola"] .tovaglia-bordo, html[data-pelle="tavola"] .arrivo .bandiera { background-color: #FFFDF6;
-  background-image: linear-gradient(90deg, rgba(192,48,42,.45) 50%, transparent 50%), linear-gradient(rgba(192,48,42,.45) 50%, transparent 50%);
-  background-size: 22px 22px; height: 22px; }
-html[data-pelle="tavola"] .tovaglia-bordo { display: block; margin: -84px 0 62px; }
-@media (max-width: 760px) { html[data-pelle="tavola"] .tovaglia-bordo { margin: -60px 0 40px; } }
-.tovaglia-bordo { display: none; }
-html[data-pelle="tavola"] .tag.visto { background: var(--text); color: #FFFDF6; border-color: var(--text); }
-html[data-pelle="tavola"] .btn.pieno:hover { background: var(--text); color: #FFFDF6; border-color: var(--text); }
-html[data-pelle="tavola"] .bozza { color: var(--muted); border-color: var(--muted); }
-html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transparent, rgba(30,24,20,.82)); }
+<style>@font-face{font-family:"Poppins";src:url('../fonts/poppins-v24-latin-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:"Archivo";src:url('../fonts/archivo-v25-latin-regular.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:"Archivo";src:url('../fonts/archivo-v25-latin-700.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:"JetBrains Mono";src:url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2');font-weight:500;font-display:swap}
 /* Calcolatori dell'Officina (incollato da build_officina.py) */
 .calc2 { display: grid; grid-template-columns: 1.05fr 1fr; gap: 24px; align-items: start; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 20px; position: relative; transition: border-color .4s; }
 .calc2.arrivato { border-color: var(--giallo); }
@@ -322,175 +221,557 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
 .isc-fatto { font-size: 14.5px; margin: 0; }
 .isc-fatto:empty { display: none; }
 @media (max-width: 420px) { .iscrizione { padding: 12px; } .isc-iframe { margin: 10px -12px; border-left: 0; border-right: 0; } .isc-iframe iframe { height: 400px; } }
+/* Home v4 (mix Bob's e Ward, 23/11/2026). Letto da build_v4.py, che aggiunge font, calcolatore e dati della v3. */
 
-/* Apertura: tutto nella prima schermata */
-.apertura { position: relative; min-height: calc(100svh - 58px); display: flex; align-items: flex-end; overflow: hidden; }
-.apertura video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; filter: grayscale(.35) brightness(.32) contrast(1.15); }
-.apertura .dentro { position: relative; padding-top: 48px; padding-bottom: 40px; width: 100%; }
-.apertura h1 { font-size: clamp(44px, 7.4vw, 112px); }
-.apertura h1 span { display: block; color: var(--riga2); }
-.apertura .chi { font-size: clamp(18px, 2vw, 22px); max-width: 52ch; margin: 22px 0 8px; }
-.apertura .cosa { font-size: 16.5px; color: #DDD4C2; max-width: 60ch; margin: 0 0 22px; }
-.apertura .bottoni { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
-.credito { position: absolute; right: 12px; bottom: 8px; font-size: 11px; color: #8C8273; z-index: 2; }
-@media (max-width: 600px) {
-  .apertura { min-height: 0; flex-direction: column; align-items: stretch; }
-  .apertura h1 { font-size: 38px; }
-  .apertura .dentro { padding-top: max(110px, 18svh); padding-bottom: 18px; }
-  .apertura .chi { margin-top: 14px; font-size: 17px; }
-  .apertura .cosa { font-size: 15px; margin-bottom: 18px; }
-  .apertura .bottoni { gap: 10px; }
-  .apertura .btn { font-size: 16px; padding: 12px 16px; flex: 1 1 auto; text-align: center; }
-  .credito { position: relative; right: auto; bottom: auto; padding: 0 16px 12px; font-size: 10.5px; line-height: 1.4; }
+:root{
+  --carta:#F7F1E7;--carta-2:#EEE6D8;--ink:#1C1A17;--muted:#5E574C;--line:#E2D8C8;
+  --rosso:#C0302A;--arancio:#E8762C;--giallo:#F2C94C;--blu:#2340C8;--azzurro:#A8D3EE;
+  --r:24px;--ease:cubic-bezier(.22,1,.36,1);--gut:clamp(16px,4vw,40px);--max:1200px;
+  --titoli:"Poppins","Helvetica Neue",Arial,sans-serif;
+  --testo:"Archivo","Helvetica Neue",Arial,sans-serif;
+  --ast:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 24 24'%3E%3Cg stroke='black' stroke-width='3.4' stroke-linecap='round'%3E%3Cpath d='M12 2.5v19M3.8 7.25l16.4 9.5M3.8 16.75l16.4-9.5'/%3E%3C/g%3E%3C/svg%3E");
 }
-/* Il conto */
-.dopo-conto { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; margin: 22px 0 0; }
-/* Come leggo un numero */
-.fascia { background: var(--giallo); color: #15110D; }
-.fascia h2 { color: #15110D; }
-.domande3 { display: grid; grid-template-columns: repeat(3, 1fr); gap: 32px; margin-top: 26px; }
-.domande3 h3 { font-size: 26px; }
-.domande3 p { margin: 0; font-size: 16.5px; }
-@media (max-width: 860px) { .domande3 { grid-template-columns: 1fr; gap: 20px; } }
-/* Radar */
-.radar-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; align-items: start; }
-@media (max-width: 900px) { .radar-grid { grid-template-columns: 1fr; gap: 24px; } }
-.tabellone { background: #0D0B09; border: 2px solid #3A332A; border-radius: var(--r); padding: 16px 18px; }
-.tab-testa { display: flex; justify-content: space-between; gap: 10px; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .1em; font-size: 14px; border-bottom: 1px solid #3A332A; padding-bottom: 8px; margin-bottom: 4px; }
-.tab-testa .d { color: var(--giallo); font-family: var(--mono); font-weight: 500; letter-spacing: 0; }
-.trow { display: grid; grid-template-columns: 1fr auto; gap: 12px; align-items: center; padding: 10px 0; border-bottom: 1px dashed #3A332A; }
-.trow:last-of-type { border-bottom: 0; }
-.trow .l { font-family: var(--cond); font-weight: 600; text-transform: uppercase; letter-spacing: .04em; font-size: 20px; }
-.flap { display: inline-flex; gap: 3px; }
-.flap i { font-style: normal; font-family: var(--mono); font-weight: 500; font-size: 28px; line-height: 1; padding: 5px 4px; background: #1F1A15; border-radius: 2px; color: var(--giallo); }
-.come-lavora { margin: 0 0 12px; }
-.pronostico { display: flex; flex-wrap: wrap; gap: 10px 18px; align-items: center; justify-content: space-between; background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 12px 16px; margin: 34px 0 16px; }
-.pronostico p { margin: 0; }
-.podio { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
-@media (max-width: 900px) { .podio { grid-template-columns: 1fr; } }
-.card { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); overflow: hidden; display: flex; flex-direction: column; text-align: left; color: var(--text); font: inherit; padding: 0; }
-button.card { cursor: pointer; }
-button.card:hover { border-color: var(--text); }
-.card[aria-pressed="true"] { border: 2px solid var(--giallo); }
-.ante { margin: 0; background: #fff; border-bottom: 1px solid var(--line); }
-.ante img { display: block; width: 100%; height: auto; aspect-ratio: 16 / 10; object-fit: cover; object-position: center; }
-.ante figcaption { font-family: var(--mono); font-size: 11.5px; color: #6B6358; background: #FBF8F0; padding: 4px 10px; }
-.ante-carta span { display: flex; align-items: center; justify-content: center; aspect-ratio: 16 / 10; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 22px; color: #6B6358; background: repeating-linear-gradient(0deg, transparent 0 23px, rgba(54,55,55,.06) 23px 24px), #FBF8F0; }
+*{box-sizing:border-box;margin:0;padding:0}
+html{scroll-behavior:smooth;overflow-x:clip}
+main{overflow-x:clip}
+body{background:var(--carta);color:var(--ink);font-family:var(--testo);font-size:17px;line-height:1.55}
+a{color:inherit}
+img,video{display:block;max-width:100%}
+.wrap{max-width:var(--max);margin:0 auto;padding:0 var(--gut)}
+h1,h2,h3,.titolo{font-family:var(--titoli);font-weight:700;letter-spacing:-.04em;line-height:1.02}
+.rosso{color:var(--rosso)}
+.muted{color:var(--muted)}
+.ast{display:inline-block;width:.72em;height:.72em;background:currentColor;-webkit-mask:var(--ast) center/contain no-repeat;mask:var(--ast) center/contain no-repeat;vertical-align:-.04em;flex:none}
+.sopra{display:flex;align-items:center;gap:10px;font-family:var(--titoli);font-weight:700;font-size:15px;letter-spacing:-.01em;color:var(--rosso);margin-bottom:16px}
+.sopra::before{content:"";width:7px;height:7px;border-radius:50%;background:var(--rosso)}
+.h2{font-size:clamp(34px,4.8vw,58px);max-width:18ch}
+.lead{font-size:clamp(17px,1.5vw,19px);color:var(--muted);max-width:56ch;margin-top:20px}
+section{padding:clamp(64px,9vw,120px) 0}
+.rv{transition:opacity .9s var(--ease)}
+.rv.spento{opacity:.22}
 
-.card .fig { min-height: 150px; background: var(--bg-3); padding: 14px; display: flex; flex-direction: column; justify-content: space-between; gap: 12px; }
-.tags { display: flex; gap: 6px; flex-wrap: wrap; }
-.tag { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .06em; font-size: 13px; padding: 4px 8px; border-radius: 2px; border: 1px solid var(--muted); }
-.tag.visto { background: var(--carta); color: #15110D; border-color: var(--carta); }
-.card .num { font-family: var(--display); font-weight: 900; font-size: 40px; line-height: .95; text-transform: uppercase; }
-.card .num small { display: block; font-family: var(--body); font-weight: 400; text-transform: none; font-size: 14px; color: var(--muted); line-height: 1.35; margin-top: 6px; }
-.card .corpo { padding: 14px; flex: 1; }
-.card .chi { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 13px; color: var(--giallo); margin: 0 0 6px; }
-.card h3 { font-size: 21px; margin: 0; }
-.card .piede { display: flex; justify-content: flex-end; padding: 10px 14px; border-top: 1px solid var(--line); }
-.voto { font-family: var(--display); font-weight: 900; font-size: 32px; color: var(--giallo); line-height: 1; }
-.voto small { font-size: 15px; color: var(--muted); }
-.coperto .voto { visibility: hidden; }
-.coperto .piede::before { content: "voto coperto"; font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .08em; font-size: 14px; color: var(--muted); margin-right: auto; }
-.esito-pron { margin: 16px 0 0; padding: 14px 16px; border-left: 4px solid var(--giallo); background: var(--bg-2); }
-.esito-pron[hidden] { display: none; }
-.valutazione { display: grid; grid-template-columns: 56px 1fr; gap: 16px; margin-top: 26px; align-items: start; }
-.scacchi { width: 56px; height: 40px; background: conic-gradient(var(--text) 25%, var(--bg) 0 50%, var(--text) 0 75%, var(--bg) 0) 0 0 / 14px 14px; border: 1px solid var(--text); }
-.valutazione p { margin: 0 0 8px; }
-/* Newsletter */
-.diario { list-style: none; margin: 0; padding: 0; border-top: 1px solid var(--line); }
-.diario li { display: grid; grid-template-columns: 110px 1fr; gap: 4px 18px; padding: 14px 0; border-bottom: 1px solid var(--line); align-items: baseline; }
-.diario .d { font-family: var(--mono); font-size: 13px; color: var(--muted); }
-.diario a { font-family: var(--cond); font-weight: 700; text-transform: uppercase; font-size: 22px; line-height: 1.1; text-decoration: none; }
-.diario a:hover { color: var(--giallo); }
-@media (max-width: 600px) { .diario li { grid-template-columns: 1fr; } .diario a { font-size: 19px; } }
-.news-grid { display: grid; grid-template-columns: 1.3fr 1fr; gap: 40px; align-items: start; }
-@media (max-width: 900px) { .news-grid { grid-template-columns: 1fr; gap: 26px; } }
-.tovaglie { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; }
-.tovaglie img { border-radius: 2px; border: 1px solid var(--line); }
-.iscriviti-box { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; margin-top: 18px; }
-.iscriviti-box p { margin: 0 0 12px; }
-/* Anteprime della newsletter, nello stile delle card di Substack */
-.news-testa { display: flex; justify-content: space-between; align-items: flex-end; gap: 20px 40px; flex-wrap: wrap; margin-bottom: 26px; }
-.news-testa .lead { margin: 0; }
-.news-bottoni { display: flex; gap: 16px; align-items: center; flex-wrap: wrap; }
-.anteprime { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
-@media (max-width: 900px) { .anteprime { grid-template-columns: 1fr; } }
-.anteprima { display: flex; flex-direction: column; background: var(--bg-2); border: 1px solid var(--line); border-radius: 10px; overflow: hidden; text-decoration: none; color: var(--text); }
-.anteprima:hover { border-color: var(--text); }
-.copertina { position: relative; display: block; aspect-ratio: 16 / 9; background: #000; }
-.copertina > img { width: 100%; height: 100%; object-fit: cover; }
-.anteprima .velo { position: absolute; left: 0; right: 0; bottom: 0; display: flex; align-items: center; gap: 8px; padding: 26px 12px 10px; background: linear-gradient(transparent, rgba(0,0,0,.78)); color: #fff; font-family: var(--cond); font-weight: 700; font-size: 13px; letter-spacing: .08em; text-transform: uppercase; }
-.anteprima .avatar { width: 24px; height: 24px; border-radius: 50%; object-fit: cover; object-position: center 20%; border: 1px solid rgba(255,255,255,.6); }
-.anteprima .testo { display: flex; flex-direction: column; gap: 6px; padding: 14px; }
-.anteprima strong { font-size: 18px; line-height: 1.25; }
-.anteprima em { font-style: normal; color: var(--muted); font-size: 15px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-.anteprima .attacco { font-size: 15px; line-height: 1.45; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; overflow: hidden; }
-.anteprima .data { font-family: var(--mono); font-size: 12px; color: var(--muted); }
-/* Da copiare, in home */
-.copia-home { display: flex; justify-content: space-between; align-items: center; gap: 16px 30px; flex-wrap: wrap; }
-.copia-home p { margin: 0; max-width: 62ch; }
-.copia-home .bottoni { display: flex; gap: 12px; flex-wrap: wrap; }
-/* Chi sono */
-.chi-grid { display: grid; grid-template-columns: 300px 1fr; gap: 40px; align-items: start; }
-@media (max-width: 860px) { .chi-grid { grid-template-columns: 1fr; gap: 24px; } }
-.ritratto img { width: 100%; aspect-ratio: 4 / 5; object-fit: cover; object-position: 88% center; border-radius: var(--r); }
-.ritratto figcaption { font-size: 12px; color: var(--muted); margin-top: 6px; }
-.lavorato { font-family: var(--cond); font-weight: 700; text-transform: uppercase; letter-spacing: .04em; font-size: 22px; margin: 4px 0 20px; }
-.lavorato span { color: var(--muted); font-size: 15px; letter-spacing: .08em; margin-right: 8px; }
-.fatti { display: flex; flex-wrap: wrap; gap: 8px 28px; margin: 0 0 24px; padding: 0; list-style: none; }
-.fatti b { display: block; font-family: var(--display); font-weight: 900; font-size: 30px; line-height: 1; }
-.fatti span { font-size: 13.5px; color: var(--muted); }
-@media (max-width: 600px) { .fatti { display: grid; grid-template-columns: 1fr 1fr; gap: 16px 18px; } .fatti b { font-size: 26px; } .fatti span { display: block; margin-top: 4px; line-height: 1.35; } }
-.carriera { list-style: none; margin: 0; padding: 0 0 0 22px; border-left: 2px solid var(--line); }
-.carriera li { position: relative; padding: 0 0 18px; }
-.carriera li::before { content: ""; position: absolute; left: -30px; top: 6px; width: 12px; height: 12px; border-radius: 50%; background: var(--bg); border: 3px solid var(--giallo); }
-.carriera .y { font-family: var(--display); font-weight: 900; font-size: 26px; line-height: 1; }
-.carriera p { margin: 2px 0 0; color: var(--muted); font-size: 15.5px; max-width: 60ch; }
-.attrezzi { columns: 2; column-gap: 34px; margin: 10px 0 0; padding: 0; list-style: none; font-size: 15px; }
-.attrezzi li { break-inside: avoid; margin: 0 0 10px; color: var(--muted); }
-.attrezzi b { color: var(--text); font-weight: 700; display: block; }
-@media (max-width: 600px) {
-  .sezione { padding: 44px 0; }
-  .lead { font-size: 17px; }
-  .podio, .anteprime { display: flex; overflow-x: auto; scroll-snap-type: x mandatory; gap: 12px; margin: 0 -16px; padding: 0 16px 10px; scrollbar-width: none; -webkit-overflow-scrolling: touch; }
-  .podio::-webkit-scrollbar, .anteprime::-webkit-scrollbar { display: none; }
-  .podio > *, .anteprime > * { flex: 0 0 84%; scroll-snap-align: start; }
-  .chi-grid { gap: 18px; }
-  .ritratto { max-width: 240px; }
-  .ritratto img { aspect-ratio: 1 / 1; }
-  .carriera li { padding-bottom: 14px; }
-  .carriera p { font-size: 14.5px; }
-  .attrezzi { columns: 2; column-gap: 16px; font-size: 13.5px; }
+/* segnaposto: ciò che serve da Lorenzo prima di andare online */
+.sp{outline:2px dashed var(--arancio);outline-offset:4px;position:relative}
+.sp-tag{position:absolute;top:-13px;right:12px;background:var(--arancio);color:var(--ink);font-family:var(--titoli);font-size:10.5px;font-weight:700;letter-spacing:.1em;text-transform:uppercase;padding:4px 9px;border-radius:999px;z-index:4;white-space:nowrap;line-height:1.2}
+
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;padding:15px 24px;border-radius:12px;font-family:var(--titoli);font-weight:700;font-size:15px;letter-spacing:-.01em;text-decoration:none;border:2px solid transparent;cursor:pointer;white-space:nowrap;transition:transform .15s ease}
+.btn{transition:transform .16s var(--ease),background-color .18s var(--ease),color .18s var(--ease)}
+.btn:active{transform:scale(.97)}
+.btn-rosso:hover{background:#A42621}
+.btn-nero:hover{background:#000}
+.btn-vuoto:hover{background:var(--ink);color:var(--carta)}
+.btn-rosso{background:var(--rosso);color:#FFF8EE}
+.btn-nero{background:var(--ink);color:var(--carta)}
+.btn-vuoto{border-color:var(--ink);background:transparent;color:var(--ink)}
+.freccia{font-family:var(--titoli);font-weight:700;font-size:15px;text-decoration:none;display:inline-flex;align-items:center;gap:6px}
+.freccia::after{content:"›";font-size:1.25em;line-height:1;transition:transform .15s}
+.freccia:hover::after{transform:translateX(3px)}
+
+/* barra delle prove */
+.prove{background:var(--ink);color:var(--carta);font-size:13px}
+.prove ul{list-style:none;display:flex;justify-content:center;gap:30px;padding:9px 0;white-space:nowrap;overflow:hidden}
+.prove li{display:flex;align-items:center;gap:8px}
+.prove .ast{color:var(--giallo);width:11px;height:11px}
+@media (max-width:900px){.prove li:nth-child(n+3){display:none}}
+@media (max-width:540px){.prove ul{justify-content:flex-start;gap:18px}.prove li:nth-child(n+2){display:none}}
+
+/* testata */
+header{position:sticky;top:0;z-index:20;background:rgba(247,241,231,.95);border-bottom:1px solid transparent;transition:border-color .2s}
+header.scrolled{border-bottom-color:var(--line)}
+.bar{display:flex;align-items:center;justify-content:space-between;gap:20px;height:72px}
+.logo{font-family:var(--titoli);font-weight:700;font-size:21px;letter-spacing:-.045em;text-decoration:none;white-space:nowrap}
+.logo span{color:var(--rosso)}
+nav ul{display:flex;gap:18px;list-style:none;font-size:14px;white-space:nowrap}
+nav a{text-decoration:none}
+nav a:hover{color:var(--rosso)}
+.bar-dx{display:flex;align-items:center;gap:12px}
+.lingue{display:flex;border:1.5px solid var(--line);border-radius:999px;padding:3px;font-size:12px;font-weight:700;background:#fff}
+.lingue a{padding:6px 11px;border-radius:999px;text-decoration:none;white-space:nowrap}
+.lingue a.on{background:var(--ink);color:var(--carta)}
+.bar .btn{padding:10px 16px;font-size:14px}
+@media (max-width:1260px){nav{display:none}}
+@media (max-width:540px){.bar .btn{display:none}}
+
+/* apertura, come Bob's: testo, bollino piccolo, poi la scena larga */
+.hero{position:relative;padding-top:clamp(56px,8vw,110px);padding-bottom:44px}
+.hero h1{font-size:clamp(44px,7vw,92px);max-width:13ch}
+.hero-sotto{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:end;margin-top:34px}
+.hero-sotto p{font-size:clamp(17px,1.5vw,19px);max-width:50ch}
+.hero-sotto p+p{margin-top:12px;color:var(--muted)}
+.domanda{font-family:var(--titoli);font-weight:700;font-size:15px;margin-bottom:12px}
+.azioni{display:flex;gap:16px;flex-wrap:wrap;align-items:center}
+.posti{display:inline-flex;align-items:center;gap:10px;margin-top:20px;font-size:15px;padding:6px 12px;border-radius:999px}
+.posti::before{content:"";width:9px;height:9px;border-radius:50%;background:var(--rosso);box-shadow:0 0 0 4px rgba(192,48,42,.18)}
+.firma{display:flex;align-items:center;gap:12px;margin-top:22px;font-size:14px;color:var(--muted)}
+.firma img{width:44px;height:44px;border-radius:50%;object-fit:cover;filter:grayscale(1);box-shadow:0 0 0 2px var(--carta),0 0 0 3.5px var(--ink)}
+.firma b{color:var(--ink)}
+@media (max-width:860px){.hero-sotto{grid-template-columns:1fr;gap:26px}}
+
+
+.scena-wrap{position:relative}
+.scena{position:relative;border-radius:var(--r);overflow:hidden;aspect-ratio:16/7.5;background:#2b2620}
+.scena video{width:100%;height:100%;object-fit:cover;filter:sepia(.3) saturate(1.1) contrast(1.05)}
+.play{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);display:flex;align-items:center;gap:14px;background:rgba(28,26,23,.88);color:var(--carta);border-radius:999px;padding:10px 22px 10px 10px;font-family:var(--titoli);font-weight:700;font-size:15px;border:0;cursor:pointer;white-space:nowrap}
+.play i{width:46px;height:46px;border-radius:50%;background:var(--rosso);display:grid;place-items:center}
+.play i::after{content:"";border-left:14px solid #FFF8EE;border-top:9px solid transparent;border-bottom:9px solid transparent;margin-left:4px}
+.credito{font-size:12px;color:var(--muted);margin-top:12px;padding-right:150px}
+.scena-tag{left:16px;right:auto}
+@media (max-width:760px){.scena{aspect-ratio:4/5}.play{font-size:13px;padding-right:16px}}
+
+/* citazioni */
+.citazioni{display:grid;grid-template-columns:1fr 1fr;gap:22px;margin-top:84px}
+.cit{background:#fff;border-radius:var(--r);padding:30px 30px 26px;display:flex;flex-direction:column;gap:18px}
+.cit blockquote{font-size:clamp(18px,1.7vw,21px);line-height:1.35}
+.cit blockquote::before{content:"“";display:block;font-family:var(--titoli);font-size:60px;line-height:.6;color:var(--rosso);margin-bottom:8px}
+.cit .chi{display:flex;align-items:center;gap:12px;font-size:14px;color:var(--muted)}
+.cit .chi i{width:40px;height:40px;border-radius:50%;background:var(--carta-2);flex:none}
+.cit .chi b{color:var(--ink);display:block}
+@media (max-width:760px){.citazioni{grid-template-columns:1fr;margin-top:64px}}
+
+/* campi del modulo */
+label{display:flex;flex-direction:column;gap:6px;font-size:14px;font-weight:700}
+input,select,textarea{font:inherit;font-weight:400;font-size:16px;border:1.5px solid var(--line);background:#fff;border-radius:12px;padding:11px 13px;color:var(--ink);width:100%}
+input:focus,textarea:focus{outline:2px solid var(--rosso);outline-offset:1px;border-color:transparent}
+.dopo{display:flex;align-items:center;gap:14px 22px;flex-wrap:wrap;margin-top:26px}
+.dopo span{font-size:15px;color:var(--muted)}
+
+/* nastri */
+.nastro-in{display:flex;width:max-content;will-change:transform}
+
+/* tre porte */
+.porte{display:grid;grid-template-columns:1fr 1fr .85fr;gap:20px;margin-top:52px;align-items:stretch}
+.porta{border-radius:var(--r);padding:32px 28px 28px;display:flex;flex-direction:column;gap:15px}
+.porta .num{font-family:var(--titoli);font-weight:700;font-size:14px;letter-spacing:0;opacity:.7}
+.porta h3{font-size:clamp(28px,3vw,36px)}
+.porta .durata{display:inline-block;align-self:flex-start;font-size:15px;font-weight:700;padding-bottom:4px;border-bottom:1.5px solid currentColor}
+.porta .durata.sp{margin-top:8px}
+.porta ul{list-style:none;display:flex;flex-direction:column;gap:9px;font-size:16px}
+.porta li{display:flex;gap:10px;align-items:baseline}
+.porta li .ast{width:12px;height:12px}
+.porta .btn{margin-top:auto;align-self:flex-start}
+.porta.gialla{background:var(--giallo)}
+.porta.rossa{background:var(--rosso);color:#FFF8EE}
+.porta.rossa .btn{background:#FFF8EE;color:var(--rosso)}
+.porta.bianca{background:#fff}
+@media (max-width:980px){.porte{grid-template-columns:1fr}}
+
+/* ruota dei settori, come lo schema di Bob's */
+.mozzo{display:grid;grid-template-columns:1fr 1fr;gap:56px;align-items:center;margin-top:56px}
+.ruota{position:relative;aspect-ratio:1/1;max-width:470px;width:100%;margin:0 auto}
+.ruota svg.raggi{position:absolute;inset:0;width:100%;height:100%}
+.nodo{position:absolute;transform:translate(-50%,-50%);display:flex;flex-direction:column;align-items:center;gap:8px;background:none;border:0;cursor:pointer;font:inherit;color:inherit}
+.nodo .cerchio{width:clamp(54px,8.6vw,78px);height:clamp(54px,8.6vw,78px);border-radius:50%;display:grid;place-items:center;font-family:var(--titoli);font-weight:700;font-size:clamp(15px,2vw,20px);transition:transform .15s}
+.nodo .etichetta{font-family:var(--titoli);font-weight:700;font-size:clamp(11px,1.3vw,13px);text-align:center;max-width:11ch;line-height:1.15}
+.nodo:hover .cerchio,.nodo.on .cerchio{transform:scale(1.08)}
+.nodo.on .cerchio{box-shadow:0 0 0 4px var(--carta),0 0 0 6px var(--ink)}
+.centro-ruota{position:absolute;left:50%;top:50%;transform:translate(-50%,-50%);width:34%;aspect-ratio:1/1;border-radius:50%;background:var(--rosso);color:#FFF8EE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;text-align:center;font-family:var(--titoli);font-weight:700;font-size:clamp(14px,2vw,21px);line-height:1.05}
+.centro-ruota .ast{width:20px;height:20px}
+.pannello .conta{font-size:14px;font-weight:700;color:var(--muted);margin-bottom:12px;font-variant-numeric:tabular-nums}
+.pannello h3{font-size:clamp(28px,3.4vw,42px);margin-bottom:16px}
+.pannello p{color:var(--muted);max-width:46ch;margin-bottom:18px}
+.etichette{font-size:15px;color:var(--ink)}
+.pannello .dove{font-size:14px;margin-top:18px;border-top:1px solid var(--line);padding-top:14px}
+@media (max-width:900px){.mozzo{grid-template-columns:1fr;gap:30px}}
+
+/* come leggo un numero */
+.domande-top{display:grid;grid-template-columns:1.2fr .8fr;gap:48px;align-items:center}
+.cartello{border-radius:var(--r);background:var(--giallo);aspect-ratio:5/4;display:grid;place-items:center;position:relative;overflow:hidden}
+.cartello .q{font-family:var(--titoli);font-weight:700;font-size:clamp(140px,20vw,250px);line-height:.8;color:var(--rosso);transform:rotate(-8deg)}
+.tre{display:grid;grid-template-columns:repeat(3,1fr);gap:40px;margin-top:64px;border-top:1.5px solid var(--ink);padding-top:28px}
+.tre .n{font-family:var(--titoli);font-weight:700;color:var(--rosso);font-size:14px}
+.tre h3{font-size:clamp(22px,2.2vw,27px);margin:8px 0 12px}
+.tre p{color:var(--muted)}
+@media (max-width:860px){.domande-top{grid-template-columns:1fr}.tre{grid-template-columns:1fr;gap:28px}}
+
+/* radar */
+.testa-sez{display:flex;justify-content:space-between;align-items:flex-end;gap:24px;flex-wrap:wrap}
+.metodo{font-size:15px;color:var(--muted);max-width:60ch;margin-top:12px}
+.contatori{display:grid;grid-template-columns:auto repeat(4,1fr);border:1px solid var(--line);border-radius:18px;margin-top:40px;background:#fff;overflow:hidden}
+.contatori>div{padding:18px 20px;border-left:1px solid var(--line)}
+.contatori>div:first-child{border-left:0;background:var(--ink);color:var(--carta);font-size:13px;font-weight:700;display:flex;align-items:center}
+.contatori b{display:block;font-family:var(--titoli);font-size:clamp(26px,3vw,36px);letter-spacing:-.04em;line-height:1}
+.contatori span{font-size:13px;color:var(--muted)}
+.contatori>div:last-child b{color:var(--rosso)}
+.gioco{display:flex;align-items:center;gap:16px;flex-wrap:wrap;margin-top:28px;font-family:var(--titoli);font-weight:700;font-size:17px}
+.nota-radar{color:var(--muted);max-width:70ch;margin-top:26px;font-size:15px;display:flex;gap:10px}
+.nota-radar .ast{color:var(--rosso);width:12px;height:12px;margin-top:6px}
+@media (max-width:900px){.contatori{grid-template-columns:1fr 1fr}.contatori>div:first-child{grid-column:span 2}.contatori>div:nth-child(4){border-left:0}.contatori>div:nth-child(n+4){border-top:1px solid var(--line)}}
+
+/* quando mi chiamano */
+.situazioni{display:grid;grid-template-columns:repeat(3,1fr);gap:36px;margin-top:48px;border-top:1.5px solid var(--ink);padding-top:28px}
+.situazioni h3{font-size:clamp(21px,2.1vw,25px);margin-bottom:12px;line-height:1.12}
+.situazioni p{color:var(--muted);font-size:16px}
+.situazioni .lavoro{margin-top:12px;font-size:14px;font-weight:700;color:var(--ink)}
+@media (max-width:860px){.situazioni{grid-template-columns:1fr;gap:28px}}
+
+/* chi sono */
+.chi-top{display:grid;grid-template-columns:1.1fr .9fr;gap:48px;align-items:center}
+.foto{border-radius:var(--r);overflow:hidden;aspect-ratio:1/1;background:var(--giallo)}
+.foto img{width:100%;height:100%;object-fit:cover;mix-blend-mode:multiply;filter:grayscale(1) contrast(1.1)}
+.griglia{display:grid;grid-template-columns:repeat(3,1fr);border-top:1px solid var(--line);border-left:1px solid var(--line);margin-top:56px;background:#fff;border-radius:2px}
+.cella{border-right:1px solid var(--line);border-bottom:1px solid var(--line);padding:30px 26px;min-height:170px;display:flex;flex-direction:column;justify-content:space-between;gap:16px}
+.cella .n{font-family:var(--titoli);font-weight:700;font-size:clamp(36px,4vw,54px);letter-spacing:-.05em;line-height:1}
+.cella .l{font-size:15.5px;max-width:26ch}
+.cella.nomi{grid-column:span 3;flex-direction:row;justify-content:flex-start;align-items:center;flex-wrap:wrap;gap:10px 30px;min-height:0;padding:24px 26px}
+.cella.nomi .t{font-size:14px;font-weight:700;color:var(--rosso);width:100%}
+.cella.nomi .nome{font-family:var(--titoli);font-weight:700;font-size:clamp(19px,2.2vw,27px);letter-spacing:-.04em}
+.cella.nomi .nome small{font-family:var(--testo);font-weight:400;font-size:14px;color:var(--muted);letter-spacing:0}
+@media (max-width:760px){.chi-top{grid-template-columns:1fr}.griglia{grid-template-columns:1fr 1fr}.cella.nomi{grid-column:span 2}.cella{padding:22px 16px;min-height:150px}}
+.passi{display:grid;grid-template-columns:repeat(6,1fr);gap:14px;margin-top:44px}
+.passo{background:#fff;border-radius:20px;padding:22px 18px}
+.passo .anno{display:inline-block;background:var(--ink);color:var(--carta);border-radius:6px;padding:4px 11px;font-family:var(--titoli);font-weight:700;font-size:13px;margin-bottom:12px}
+.passo:nth-child(2) .anno{background:var(--rosso)}
+.passo:nth-child(4) .anno{background:var(--blu)}
+.passo:nth-child(6) .anno{background:var(--arancio);color:var(--ink)}
+.passo p{font-size:14.5px;color:var(--muted)}
+.passo b{color:var(--ink)}
+@media (max-width:1100px){.passi{grid-template-columns:repeat(3,1fr)}}
+@media (max-width:640px){.passi{grid-template-columns:1fr}}
+.strumenti{display:grid;grid-template-columns:repeat(3,1fr);gap:0;margin-top:40px;border-top:1px solid var(--line)}
+.strumenti div{padding:16px 18px 16px 0;border-bottom:1px solid var(--line);font-size:15px;color:var(--muted)}
+.strumenti b{display:block;color:var(--ink);font-family:var(--titoli);font-size:14px;letter-spacing:-.01em;margin-bottom:3px}
+@media (max-width:860px){.strumenti{grid-template-columns:1fr 1fr}}
+@media (max-width:520px){.strumenti{grid-template-columns:1fr}}
+
+/* da copiare */
+.copia{display:grid;grid-template-columns:1fr 1fr;gap:20px;margin-top:40px}
+.copia a{border-radius:var(--r);padding:30px 28px;text-decoration:none;display:flex;flex-direction:column;gap:12px;min-height:200px}
+.copia a:first-child{background:var(--blu);color:#fff}
+.copia a:last-child{background:var(--azzurro)}
+.copia h3{font-size:clamp(24px,2.6vw,32px)}
+.copia p{font-size:15.5px;opacity:.9}
+.copia .freccia{margin-top:auto}
+@media (max-width:760px){.copia{grid-template-columns:1fr}}
+
+/* parliamo */
+.parliamo{background:var(--ink);color:var(--carta)}
+.parliamo-grid{display:grid;grid-template-columns:.9fr 1.1fr;gap:56px;align-items:start}
+.parliamo h2{font-size:clamp(40px,5.6vw,70px)}
+.parliamo .lead{color:#BDB39F}
+.parliamo .sopra{color:var(--giallo)}
+.parliamo .sopra::before{background:var(--giallo)}
+.agenda{list-style:none;margin-top:28px;display:flex;flex-direction:column;gap:14px}
+.agenda li{display:flex;gap:14px;align-items:baseline}
+.agenda li b{flex:none;width:30px;height:30px;border-radius:50%;background:var(--giallo);color:var(--ink);display:grid;place-items:center;font-family:var(--titoli);font-size:14px}
+.parliamo .firma{color:#BDB39F;margin-top:30px}
+.parliamo .firma b{color:var(--carta)}
+.parliamo .firma img{box-shadow:none}
+form{background:var(--carta);color:var(--ink);border-radius:var(--r);padding:30px 28px;display:grid;gap:16px}
+.riga2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+textarea{min-height:110px;resize:vertical}
+.bisogni{display:flex;flex-wrap:wrap;gap:8px}
+.bisogni label{display:block}
+.bisogni input{position:absolute;opacity:0;pointer-events:none;width:1px;height:1px}
+.bisogni span{display:inline-block;border:1.5px solid var(--ink);border-radius:10px;padding:9px 15px;font-size:14px;cursor:pointer}
+.bisogni input:checked+span{background:var(--ink);color:var(--carta)}
+.bisogni input:focus-visible+span{outline:2px solid var(--rosso);outline-offset:2px}
+form .nota{font-size:13px;color:var(--muted)}
+form .btn{justify-self:start}
+.mail-diretta{margin-top:18px;font-size:15px;color:#BDB39F}
+.mail-diretta a{color:var(--carta);font-weight:700}
+@media (max-width:880px){.parliamo-grid{grid-template-columns:1fr;gap:40px}}
+@media (max-width:520px){.riga2{grid-template-columns:1fr}form{padding:24px 18px}}
+
+footer{padding:30px 0 44px;font-size:13.5px;color:var(--muted)}
+footer .wrap{display:flex;justify-content:space-between;gap:16px 24px;flex-wrap:wrap}
+footer b{font-family:var(--titoli);color:var(--ink);letter-spacing:-.02em}
+footer a{text-decoration:none;margin-left:16px}
+
+.bozza{position:fixed;right:12px;bottom:12px;z-index:30;background:var(--arancio);color:var(--ink);font-size:12px;padding:8px 12px;border-radius:999px;font-weight:700}
+
+/* movimento: una curva, solo transform e opacity, solo dove spiega qualcosa */
+.progresso{position:fixed;top:0;left:0;right:0;height:3px;background:var(--rosso);transform-origin:0 50%;transform:scaleX(0);z-index:40;pointer-events:none}
+.parola{display:inline-block}
+.barre{display:grid;gap:9px;border-top:1px solid var(--line);padding-top:14px}
+.barra{display:grid;grid-template-columns:minmax(0,9.5em) 1fr 4.2em;gap:10px;align-items:center;font-size:13.5px}
+.barra .t{height:12px;background:var(--carta-2);border-radius:4px;overflow:hidden}
+.barra .t i{display:block;height:100%;background:#8C8273;border-radius:4px;transform-origin:0 50%;transform:scaleX(0);transition:transform .7s var(--ease)}
+.barra.chiave .t i{background:var(--rosso)}
+.barra.chiave span{font-weight:700}
+.barra b{font-variant-numeric:tabular-nums;text-align:right}
+.esito .pipeline{font-size:14px;color:var(--muted)}
+.esito .grande{font-variant-numeric:tabular-nums}
+.contatori .q{display:block;height:6px;background:var(--carta-2);border-radius:2px;margin:10px 0 8px;overflow:hidden}
+.contatori .q i{display:block;height:100%;background:var(--ink);transform-origin:0 50%;transform:scaleX(0);transition:transform 1s var(--ease)}
+.contatori>div:last-child .q i{background:var(--rosso)}
+.contatori b,.cella .n{font-variant-numeric:tabular-nums}
+.binario{height:3px;background:var(--line);border-radius:2px;margin-top:40px;overflow:hidden}
+.binario i{display:block;height:100%;background:var(--rosso);transform-origin:0 50%;transform:scaleX(0)}
+.binario+.passi{margin-top:16px}
+.nodo .cerchio{transition:transform .2s var(--ease),box-shadow .2s var(--ease)}
+
+@media (prefers-reduced-motion:reduce){
+  .progresso,.binario{display:none}
+  .barra .t i,.contatori .q i{transition:none}
+  .timbro svg,.nastro-in{animation:none}
+  .btn,.pezzo img,.nodo .cerchio,.voto,.rv{transition:none}
+  html{scroll-behavior:auto}
 }
-.scrivimi { margin-top: 22px; padding-top: 16px; border-top: 1px solid var(--line); }
-/* Chiusura */
-.arrivo .bandiera { height: 22px; background: conic-gradient(var(--text) 25%, var(--bg) 0 50%, var(--text) 0 75%, var(--bg) 0) 0 0 / 22px 22px; margin-bottom: 40px; }
-.cta-riga { display: flex; flex-wrap: wrap; gap: 12px 18px; align-items: center; }
+
+/* ---------- componenti veri della v3 vestiti con la pelle v4 ---------- */
+:root{--bg:#F7F1E7;--bg-2:#fff;--bg-3:#EEE6D8;--text:#1C1A17;--su-carta:#1C1A17;--su-rosso:#FFF8EE;--rosso-fondo:#C0302A;--display:var(--titoli);--cond:var(--titoli);--body:var(--testo);--mono:"JetBrains Mono",ui-monospace,monospace}
+.skip{position:absolute;left:-999px;top:8px;background:var(--giallo);color:var(--ink);padding:8px 12px;z-index:100}
+.skip:focus{left:8px}
+:focus-visible{outline:3px solid var(--rosso);outline-offset:2px}
+section[id]{scroll-margin-top:84px}
+.credito a{color:inherit}
+.nota{font-size:14px;color:var(--muted)}
+.btn.pieno{background:var(--rosso);border-color:var(--rosso);color:#FFF8EE}
+.btn.pieno:hover{background:#A42621;border-color:#A42621}
+.btn.piccolo{padding:9px 14px;font-size:13.5px;border-color:var(--ink);background:transparent;color:var(--ink);border-radius:10px}
+.btn.piccolo:hover{background:var(--ink);color:var(--carta)}
+.btn.pieno.piccolo{background:var(--rosso);border-color:var(--rosso);color:#FFF8EE}
+
+/* il conto: il calcolatore dell'Officina */
+.calc2>*,.c-griglia>*,.c-campi{min-width:0}
+.calc2 .campo input{min-width:0}
+.calc2{border:0;border-radius:30px;padding:clamp(20px,3.4vw,44px);gap:clamp(22px,3.4vw,48px);margin-top:36px;transition:box-shadow .4s var(--ease)}
+.calc2.arrivato{box-shadow:0 0 0 3px var(--giallo)}
+.calc2 .campo label{font-weight:700;font-size:14px;color:var(--muted);display:block}
+.calc2 .campo input{font-family:var(--mono);background:var(--carta);border:1.5px solid var(--line);border-radius:12px;color:var(--ink);padding:10px 12px}
+.calc2 .campo input:focus{outline:2px solid var(--rosso);outline-offset:1px;border-color:transparent}
+.c-stima{background:var(--giallo);border-left:0;border-radius:18px;padding:18px 20px}
+.c-stima label{font-family:var(--titoli);text-transform:none;letter-spacing:-.01em;font-size:16px}
+.c-stima input{background:#fff;border:0;border-radius:10px;width:150px;color:var(--ink)}
+.c-uscite .uscita{background:var(--ink);border-radius:20px;padding:24px}
+.c-main{border-bottom:1px solid rgba(247,241,231,.16);padding-bottom:14px;margin-bottom:6px}
+.c-main b{font-family:var(--titoli);font-weight:700;font-size:clamp(46px,5.6vw,72px);letter-spacing:-.05em;line-height:1;color:var(--giallo);font-variant-numeric:tabular-nums}
+.c-main span{color:#D9D0BE}
+.c-uscite .orow{border-bottom:1px solid rgba(247,241,231,.12)}
+.c-uscite .orow .v{color:#F7F1E7}
+.c-come summary{font-family:var(--titoli);text-transform:none;letter-spacing:0;font-size:15px}
+.c-err{color:var(--rosso)}
+.c-link,.c-salta{color:var(--ink)}
+.c-chiuso-nota{background:var(--carta-2);border-left-color:var(--rosso);border-radius:10px}
+.c-dopo{border-top-color:var(--line)}
+.iscrizione{background:var(--giallo);color:var(--ink);border-radius:24px;padding:clamp(20px,3vw,30px);margin:30px 0 0}
+.iscrizione h2{font-family:var(--titoli);text-transform:none;letter-spacing:-.03em;font-size:clamp(24px,2.6vw,32px);color:var(--ink)}
+.iscrizione .isc-terzi{color:#4A4338;border-left-color:#4A4338}
+.iscrizione .btn.pieno{background:var(--rosso);border-color:var(--rosso);border-radius:12px}
+.iscrizione .btn.pieno:hover{background:var(--ink);border-color:var(--ink)}
+.iscrizione .c-link{color:var(--ink)}
+.isc-iframe{border-color:var(--ink);border-radius:10px;overflow:hidden}
+@media (prefers-reduced-motion:no-preference){[data-o="main"].aggiornato{animation:sale .45s var(--ease)}}
+@keyframes sale{from{opacity:.3;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+/* radar: il podio e il pronostico della v3 */
+.pronostico{display:flex;gap:12px 18px;align-items:center;flex-wrap:wrap;margin-top:30px}
+.pronostico p{margin:0;font-family:var(--titoli);font-size:17px;letter-spacing:-.01em}
+.podio{display:grid;grid-template-columns:repeat(3,1fr);gap:20px;margin-top:22px}
+.card{background:#fff;border:0;border-radius:24px;overflow:hidden;display:flex;flex-direction:column;text-align:left;color:var(--ink);font:inherit;padding:0;cursor:pointer;transition:box-shadow .2s var(--ease)}
+.card:hover{box-shadow:0 0 0 2px var(--ink)}
+.card[aria-pressed="true"]{box-shadow:0 0 0 3px var(--rosso)}
+.card:disabled{cursor:default}
+.card:disabled:hover{box-shadow:none}
+.card[aria-pressed="true"]:disabled{box-shadow:0 0 0 3px var(--rosso)}
+.ante{margin:0;background:#fff}
+.ante img{display:block;width:100%;height:auto;aspect-ratio:16/10;object-fit:cover}
+.ante figcaption{font-size:12px;color:var(--muted);padding:6px 20px;background:var(--carta)}
+.ante-carta span{display:flex;align-items:center;justify-content:center;aspect-ratio:16/10;font-family:var(--titoli);font-weight:700;color:var(--muted);background:var(--carta-2)}
+.card .fig{padding:20px 22px;display:flex;flex-direction:column;gap:12px;min-height:170px}
+.podio .card:nth-child(1) .fig{background:var(--giallo)}
+.podio .card:nth-child(2) .fig{background:var(--rosso);color:#FFF8EE}
+.podio .card:nth-child(3) .fig{background:var(--blu);color:#fff}
+.tags{display:flex;gap:4px 8px;flex-wrap:wrap;font-size:14px}
+.tag{font-weight:700}
+.tag+.tag{font-weight:400;opacity:.82}
+.tag+.tag::before{content:"· "}
+.card .num{font-family:var(--titoli);font-weight:700;font-size:clamp(30px,3.2vw,42px);letter-spacing:-.045em;line-height:.98;margin-top:auto}
+.card .num small{display:block;font-family:var(--testo);font-weight:400;font-size:14px;letter-spacing:0;line-height:1.35;margin-top:8px;opacity:.9}
+.card .corpo{padding:18px 22px 4px;flex:1}
+.card .chi{font-size:13.5px;color:var(--muted);font-weight:700;margin:0 0 6px}
+.card h3{font-size:19px;letter-spacing:-.03em;line-height:1.18;margin:0}
+.card .piede{display:flex;justify-content:flex-end;align-items:center;padding:12px 22px 18px;min-height:82px}
+.card .voto{width:58px;height:58px;border-radius:50%;background:var(--ink);color:var(--carta);display:grid;place-items:center;font-family:var(--titoli);font-weight:700;font-size:19px;letter-spacing:-.03em;transform:rotate(-8deg)}
+.card .voto small{font-size:11px;opacity:.7;margin-top:-14px}
+.coperto .voto{visibility:hidden}
+.coperto .piede::before{content:"Voto coperto";font-size:14px;font-weight:700;color:var(--muted);margin-right:auto}
+@media (prefers-reduced-motion:no-preference){.podio:not(.coperto) .voto{animation:voto4 .5s var(--ease) both}.podio:not(.coperto) .card:nth-child(2) .voto{animation-delay:.12s}.podio:not(.coperto) .card:nth-child(3) .voto{animation-delay:.24s}}
+@keyframes voto4{from{opacity:0;transform:scale(.7) rotate(-8deg)}to{opacity:1;transform:rotate(-8deg)}}
+.esito-pron{margin-top:18px;padding:16px 20px;border-radius:16px;background:#fff;border-left:4px solid var(--rosso)}
+.esito-pron[hidden]{display:none}
+.esito-pron p{margin:0}
+@media (max-width:900px){.podio{grid-template-columns:1fr}}
+
+/* newsletter: le anteprime della v3 */
+.anteprime{display:grid;grid-template-columns:repeat(3,1fr);gap:22px;margin-top:44px}
+.anteprima{display:flex;flex-direction:column;gap:14px;text-decoration:none;color:var(--ink)}
+.copertina{position:relative;display:block;aspect-ratio:16/10;border-radius:24px;overflow:hidden;background:var(--carta-2)}
+.copertina>img{width:100%;height:100%;object-fit:cover;transition:transform .4s var(--ease)}
+.anteprima:hover .copertina>img{transform:scale(1.03)}
+.anteprima .velo{display:none}
+.anteprima .testo{display:flex;flex-direction:column;gap:6px}
+.anteprima strong{font-family:var(--titoli);font-size:20px;letter-spacing:-.03em;line-height:1.18}
+.anteprima em{font-style:normal;color:var(--muted);font-size:15px}
+.anteprima .attacco{display:none}
+.anteprima .data{order:-1;font-size:14px;font-weight:700;color:var(--muted)}
+@media (max-width:900px){.anteprime{grid-template-columns:1fr}}
+
+/* da dove vengo: sette passi */
+.passi{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+
+/* menu su schermi stretti: una riga che scorre sotto la testata */
+@media (max-width:1260px){
+  .bar{flex-wrap:wrap;height:auto;padding-top:12px;padding-bottom:0;row-gap:8px}
+  nav{display:block;order:3;width:100%;overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}
+  nav::-webkit-scrollbar{display:none}
+  nav ul{padding:2px 0 12px}
+}
+.c-azioni .btn,.pronostico .btn{white-space:normal;text-align:left}
+
+/* ---------- 23/11 sera: meno Bob's. Colori della pelle "tavola" del sito e del Substack, segni propri ---------- */
+:root{
+  --carta:#F7F2DF;--carta-2:#EFE7CF;--carta-3:#FFFDF6;--ink:#2E2D2B;--muted:#6B6358;--line:#DDD1B3;
+  --rosso:#C0302A;--rosso-scuro:#8E1F1A;--verde:#2F6B45;--giallo:#F7C948;--notte:#15110D;
+  --blu:var(--verde);--azzurro:var(--carta-2);--arancio:var(--rosso-scuro);
+  --bg:var(--carta);--bg-2:var(--carta-3);--bg-3:var(--carta-2);--text:var(--ink);--su-carta:var(--ink)
+}
+header{background:rgba(247,242,223,.95)}
+.quadretti,#conto,.cartello{background-image:repeating-linear-gradient(0deg,transparent 0 39px,rgba(54,55,55,.06) 39px 40px),repeating-linear-gradient(90deg,transparent 0 39px,rgba(54,55,55,.06) 39px 40px)}
+.cartello{background-color:var(--carta-3)}
+
+/* lo scontrino, al posto del bollino */
+.hero h1{max-width:12.5ch}
+.scontrino{position:absolute;top:clamp(40px,6vw,92px);right:clamp(8px,4vw,56px);width:250px;transform:rotate(2deg);filter:drop-shadow(0 12px 18px rgba(54,55,55,.16));z-index:2}
+.carta-s{position:relative;background:var(--carta-3);padding:18px 18px 16px;font-family:var(--mono);font-weight:500;font-size:12.5px;line-height:1.6;color:var(--ink)}
+.carta-s::after{content:"";position:absolute;left:0;right:0;bottom:-10px;height:10px;background:linear-gradient(-45deg,transparent 7px,var(--carta-3) 0) 0 0/14px 10px repeat-x,linear-gradient(45deg,transparent 7px,var(--carta-3) 0) 0 0/14px 10px repeat-x}
+.carta-s b{display:block;font-weight:500;letter-spacing:.08em;text-align:center}
+.carta-s>span{display:block;text-align:center;color:var(--muted)}
+.carta-s hr{border:0;border-top:1px dashed #B8AE98;margin:10px 0}
+.carta-s p{display:flex;justify-content:space-between;gap:12px;margin:0}
+.carta-s p span:last-child{white-space:nowrap}
+.carta-s .tot{color:var(--rosso)}
+@media (max-width:1100px){.scontrino{display:none}.hero h1{max-width:14ch}}
+
+/* tasti della calcolatrice, al posto delle pillole */
+.tastiera{position:absolute;left:3%;bottom:7%;display:flex;flex-wrap:wrap;gap:12px;max-width:62%}
+.tasto{display:inline-block;background:var(--carta-3);color:var(--ink);border-radius:10px;padding:10px 14px;font-family:var(--mono);font-weight:500;font-size:clamp(12.5px,1.2vw,15px);white-space:nowrap;box-shadow:0 5px 0 #CBBF9F,0 12px 20px rgba(0,0,0,.22)}
+.tasto-uguale{position:absolute;right:4%;bottom:-38px;width:116px;height:116px;border-radius:22px;background:var(--rosso);color:#FFF8EE;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;text-decoration:none;box-shadow:0 8px 0 var(--rosso-scuro),0 16px 26px rgba(0,0,0,.2);transition:transform .12s var(--ease),box-shadow .12s var(--ease);z-index:3}
+.tasto-uguale span{font-family:var(--mono);font-weight:500;font-size:58px;line-height:.9}
+.tasto-uguale small{font-family:var(--titoli);font-weight:700;font-size:13px}
+.tasto-uguale:active{transform:translateY(6px);box-shadow:0 2px 0 var(--rosso-scuro),0 8px 16px rgba(0,0,0,.2)}
+@media (max-width:760px){.tastiera{max-width:88%;gap:8px;bottom:5%}.tasto-uguale{width:86px;height:86px;bottom:-30px}.tasto-uguale span{font-size:42px}.tasto-uguale small{font-size:11px}.credito{padding-right:110px}}
+
+/* rotolo della calcolatrice, al posto del nastro rosso inclinato */
+.rotolo{background:var(--carta-3);border-top:1px dashed #B8AE98;border-bottom:1px dashed #B8AE98;padding:16px 0;overflow:hidden;margin:clamp(24px,4vw,48px) 0}
+
+/* tabellone a palette, al posto del nastro giallo */
+.tabellone4{background:var(--notte);padding:30px 0}
+.riga-flap{display:flex;flex-wrap:wrap;justify-content:center;gap:12px 22px;margin:0 auto}
+.riga-flap .pf{display:inline-flex;gap:4px}
+.riga-flap i{position:relative;font-style:normal;font-family:var(--mono);font-weight:500;font-size:clamp(20px,2.8vw,36px);color:var(--giallo);background:#2A231C;border-radius:3px;width:1.08em;text-align:center;padding:.16em 0;line-height:1}
+.riga-flap i::after{content:"";position:absolute;left:0;right:0;top:50%;border-top:1px solid var(--notte)}
+
+/* tovaglia di A Tavola con Lorenzo, sopra la newsletter */
+.tovaglia{height:22px;background-color:var(--carta-3);background-image:linear-gradient(90deg,rgba(192,48,42,.45) 50%,transparent 50%),linear-gradient(rgba(192,48,42,.45) 50%,transparent 50%);background-size:22px 22px}
+
+/* superfici che erano gialle o blu */
+.porta.gialla{background:var(--verde);color:var(--carta-3)}
+.porta.gialla .btn-nero{background:var(--carta-3);color:var(--verde)}
+.porta.bianca{background:var(--carta-3)}
+.podio .card:nth-child(1) .fig{background:var(--notte);color:#F4EFE4}
+.podio .card:nth-child(1) .num{color:var(--giallo)}
+.podio .card:nth-child(3) .fig{background:var(--verde);color:var(--carta-3)}
+.card,.esito-pron,.cit,.griglia,.contatori,.calc2,.passo{background:var(--carta-3)}
+.c-stima{background:var(--carta-3);border:1.5px dashed var(--rosso)}
+.c-stima input{background:var(--carta);border:1.5px solid var(--line)}
+.calc2 .campo input{background:var(--carta)}
+.calc2.arrivato{box-shadow:0 0 0 3px var(--rosso)}
+.iscrizione{background:var(--carta-3);border:1.5px solid var(--line)}
+.foto{background:var(--carta-2)}
+.foto img{mix-blend-mode:normal;filter:grayscale(1) contrast(1.05)}
+.cella.forte{grid-column:span 3;flex-direction:row;align-items:flex-end;justify-content:flex-start;gap:28px;min-height:0;background:var(--notte);color:#F4EFE4}
+.cella.forte .n{color:var(--giallo);font-size:clamp(56px,8vw,104px)}
+.cella.forte .l{font-size:17px;max-width:34ch;color:#D9D0BE;padding-bottom:10px}
+.copia a:first-child{background:var(--verde)}
+.copia a:last-child{background:var(--carta-2)}
+.passo:nth-child(4) .anno{background:var(--verde)}
+.passo:nth-child(6) .anno{background:var(--rosso-scuro);color:#FFF8EE}
+@media (max-width:760px){.cella.forte{grid-column:span 2;flex-direction:column;align-items:flex-start;gap:10px}}
+.scontrino{width:280px}
+.tabellone4+.parliamo{border-top:1px dashed #3A332A}
+
+/* ---------- settori: una calcolatrice al posto della ruota ---------- */
+.calcolatrice{background:var(--ink);border-radius:30px;padding:24px 24px 18px;max-width:430px;width:100%;margin:0 auto;box-shadow:0 22px 44px rgba(46,45,43,.28),inset 0 2px 0 rgba(255,255,255,.07)}
+.display{display:flex;align-items:center;justify-content:flex-end;gap:2px;background:#C3CAA6;border-radius:10px;padding:14px 16px;margin-bottom:22px;min-height:58px;font-family:var(--mono);font-weight:500;font-size:clamp(15px,1.8vw,19px);color:#26291B;letter-spacing:.04em;white-space:nowrap;overflow:hidden;box-shadow:inset 0 3px 8px rgba(0,0,0,.28)}
+.cursore{display:inline-block;width:.55em;height:1.05em;background:#26291B;opacity:.75}
+@media (prefers-reduced-motion:no-preference){.cursore{animation:lampeggia 1s steps(1) infinite}}
+@keyframes lampeggia{50%{opacity:0}}
+.tasti-s{display:grid;grid-template-columns:repeat(3,1fr);gap:14px}
+.tasto-s{aspect-ratio:1/1;border:0;border-radius:16px;background:var(--carta-3);color:var(--ink);box-shadow:0 6px 0 #B9AE92;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:6px;cursor:pointer;font:inherit;padding:6px;transition:transform .1s var(--ease),box-shadow .1s var(--ease),background-color .15s var(--ease)}
+.tasto-s b{font-family:var(--mono);font-weight:500;font-size:clamp(22px,2.8vw,30px);line-height:1}
+.tasto-s small{font-family:var(--titoli);font-weight:700;font-size:clamp(10px,1.05vw,12.5px);line-height:1.1;text-align:center}
+.tasto-s:hover{background:#fff}
+.tasto-s:active{transform:translateY(4px);box-shadow:0 2px 0 #B9AE92}
+.tasto-s.on{background:var(--rosso);color:#FFF8EE;transform:translateY(5px);box-shadow:0 1px 0 var(--rosso-scuro)}
+.tasto-s:focus-visible{outline:3px solid var(--giallo);outline-offset:3px}
+.marca{margin:16px 0 0;text-align:center;font-family:var(--mono);font-size:12px;letter-spacing:.12em;text-transform:uppercase;color:#8F877A}
+@media (max-width:420px){.calcolatrice{padding:18px 16px 14px;border-radius:24px}.tasti-s{gap:10px}}
+
+/* ---------- il rotolo: nastro da addizionatrice, bordi strappati, totali in rosso ---------- */
+.rotolo{position:relative;background:var(--carta-3);border:0;padding:26px 0 24px;margin:clamp(30px,5vw,60px) 0;filter:drop-shadow(0 8px 14px rgba(46,45,43,.12))}
+.rotolo::before,.rotolo::after{content:"";position:absolute;left:0;right:0;height:10px}
+.rotolo::before{top:0;background:linear-gradient(135deg,var(--carta) 7px,transparent 0) 0 0/14px 10px repeat-x,linear-gradient(-135deg,var(--carta) 7px,transparent 0) 0 0/14px 10px repeat-x}
+.rotolo::after{bottom:0;background:linear-gradient(45deg,var(--carta) 7px,transparent 0) 0 100%/14px 10px repeat-x,linear-gradient(-45deg,var(--carta) 7px,transparent 0) 0 100%/14px 10px repeat-x}
+.rotolo .nastro-in{align-items:stretch}
+.biglietto{display:inline-grid;grid-template-columns:auto auto;align-items:end;column-gap:12px;row-gap:4px;padding:2px 28px;border-right:1px dashed #C9BFA6}
+.biglietto small{grid-column:1/3;font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);white-space:nowrap}
+.biglietto b{font-family:var(--mono);font-weight:500;font-size:clamp(20px,2.3vw,28px);color:var(--ink);white-space:nowrap;font-variant-numeric:tabular-nums}
+.biglietto i{font-style:normal;font-family:var(--mono);font-weight:500;font-size:clamp(16px,1.8vw,22px);color:var(--muted)}
+.biglietto.tot b,.biglietto.tot i{color:var(--rosso)}
+.rotolo .motto{display:inline-flex;align-items:center;padding:0 40px;font-family:var(--titoli);font-weight:700;font-size:clamp(20px,2.4vw,30px);letter-spacing:-.03em;color:var(--rosso);white-space:nowrap;border-right:1px dashed #C9BFA6}
+.rotolo{padding:30px 0 28px;filter:drop-shadow(0 10px 18px rgba(46,45,43,.16));background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(192,48,42,.07) 27px 28px)}
+.biglietto b{font-size:clamp(22px,2.6vw,32px)}
 </style>
 </head>
 <body data-home>
 <a class="skip" href="#contenuto">Vai al contenuto</a>
-<header class="testata"><div class="wrap riga">
-  <a class="firma" href="#apertura">Lorenzo Asuni</a>
-  <nav aria-label="Sezioni"><ul class="menu"><li><a href="#conto">Il conto</a></li><li><a href="#numero">Come leggo un numero</a></li><li><a href="#radar">Il radar</a></li><li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li><li><a href="repository.html">Da copiare</a></li><li class="forte"><a href="officina.html">Officina</a></li><li class="cyber"><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></li></ul></nav>
+<div class="progresso" id="progresso" aria-hidden="true"></div>
+<div class="prove" aria-label="In breve"><ul><li><i class="ast"></i>+323% di crescita annuale media del fatturato</li><li><i class="ast"></i>35 imprese seguite</li><li><i class="ast"></i>Oltre 100 M€ raccolti dalle società che ho seguito</li><li><i class="ast"></i>Oltre 500 iscritti alla newsletter</li><li><i class="ast"></i>Dal 2013 nel marketing e nelle vendite</li></ul></div>
+<header id="testata"><div class="wrap bar">
+  <a class="logo" href="#apertura">Lorenzo Asuni<span>.</span></a>
+  <nav aria-label="Sezioni"><ul>
+    <li><a href="#conto">Il conto</a></li><li><a href="#aiuto">Come lavoro</a></li><li><a href="#numero">Come leggo un numero</a></li><li><a href="#radar">Il radar</a></li>
+    <li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li><li><a href="repository.html">Da copiare</a></li><li><a href="officina.html">Officina</a></li>
+  </ul></nav>
+  <div class="bar-dx">
+    <div class="lingue"><a class="on" href="#apertura">IT</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></div>
+    <a class="btn btn-rosso" href="#parliamo">Scrivimi due righe</a>
+  </div>
 </div></header>
-<main id="contenuto">
 
-<section class="apertura" id="apertura" aria-labelledby="t-apertura">
-  <video src="asset/calcolatrice-tasti-wikimedia.webm" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
-  <div class="wrap dentro">
-    <h1 id="t-apertura">Il fatturato di una<br>società&nbsp;tech,<span>calcolatrice alla&nbsp;mano.</span></h1>
-    <p class="chi">Lavoro dentro le aziende B2B e metto marketing, vendite e RevOps sugli stessi numeri.</p>
-    <p class="cosa">Se guidi una società tech, da founder o da CEO, parti dal conto sul tuo fatturato e dalle dieci domande che mostrano dove lo stai perdendo. Se invece investi in società tech, usale per leggere i tuoi investimenti.</p>
-    <div class="bottoni"><a class="btn pieno" href="#conto">Fai il conto</a><a class="btn" href="materiali/autotest.html">Le dieci domande</a></div>
+<main id="contenuto">
+<div class="wrap hero" id="apertura">
+  <div class="scontrino" aria-hidden="true"><div class="carta-s"><b>LORENZO ASUNI</b><span>Fractional CMO</span><hr><p><span>Crescita media annua</span><span>+323%</span></p><p><span>Imprese seguite</span><span>35</span></p><p><span>Raccolti dalle società</span><span>100 M€+</span></p><p><span>Nel marketing</span><span>dal 2013</span></p><p><span>Lingue</span><span>IT EN ES</span></p><hr><p class="tot"><span>TOTALE</span><span>il tuo fatturato</span></p></div></div>
+  <div class="sopra">Marketing, vendite e RevOps</div>
+  <h1>Il fatturato di una società tech, <span class="rosso">AI e calcolatrice alla mano.</span></h1>
+  <div class="hero-sotto">
+    <div><p>Lavoro dentro le aziende B2B e metto marketing, vendite e RevOps sugli stessi numeri.</p><p>Se guidi una società tech, da founder o da CEO, parti dal conto sul tuo fatturato e dalle dieci domande che mostrano dove lo stai perdendo. Se invece investi in società tech, usale per leggere i tuoi investimenti.</p></div>
+    <div>
+      <p class="domanda">Come posso aiutarti?</p>
+      <div class="azioni"><a class="btn btn-rosso" href="#parliamo">Scrivimi due righe</a><a class="btn btn-vuoto" href="#conto">Fai il conto</a></div>
+      <div class="posti">Prendo un nuovo progetto da aprile 2027</div>
+    </div>
+  </div>
+</div>
+
+<div class="wrap scena-wrap">
+  <div style="position:relative">
+    <div class="scena">
+      <video src="asset/calcolatrice-tasti-wikimedia.webm" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
+      <div class="tastiera"><span class="tasto">Dentro l'azienda</span><span class="tasto">Numeri con la fonte</span><span class="tasto">Progetti di 6 o 12 mesi</span><span class="tasto">IT · EN · ES</span><span class="tasto">Dal 2013</span></div>
+    </div>
+    <a class="tasto-uguale" href="#conto"><span aria-hidden="true">=</span><small>Fai il conto</small></a>
   </div>
   <p class="credito">Video: <a href="https://commons.wikimedia.org/wiki/File:Keystrokes_in_a_vintage_mechanical_calculator.webm">Subhashish Panigrahi</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.it">CC BY-SA 4.0</a>, via Wikimedia Commons, senza audio</p>
-</section>
+  
+</div>
 
-<section class="sezione quadretti" id="conto" aria-labelledby="t-conto">
+<section id="conto" aria-labelledby="t-conto">
   <div class="wrap">
-    <h2 id="t-conto">Il conto</h2>
-    <p class="lead">Quanti meeting servono per il fatturato nuovo che vuoi chiudere? Prima di guardare, prova a stimarlo. Poi metti i tuoi numeri: il risultato cambia mentre scrivi.</p>
+    <div class="sopra">Il conto</div>
+    <h2 class="h2 rv" id="t-conto">Quanti meeting servono per il fatturato <span class="rosso">che vuoi chiudere?</span></h2>
+    <p class="lead">Prima di guardare, prova a stimarlo. Poi metti i tuoi numeri: il risultato cambia mentre scrivi.</p>
     <div class="iscrizione" id="iscrizione" role="region" aria-labelledby="isc-t" hidden>
   <div class="isc-chiuso">
     <h2 id="isc-t">I risultati si aprono con l'iscrizione</h2>
@@ -502,41 +783,66 @@ button.card:hover { border-color: var(--text); }
   <p class="isc-fatto" aria-live="polite"></p>
 </div>
     <div id="calc-funnel"><div class="calc2" data-calc="funnel" data-stima></div></div>
-    <p class="dopo-conto"><a class="btn" href="officina.html">Gli altri nove conti, nell'Officina</a><span class="nota">CAC, sconto contro volume, venditori da assumere, provvigioni e altri.</span></p>
+    <div class="dopo"><a class="btn btn-nero" href="officina.html">Gli altri nove conti, nell'Officina</a><span>CAC, sconto contro volume, venditori da assumere, provvigioni e altri.</span><a class="freccia" href="materiali/autotest.html">Le dieci domande che mostrano dove perdi il fatturato</a></div>
   </div>
 </section>
 
-<section class="sezione fascia" id="numero" aria-labelledby="t-numero">
+<div class="rotolo" aria-hidden="true"><div class="nastro-in" id="nastro1"></div></div>
+
+<section id="aiuto" aria-labelledby="t-aiuto">
   <div class="wrap">
-    <h2 id="t-numero">Come leggo un numero</h2>
-    <p class="lead">Prima di fidarmi di un risultato, mio o di altri, faccio tre domande. In quest'ordine: se cade la prima, le altre non servono.</p>
-    <div class="domande3">
-      <div><h3>1. Chi lo dice</h3><p>L'ho visto io, in un dato aperto o in un documento depositato, oppure lo dichiara chi l'ha fatto? Un numero dichiarato può essere vero, ma pesa meno.</p></div>
-      <div><h3>2. Contro cosa</h3><p>Mi servono il periodo, il punto di partenza e il costo. Un "+52%" senza la base non mi dice niente.</p></div>
-      <div><h3>3. Si rifà altrove?</h3><p>Funzionerebbe in un'azienda B2B italiana da 5 a 50 persone, con il suo budget e il suo team? Se la risposta è no, il caso resta una curiosità.</p></div>
+    <div class="sopra">Come lavoro</div>
+    <h2 class="h2 rv" id="t-aiuto">Due modi di lavorare insieme. <span class="rosso">E uno per leggermi e basta.</span></h2>
+    <div class="porte"><article class="porta gialla"><span class="num">01</span><h3>Assessment go-to-market</h3><p>Leggo clienti, contratti, pipeline e registrazioni delle call, e parlo con chi vende. Ti consegno dove si perde il fatturato e cosa fare nei sei mesi dopo.</p>
+        <ul><li><i class="ast"></i>Chi state attirando e chi dovreste attirare</li><li><i class="ast"></i>Il funnel a ritroso dal fatturato che vuoi</li><li><i class="ast"></i>Un piano con obiettivi per canale</li></ul><a class="btn btn-nero" href="#parliamo" data-bisogno="assessment">Parliamo dell'assessment</a></article><article class="porta rossa"><span class="num">02</span><h3>Fractional CMO</h3><span class="durata">Progetti di 6 o 12 mesi</span><p>Seguo go-to-market, marketing e brand dentro il team, dalla crescita del fatturato alla costruzione del team e al posizionamento. Si parte con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
+        <ul><li><i class="ast"></i>Obiettivi sfidanti dal primo mese, sui tassi di oggi</li><li><i class="ast"></i>BDR, venditori e campagne con una scorecard</li><li><i class="ast"></i>Una verifica settimanale sui numeri</li></ul><a class="btn" href="#parliamo" data-bisogno="fractional">Parliamo del progetto</a></article><article class="porta bianca"><span class="num">03</span><h3>Leggimi e basta</h3>
+        <p>Il conto e l'Officina sono aperti. Una volta al mese la newsletter, ogni venerdì il radar, ogni settimana i repository da copiare.</p>
+        <ul><li><i class="ast"></i>Dieci conti collegati tra loro</li><li><i class="ast"></i>Casi con un numero e un voto</li><li><i class="ast"></i>Calcolatori e skill da adattare</li></ul>
+        <a class="btn btn-vuoto" href="#newsletter">Iscriviti alla newsletter</a></article></div>
+  </div>
+</section>
+
+<section id="settori" style="padding-top:0" aria-labelledby="t-settori">
+  <div class="wrap">
+    <div class="sopra">Settori</div>
+    <h2 class="h2 rv" id="t-settori">Dimmi cosa fa la tua azienda. <span class="rosso">Ti dico cosa ho già visto nel tuo settore.</span></h2>
+    <div class="mozzo">
+      <div class="calcolatrice">
+        <div class="display"><span id="disp" aria-live="polite"></span><i class="cursore" aria-hidden="true"></i></div>
+        <div class="tasti-s" id="tasti-s" role="group" aria-label="Scegli il settore"></div>
+        <p class="marca">Scegli il tuo settore</p>
+      </div>
+      <div class="pannello" id="pannello" aria-live="polite"><div id="pannello-in"></div></div>
     </div>
   </div>
 </section>
 
-<section class="sezione" id="radar" aria-labelledby="t-radar">
+<section id="numero" style="padding-top:0" aria-labelledby="t-numero">
   <div class="wrap">
-    <h2 id="t-radar">Il radar della settimana</h2>
-    <div class="radar-grid">
+    <div class="domande-top">
       <div>
-        <p class="lead come-lavora">Ogni settimana un sistema raccoglie articoli da newsletter, blog e stampa di marketing e vendite. Io scelgo quelli che hanno un numero, li leggo a fondo e do un voto su 10.</p>
-        <p class="nota">Il voto: fino a 3 punti per la prova, 3 per quanto si rifà in un'azienda B2B italiana da 5 a 50 persone, 2 per la novità, 2 per il canale.</p>
+        <div class="sopra">Come leggo un numero</div>
+        <h2 class="h2 rv" id="t-numero">Prima di fidarmi di un risultato, tre domande. <span class="rosso">In quest'ordine.</span></h2>
+        <p class="lead">Vale per i miei risultati e per quelli degli altri. Se cade la prima, le altre non servono.</p>
       </div>
-      <div class="tabellone" role="table" aria-label="Il radar del 14 novembre 2026">
-        <div class="tab-testa" role="row"><span role="columnheader">Settimana del</span><span class="d" role="columnheader">14/11/2026</span></div>
-        <div class="trow" role="row"><span class="l" role="cell">Raccolti</span><span class="flap" role="cell" aria-label="209"><i>2</i><i>0</i><i>9</i></span></div>
-        <div class="trow" role="row"><span class="l" role="cell">Con un numero</span><span class="flap" role="cell" aria-label="73"><i>7</i><i>3</i></span></div>
-        <div class="trow" role="row"><span class="l" role="cell">Letti a fondo</span><span class="flap" role="cell" aria-label="13"><i>1</i><i>3</i></span></div>
-        <div class="trow" role="row"><span class="l" role="cell">Tenuti</span><span class="flap" role="cell" aria-label="2"><i>2</i></span></div>
-      </div>
+      <div class="cartello" aria-hidden="true"><div class="q">?</div></div>
     </div>
+    <div class="tre">
+      <div><span class="n">01</span><h3>Chi lo dice</h3><p>L'ho visto io, in un dato aperto o in un documento depositato, oppure lo dichiara chi l'ha fatto? Un numero dichiarato può essere vero, ma pesa meno.</p></div>
+      <div><span class="n">02</span><h3>Contro cosa</h3><p>Mi servono il periodo, il punto di partenza e il costo. Un "+52%" senza la base non mi dice niente.</p></div>
+      <div><span class="n">03</span><h3>Si rifà altrove?</h3><p>Funzionerebbe in un'azienda B2B italiana da 5 a 50 persone, con il suo budget e il suo team? Se la risposta è no, il caso resta una curiosità.</p></div>
+    </div>
+  </div>
+</section>
+
+<section id="radar" style="padding-top:0" aria-labelledby="t-radar">
+  <div class="wrap">
+    <div class="sopra">Il radar della settimana</div>
+    <h2 class="h2 rv" id="t-radar">Casi con un numero. <span class="rosso">Letti a fondo, con un voto su 10.</span></h2>
+    <p class="metodo">Ogni settimana un sistema raccoglie articoli da newsletter, blog e stampa di marketing e vendite. Io scelgo quelli che hanno un numero, li leggo a fondo e do un voto su 10. Il voto: fino a 3 punti per la prova, 3 per quanto si rifà in un'azienda B2B italiana da 5 a 50 persone, 2 per la novità, 2 per il canale.</p>
+    <div class="contatori" role="table" aria-label="Il radar della settimana del 14/11/2026"><div>Settimana del 14/11/2026</div><div><b data-to="209">209</b><em class="q"><i data-q="1.0"></i></em><span>raccolti</span></div><div><b data-to="73">73</b><em class="q"><i data-q="0.3493"></i></em><span>con un numero</span></div><div><b data-to="13">13</b><em class="q"><i data-q="0.0622"></i></em><span>letti a fondo</span></div><div><b data-to="2">2</b><em class="q"><i data-q="0.0096"></i></em><span>tenuti</span></div></div>
     <div class="pronostico"><p><b>Prima di vedere i voti:</b> quale di questi tre esempi ha preso di più?</p><button type="button" class="btn piccolo" id="salta-pron">Mostra i voti</button></div>
-    <div class="podio coperto" id="podio">
-<button type="button" class="card" data-id="a" aria-pressed="false">
+    <div class="podio coperto" id="podio"><button type="button" class="card" data-id="a" aria-pressed="false">
   <figure class="ante"><img src="esempi-img/RG-20261108-01-mini.webp" alt="Ritaglio della fonte con il numero segnato" loading="lazy" width="800" height="500"><figcaption>Frankfurt School · 11/2026</figcaption></figure><div class="fig"><div class="tags"><span class="tag visto">Visto</span><span class="tag">Paid Meta e Google</span></div>
   <div class="num">0,37% contro 1,17%<small>conversione della visita da un annuncio ChatGPT e da Google Search, sugli stessi 1.898 negozi online</small></div></div>
   <div class="corpo"><p class="chi">Frankfurt School e WU Vienna</p><h3>Su ChatGPT una visita pagata converte un terzo di una da Google</h3></div>
@@ -554,97 +860,104 @@ button.card:hover { border-color: var(--text); }
   <div class="corpo"><p class="chi">Base44</p><h3>Un founder, nessun round, venduta a Wix sei mesi dopo il lancio</h3></div>
   <div class="piede"><span class="voto">7<small>/10</small></span></div>
 </button>
-    </div>
+</div>
     <div class="esito-pron" id="esito-pron" aria-live="polite" hidden><p></p></div>
-    <div class="valutazione"><span class="scacchi" aria-hidden="true"></span><div>
-      <p>Sono i tre esempi con il voto più alto dall'8 novembre, quando il radar è partito. In due settimane il sistema ha raccolto 385 articoli e io ne ho tenuti 8. Il più solido è uno studio misurato da terzi; quasi tutti gli altri sono numeri dichiarati da chi l'ha fatto, e vanno letti così. Non ho ancora trovato un caso italiano con un numero.</p>
-      <p><a class="btn piccolo" href="esempi.html">Tutti gli 8 esempi, con fonte e voto</a></p>
-    </div></div>
+    <p class="nota-radar"><i class="ast"></i><span>Sono i tre esempi con il voto più alto dall'8 novembre, quando il radar è partito. In due settimane il sistema ha raccolto 385 articoli e io ne ho tenuti 8. Il più solido è uno studio misurato da terzi; quasi tutti gli altri sono numeri dichiarati da chi l'ha fatto, e vanno letti così. Non ho ancora trovato un caso italiano con un numero.</span></p>
+    <div class="dopo"><a class="freccia" href="esempi.html">Tutti gli 8 esempi, con fonte e voto</a></div>
   </div>
 </section>
 
-<section class="sezione" id="newsletter" aria-labelledby="t-news">
-  <span class="tovaglia-bordo" aria-hidden="true"></span>
+<section style="padding-top:0" aria-labelledby="t-situazioni">
   <div class="wrap">
-    <div class="news-testa">
-      <div><h2 id="t-news">A Tavola con Lorenzo</h2>
-      <p class="lead">La mia newsletter. Una volta al mese apro i conti di un'azienda di cui parlano tutti, con i documenti depositati sul tavolo. Oltre 500 persone la ricevono (dato del 7 novembre 2026).</p></div>
-      <div class="news-bottoni"><a class="btn pieno" href="https://lorenzoasuni.substack.com/subscribe">Iscriviti ad A Tavola con Lorenzo</a><a href="https://lorenzoasuni.substack.com/archive">Tutti i pezzi</a></div>
+    <div class="sopra">Quando mi chiamano</div>
+    <h2 class="h2 rv" id="t-situazioni">Tre situazioni in cui di solito arriva la telefonata.</h2>
+    <div class="situazioni"><div><h3>Il team fissa meeting, ma i contratti non arrivano.</h3><p>Il problema sta quasi sempre in un passaggio preciso: chi si presenta, chi viene qualificato, chi riceve una proposta.</p><p class="lavoro">Tassi per passaggio, no-show, definizione di opportunità.</p></div><div><h3>Prima di un round serve un piano che regga le domande.</h3><p>Il ricorrente di oggi, quello che serve al round, e quanti meeting, opportunità e contratti stanno in mezzo.</p><p class="lavoro">Funnel a ritroso, obiettivi per canale, verifica settimanale.</p></div><div><h3>Hai assunto BDR o venditori e non sai se stanno andando.</h3><p>Dopo tre mesi nessuno sa dire se il problema è la lista, lo script, la persona o il prodotto.</p><p class="lavoro">Scorecard, ascolto delle call, coaching con un metodo.</p></div></div>
+  </div>
+</section>
+
+<div class="tovaglia" aria-hidden="true"></div>
+<section id="newsletter" aria-labelledby="t-news">
+  <div class="wrap">
+    <div class="testa-sez">
+      <div>
+        <div class="sopra">A Tavola con Lorenzo</div>
+        <h2 class="h2 rv" id="t-news">Una volta al mese apro i conti di un'azienda <span class="rosso">di cui parlano tutti.</span></h2>
+        <p class="lead">La mia newsletter. Una volta al mese apro i conti di un'azienda di cui parlano tutti, con i documenti depositati sul tavolo. Oltre 500 persone la ricevono (dato del 7 novembre 2026).</p>
+      </div>
+      <div class="azioni"><a class="btn btn-rosso" href="https://lorenzoasuni.substack.com/subscribe">Iscriviti ad A Tavola con Lorenzo</a><a class="freccia" href="https://lorenzoasuni.substack.com/archive">Tutti i pezzi</a></div>
     </div>
     <div class="anteprime"><a class="anteprima" href="https://lorenzoasuni.substack.com/p/claude-dammi-5-motivi-per-cui-stai"><span class="copertina"><img src="newsletter/anthropic.jpg" alt="" loading="lazy"><span class="velo"><img class="avatar" src="asset/ritratto-substack.jpg" alt=""><span>A Tavola con Lorenzo</span></span></span><span class="testo"><strong>“Claude, dammi 5 motivi per cui stai fott*** il sistema”. Anthropic: “Ne ho 2.000 miliardi”</strong><em>Al prezzo dell’ultimo round vale circa 1.000 miliardi, ora i 2.000 sono attesi all’IPO. Si vale quanto la somma dei più grandi 35 SaaS.. con un quinto dei loro fatturati.</em><span class="attacco">26 ottobre 2026. Anthropic, quella di Claude o per gli amici Claudio, deposita alla SEC il prospetto per quotarsi al Nasdaq. Nome in codice che piace ai nerd finance: ANT. Siamo davanti all&#x27;IPOcalisse? 2 anni fa ho investito in questo “giochino”, in primis come professionista → Personalmente ho cambiato praticamente subito da GPT a Claude quando è uscito Sonnet nel 2024 . Oltre al prodotto, per me</span><span class="data">1 nov 2026</span></span></a><a class="anteprima" href="https://lorenzoasuni.substack.com/p/il-ceo-di-weroad-ha-mancato-il-piano"><span class="copertina"><img src="newsletter/weroad.jpg" alt="" loading="lazy"><span class="velo"><img class="avatar" src="asset/ritratto-substack.jpg" alt=""><span>A Tavola con Lorenzo</span></span></span><span class="testo"><strong>Il CEO di WeRoad ha mancato il piano del 57%. Ed era l&#x27;uomo giusto.</strong><em>Airbnb entra con 58 milioni e nello stesso giorno si porta via l&#x27;amministratore delegato. Ho riletto il piano del 2022, i bilanci depositati e la sequenza dei soci entrati e usciti: la storia vera non è il round.</em><span class="attacco">26 maggio 2026. Skift, la testata che il travel americano legge a colazione, scrive che Airbnb ha assunto un nuovo vicepresidente per gli hotel: Andrea D’Amico, amministratore delegato di WeRoad. Il giorno dopo esce il secondo comunicato: Airbnb guida un round da 58 milioni di dollari in WeRoad, si prende il 10,7% e un posto in consiglio. Un’azienda italiana del travel che “viene investita” dalla </span><span class="data">20 set 2026</span></span></a><a class="anteprima" href="https://lorenzoasuni.substack.com/p/satispay-contro-revolut-nate-insieme"><span class="copertina"><img src="newsletter/satispay.jpg" alt="" loading="lazy"><span class="velo"><img class="avatar" src="asset/ritratto-substack.jpg" alt=""><span>A Tavola con Lorenzo</span></span></span><span class="testo"><strong>Satispay contro Revolut. Nate insieme: perché oggi una fattura cento volte l&#x27;altra?</strong><em>5 milioni di clienti contro 6,5 in Italia, ma 70 euro di ricavi a testa contro 9. La storia di come due gemelle del 2013 oggi si sono ritrovate nella stessa spiaggia.</em><span class="attacco">7 luglio 2026, Terrazza Martini, Milano. Satispay presenta le sue prime carte di debito fisiche: tre tagli, un canone mensile e un logo Mastercard stampato sopra. Mastercard, sì. L’azienda nata per liberare gli esercenti dalle commissioni dei circuiti finisce, dodici anni dopo, a stampare il marchio di un circuito sulle proprie carte. I giornali titolano “Satispay si prepara a diventare banca”. Il</span><span class="data">3 ago 2026</span></span></a></div>
   </div>
 </section>
 
-<section class="sezione" id="chi" aria-labelledby="t-chi">
-  <div class="wrap chi-grid">
-    <figure class="ritratto"><img src="asset/ritratto-presentazione.jpg" alt="Lorenzo Asuni mentre presenta una palette di colori proiettata" loading="lazy"></figure>
-    <div>
-      <h2 id="t-chi">Lorenzo Asuni</h2>
-      <p class="lead">Faccio il fractional CMO: seguo go-to-market, marketing e brand di società tech B2B e B2B2B, dalla crescita del fatturato alla costruzione del team e al posizionamento. Lavoro per progetti di 6 o 12 mesi, che partono con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
-      <p class="lavorato"><span>Ho lavorato con</span>AirHelp (Y Combinator) · Lunii</p>
-      <p class="lavorato"><span>Investo in società tech e oltre</span>Anthropic · SpaceX · Revolut · Deel · Perplexity e altre società tech</p>
-      <ul class="fatti"><li><b>35</b><span>imprese seguite</span></li><li><b>Oltre 100 M€</b><span>raccolti dalle società che ho seguito, dal pre-seed alla Series A</span></li><li><b>Dal 2013</b><span>nel marketing e nelle vendite</span></li><li><b>Oltre 500</b><span>iscritti alla newsletter, al 7/11/2026</span></li><li><b>Oltre 22.000</b><span>persone su LinkedIn, al 7/11/2026</span></li><li><b>IT · EN · ES</b><span>lingue di lavoro</span></li></ul>
-      <h3>Da dove vengo</h3>
-      <ol class="carriera"><li><span class="y">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012.</p></li><li><span class="y">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></li><li><span class="y">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></li><li><span class="y">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></li><li><span class="y">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></li><li><span class="y">2024</span><p>Fractional CMO, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></li><li><span class="y">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></li></ol>
-      <h3 style="margin-top:18px">Gli strumenti che ho usato</h3>
-      <ul class="attrezzi"><li><b>Trovare e arricchire contatti</b>Apollo, Clay, Sales Navigator</li><li><b>Sequenze ed email</b>Smartlead, Instantly, Lemlist</li><li><b>Chiamate e registrazioni</b>Aircall, Gong, Fathom, Granola, tl;dv, Calendly</li><li><b>CRM e gestionali</b>Salesforce, HubSpot, Dynamics 365, Odoo, Oracle, SAP</li><li><b>Campagne a pagamento</b>Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Amazon Ads</li><li><b>Misura</b>GA4 e GTM, Adobe Analytics, Mixpanel, Looker Studio, SQL, Search Console, Semrush, Hotjar, Typeform, Brand24</li><li><b>Siti e grafica</b>WordPress, Wix, Framer, Canva, Figma</li><li><b>Organizzazione del lavoro</b>Asana, ClickUp, Monday, Trello, Jira e Atlassian, Linear, Airtable, GitHub</li><li><b>AI e automazioni</b>Claude Code, ChatGPT, Gemini, Make, n8n</li></ul>
-      <p class="scrivimi">Se vuoi lavorare con me, o se un numero di questa pagina non ti torna, scrivimi: <a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a></p>
+<section id="chi" style="padding-top:0" aria-labelledby="t-chi">
+  <div class="wrap">
+    <div class="chi-top">
+      <div>
+        <div class="sopra">Lorenzo Asuni</div>
+        <h2 class="h2 rv" id="t-chi">Poche aziende alla volta. <span class="rosso">Abbastanza dentro da vedere i numeri veri.</span></h2>
+        <p class="lead">Faccio il fractional CMO: seguo go-to-market, marketing e brand di società tech B2B e B2B2B, dalla crescita del fatturato alla costruzione del team e al posizionamento. Lavoro per progetti di 6 o 12 mesi, che partono con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
+      </div>
+      <div class="foto"><img src="asset/ritratto-presentazione.jpg" alt="Lorenzo Asuni mentre presenta una palette di colori proiettata" loading="lazy"></div>
+    </div>
+    <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita annuale media del fatturato, dal mio ingresso alla mia uscita (base 12 mesi)</div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2013</div><div class="l">nel marketing e nelle vendite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="500" data-suf="">Oltre 500</div><div class="l">iscritti alla newsletter, al 7/11/2026</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="22000" data-suf="">Oltre 22.000</div><div class="l">persone su LinkedIn, al 7/11/2026</div></div><div class="cella"><div class="n">IT · EN · ES</div><div class="l">lingue di lavoro</div></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
+    <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Da dove vengo</h3>
+    <div class="binario" id="binario" aria-hidden="true"><i></i></div>
+    <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
+    <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Gli strumenti che ho usato</h3>
+    <div class="strumenti"><div><b>Trovare e arricchire contatti</b>Apollo, Clay, Sales Navigator</div><div><b>Sequenze ed email</b>Smartlead, Instantly, Lemlist</div><div><b>Chiamate e registrazioni</b>Aircall, Gong, Fathom, Granola, tl;dv, Calendly</div><div><b>CRM e gestionali</b>Salesforce, HubSpot, Dynamics 365, Odoo, Oracle, SAP</div><div><b>Campagne a pagamento</b>Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Amazon Ads</div><div><b>Misura</b>GA4 e GTM, Adobe Analytics, Mixpanel, Looker Studio, SQL, Search Console, Semrush, Hotjar, Typeform, Brand24</div><div><b>Siti e grafica</b>WordPress, Wix, Framer, Canva, Figma</div><div><b>Organizzazione del lavoro</b>Asana, ClickUp, Monday, Trello, Jira e Atlassian, Linear, Airtable, GitHub</div><div><b>AI e automazioni</b>Claude Code, ChatGPT, Gemini, Make, n8n</div></div>
+  </div>
+</section>
+
+<section id="copia" style="padding-top:0" aria-labelledby="t-copia">
+  <div class="wrap">
+    <div class="sopra">Da copiare</div>
+    <h2 class="h2 rv" id="t-copia">Repository, calcolatori e skill <span class="rosso">da prendere e adattare.</span></h2>
+    <p class="lead">Ogni settimana i tre repository di marketing e vendite da guardare (ultimo giro: 15/11/2026), lo scaffale di quelli di riferimento e i miei calcolatori e skill, da prendere e adattare.</p>
+    <div class="copia">
+      <a href="repository.html#top3"><h3>La top 3 della settimana</h3><p>I tre repository di marketing e vendite da guardare, più lo scaffale di quelli di riferimento.</p><span class="freccia">Vai ai repository</span></a>
+      <a href="repository.html#miei"><h3>I miei</h3><p>I calcolatori di questa pagina e le skill che uso nel lavoro, da copiare.</p><span class="freccia">Apri i miei</span></a>
     </div>
   </div>
 </section>
 
-<section class="sezione" id="copia" aria-labelledby="t-copia">
-  <div class="wrap copia-home">
-    <div><h2 id="t-copia" style="font-size:clamp(34px,4.6vw,52px)">Da copiare</h2>
-    <p>Ogni settimana i tre repository di marketing e vendite da guardare (ultimo giro: 15/11/2026), lo scaffale di quelli di riferimento e i miei calcolatori e skill, da prendere e adattare.</p></div>
-    <div class="bottoni" style="display:flex;flex-wrap:wrap;gap:12px 18px;align-items:center"><a class="btn pieno" href="repository.html#top3">La top 3 della settimana</a><a class="btn" href="repository.html#miei">I miei</a></div>
-  </div>
-</section>
+<div class="tabellone4"><p class="wrap riga-flap" id="flap" aria-label="Il prossimo radar esce venerdì"></p></div>
 
-<section class="sezione arrivo" id="arrivo" aria-labelledby="t-arrivo">
-  <div class="wrap">
-    <div class="bandiera" aria-hidden="true"></div>
-    <h2 id="t-arrivo">Il prossimo radar esce venerdì</h2>
-    <p class="lead">I pezzi lunghi escono una volta al mese su A Tavola con Lorenzo. Se un numero di questa pagina non ti torna, scrivimelo: è il messaggio che leggo più volentieri.</p>
-    <div class="cta-riga"><a class="btn pieno" href="https://lorenzoasuni.substack.com/subscribe">Iscriviti alla newsletter</a><a href="#chi">oppure scrivimi due righe</a></div>
+<section class="parliamo" id="parliamo" aria-labelledby="t-parliamo">
+  <div class="wrap parliamo-grid">
+    <div>
+      <div class="sopra">Scrivimi due righe</div>
+      <h2 id="t-parliamo">Hai un piano da far quadrare? <span style="color:var(--giallo)">Facciamo il conto.</span></h2>
+      <p class="lead">Raccontami dove sei e dove vuoi arrivare: leggo e rispondo io.</p>
+      <ul class="agenda">
+        <li><b>1</b><span>Dove sei oggi: fatturato, team, canali che funzionano.</span></li>
+        <li><b>2</b><span>Dove vuoi arrivare e in quanto tempo.</span></li>
+        <li><b>3</b><span>Se ha senso lavorare insieme, e in quale forma.</span></li>
+      </ul>
+      <div class="firma"><img src="asset/ritratto-substack.jpg" alt=""><span><b>Lorenzo Asuni</b><br>Leggo e rispondo io.</span></div>
+      <p class="mail-diretta">Se un numero di questa pagina non ti torna, scrivimelo: è il messaggio che leggo più volentieri. <a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a></p>
+    </div>
+    <form id="modulo" novalidate>
+      <div class="riga2"><label>Nome<input name="nome" autocomplete="name"></label><label>Azienda<input name="azienda" autocomplete="organization"></label></div>
+      <div><p style="font-size:14px;font-weight:700;margin-bottom:8px">Di cosa hai bisogno?</p>
+        <div class="bisogni" role="radiogroup" aria-label="Di cosa hai bisogno">
+          <label><input type="radio" name="bisogno" value="Assessment go-to-market" id="b-assessment"><span>Assessment</span></label>
+          <label><input type="radio" name="bisogno" value="Fractional CMO" id="b-fractional"><span>Fractional CMO</span></label>
+          <label><input type="radio" name="bisogno" value="Un numero che non torna"><span>Un numero che non torna</span></label>
+          <label><input type="radio" name="bisogno" value="Altro"><span>Altro</span></label>
+        </div></div>
+      <label>Raccontami la situazione in due righe<textarea name="messaggio" placeholder="Per esempio: 12 persone, 800K di ricorrente, vogliamo arrivare a 2 milioni entro fine 2027."></textarea></label>
+      <button class="btn btn-rosso" type="submit">Manda a Lorenzo</button>
+      <p class="nota">Il modulo apre il tuo programma di posta con il messaggio già scritto, verso la@lorenzoasuni.com. Nessun dato passa da questo sito.</p>
+    </form>
   </div>
 </section>
 </main>
-<footer><div class="wrap"><span>Lorenzo Asuni. Il fatturato, calcolatrice alla mano.</span><span>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span><span><a href="privacy.html">Privacy</a> · Nessun cookie di questo sito. Terze parti: il conteggio anonimo delle visite con Umami e, se lo chiedi, il modulo di Substack.</span><span class="pelli">Pagina <a href="?pelle=tavola">chiara</a> · <a href="?pelle=notte">scura</a></span></div></footer><script>(function(){
-  var ridotto = window.matchMedia && matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if (ridotto || !('IntersectionObserver' in window)) return;
-  /* Tabellone del radar: le cifre girano come un tabellone a palette e si fermano sul numero vero. */
-  var tab = document.querySelector('.tabellone');
-  if (tab) {
-    var io = new IntersectionObserver(function (es) {
-      es.forEach(function (e) {
-        if (!e.isIntersecting) return; io.disconnect();
-        tab.querySelectorAll('.flap i').forEach(function (el, k) {
-          var vero = el.textContent, giri = 7 + k * 2, n = 0;
-          el.classList.add('gira');
-          var t = setInterval(function () {
-            n++; el.textContent = n >= giri ? vero : String(Math.floor(Math.random() * 10));
-            if (n >= giri) { clearInterval(t); el.classList.remove('gira'); el.classList.add('fermo'); }
-          }, 70);
-        });
-      });
-    }, { threshold: .5 });
-    io.observe(tab);
-  }
-  /* Conti: quando il risultato cambia, il numero principale lampeggia una volta. */
-  document.querySelectorAll('[data-o="main"]').forEach(function (b) {
-    var prima = b.textContent;
-    new MutationObserver(function () {
-      if (b.textContent === prima) return; prima = b.textContent;
-      b.classList.remove('aggiornato'); void b.offsetWidth; b.classList.add('aggiornato');
-    }).observe(b, { childList: true, characterData: true, subtree: true });
-  });
-  /* Barra del giro: quanto della pagina hai letto. */
-  var barra = document.createElement('div'); barra.className = 'giro'; barra.setAttribute('aria-hidden', 'true');
-  document.body.appendChild(barra);
-  var su = function () { var h = document.documentElement; var m = h.scrollHeight - h.clientHeight; barra.style.transform = 'scaleX(' + (m > 0 ? h.scrollTop / m : 0) + ')'; };
-  addEventListener('scroll', su, { passive: true }); su();
-})();</script>
+
+<footer><div class="wrap">
+  <span><b>Lorenzo Asuni.</b> Il fatturato, AI e calcolatrice alla mano.<br>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span>
+  <span><a href="privacy.html">Privacy</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en">Cyber · EN</a><a href="https://github.com/4asmile-git">GitHub</a><br>Nessun cookie di questo sito. Terze parti: il conteggio anonimo delle visite con Umami e, se lo chiedi, il modulo di Substack.</span>
+</div></footer>
 <script>
 /* Calcolatori RevOps dell'Officina: solo formule, nessun DOM.
    Lo stesso file viene incollato nelle pagine da build_officina.py e testato con node (test_revops_calc.js).
@@ -1329,6 +1642,77 @@ button.card:hover { border-color: var(--text); }
   var g = leggi('la-v3-pronostico'); if (g) rivela(g === '-' ? '' : g);
   var v = document.querySelector('.apertura video');
   try { if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); } } catch (e) {}
+})();
+</script>
+<script>
+(function(){
+  var calmo=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
+  var EASE=function(t){return 1-Math.pow(1-t,4)};
+  function tween(el,da,a,fmt,dur){if(calmo||da===a){el.textContent=fmt(a);return}var t0=performance.now();dur=dur||600;(function passo(t){var k=Math.min(1,(t-t0)/dur);el.textContent=fmt(da+(a-da)*EASE(k));if(k<1)requestAnimationFrame(passo)})(t0)}
+  /* rotolo della calcolatrice: il conto del funnel a ritroso, con i valori d'esempio del calcolatore */
+  (function(){var v=[['Esempio','il conto','',''],['Fatturato da chiudere','300.000 €','+'],['Contratto medio','15.000 €','÷'],['Contratti','20','=','t'],['Win rate','25%','÷'],['Opportunità','80','=','t'],['Opportunità da meeting','50%','÷'],['Meeting tenuti','160','=','t'],['Si presentano','80%','÷'],['Meeting fissati','200','T','t']];
+    var giro=v.map(function(r){return '<span class="biglietto'+(r[3]?' tot':'')+'"><small>'+r[0]+'</small><b>'+r[1]+'</b><i>'+r[2]+'</i></span>'}).join('')+'<span class="motto">AI e calcolatrice alla mano.</span>',h='';for(var i=0;i<4;i++)h+=giro;document.getElementById('nastro1').innerHTML=h})();
+  /* tabellone a palette, come quello del radar sul sito */
+  var flap=document.getElementById('flap');flap.innerHTML='Il prossimo radar esce venerdì'.toUpperCase().split(' ').map(function(w){return '<span class="pf" aria-hidden="true">'+w.split('').map(function(c){return '<i>'+c+'</i>'}).join('')+'</span>'}).join('');
+
+  /* settori: una calcolatrice, un tasto per settore, il display scrive il nome */
+  var settori=[{k:"Cybersecurity",s:"CY",c:"var(--rosso)",tc:"#FFF8EE",t:"Servizi e prodotti venduti a CISO e responsabili IT.",d:"Ci ho passato quattro anni da CMO e ci lavoro ancora. Il messaggio deve essere tecnico ma leggibile da chi firma, e la pipeline si apre con BDR, partner ed eventi più che con l'advertising.",e:"BDR e cold calling, partner, eventi, messaggio tecnico",w:"Da CMO dal 2021 al 2024, poi come fractional."},{k:"AI e software B2B",s:"AI",c:"var(--ink)",tc:"#FFFDF6",t:"Prodotti nuovi che cercano i primi clienti ricorrenti.",d:"Chi attirare per primo, quale offerta d'ingresso fa partire il primo contratto, come si costruisce l'upsell sui clienti che ci sono già.",e:"ICP, offerta d'ingresso, pitch, upsell",w:"In un laboratorio di LLM e bot dal 2019 al 2021, oggi come fractional e in assessment."},{k:"Servizi professionali",s:"SP",c:"#FFFDF6",tc:"var(--ink)",t:"Servizi alle PMI venduti al telefono.",d:"Liste costruite per campagna, script, ascolto delle call e coaching. Il funnel si legge per persona, campagna e fascia oraria, non in media.",e:"cold calling, liste, script, coaching",w:"Come fractional."},{k:"Fintech e finanza",s:"€",c:"var(--verde)",tc:"#FFFDF6",t:"Abbonamenti e servizi finanziari, B2C e alle PMI.",d:"Funnel con più passaggi umani, LTV letta per coorte, lancio di un prodotto d'ingresso a basso prezzo per alimentare i commerciali.",e:"LTV per coorte, funnel, prodotto d'ingresso",w:"Come fractional e in assessment."},{k:"Sanità e marketplace",s:"+",c:"var(--carta-2)",tc:"var(--ink)",t:"Marketplace con molte transazioni e un brand da costruire.",d:"Come leggere l'effetto di una campagna sui dati di vendita invece che sulle impressioni, e cosa fare con email e riacquisto dopo il primo ordine.",e:"campagne brand, dati di vendita, email e riacquisto",w:"Come fractional."},{k:"Consumer e travel",s:"TR",c:"#8E1F1A",tc:"#FFFDF6",t:"Lanciare in Italia un prodotto nato all'estero.",d:"Il primo mercato fuori casa: stampa, TV senza budget, partnership e i primi canali a pagamento.",e:"lancio paese, stampa, partnership",w:"AirHelp dal 2014 e Lunii dal 2018."}];
+  var tasti=document.getElementById('tasti-s'),pan=document.getElementById('pannello-in'),disp=document.getElementById('disp'),bt=[],scrivi=null;
+  settori.forEach(function(x,i){var b=document.createElement('button');b.type='button';b.className='tasto-s';b.innerHTML='<b>'+x.s+'</b><small>'+x.k+'</small>';b.addEventListener('click',function(){mostra(i)});tasti.appendChild(b);bt.push(b)});
+  function mostra(i){var x=settori[i];bt.forEach(function(n,j){n.classList.toggle('on',j===i);n.setAttribute('aria-pressed',j===i)});
+    var testo='0'+(i+1)+'/06 '+x.k.toUpperCase();if(scrivi)clearInterval(scrivi);
+    if(calmo)disp.textContent=testo;else{var n=0;disp.textContent='';scrivi=setInterval(function(){n++;disp.textContent=testo.slice(0,n);if(n>=testo.length)clearInterval(scrivi)},28)}
+    if(!calmo&&pan.innerHTML)pan.animate([{opacity:0,translate:'0 8px'},{opacity:1,translate:'0 0'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
+    pan.innerHTML='<h3>'+x.t+'</h3><p>'+x.d+'</p><p class="etichette"><b>Su cosa lavoro:</b> '+x.e+'</p><div class="dove"><b>Dove l\'ho visto:</b> '+x.w+'</div>'}
+  mostra(0);
+
+  /* porte e modulo */
+  document.querySelectorAll('[data-bisogno]').forEach(function(a){a.addEventListener('click',function(){var r=document.getElementById('b-'+a.dataset.bisogno);if(r)r.checked=true})});
+  document.getElementById('modulo').addEventListener('submit',function(e){e.preventDefault();var f=e.target,bis=(f.querySelector('input[name=bisogno]:checked')||{}).value||'Due righe dal sito';
+    var ogg=bis+(f.azienda.value?' · '+f.azienda.value:''),corpo='Ciao Lorenzo,\n\n'+f.messaggio.value+'\n\n'+f.nome.value+(f.azienda.value?', '+f.azienda.value:'');
+    location.href='mailto:la@lorenzoasuni.com?subject='+encodeURIComponent(ogg)+'&body='+encodeURIComponent(corpo)});
+
+  var t=document.getElementById('testata');addEventListener('scroll',function(){t.classList.toggle('scrolled',scrollY>10)},{passive:true});
+  var v=document.querySelector('.scena video');
+
+  if(calmo){if(v){v.removeAttribute('autoplay');v.pause()}document.querySelectorAll('[data-q]').forEach(function(i){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'});return}
+  var CURVA='cubic-bezier(.22,1,.36,1)';
+  var attese=[];function quando(el,fn,q){if(el)attese.push({el:el,fn:fn,q:q||.85})}
+  function controlla(){attese=attese.filter(function(a){if(a.el.getBoundingClientRect().top<innerHeight*a.q){a.fn(a.el);return false}return true})}
+
+  /* l'unica entrata al caricamento */
+  var h1=document.querySelector('.hero h1'),parole=[];
+  (function spezza(n){[].slice.call(n.childNodes).forEach(function(c){if(c.nodeType===3){var f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(function(w){if(!w)return;if(/^\s+$/.test(w))f.appendChild(document.createTextNode(w));else{var sp=document.createElement('span');sp.className='parola';sp.textContent=w;f.appendChild(sp);parole.push(sp)}});n.replaceChild(f,c)}else spezza(c)})})(h1);
+  parole.forEach(function(w,i){w.animate([{opacity:0,translate:'0 .35em'},{opacity:1,translate:'0 0'}],{duration:650,delay:120+i*55,easing:CURVA,fill:'backwards'})});
+  var dopo=120+parole.length*55;
+  [].slice.call(document.querySelectorAll('.hero .sopra, .hero-sotto > div')).forEach(function(el,i){el.animate([{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:600,delay:el.classList.contains('sopra')?40:dopo+i*90,easing:CURVA,fill:'backwards'})});
+
+  /* lo scontrino si stampa */
+  var sc=document.querySelector('.scontrino');if(sc)sc.animate([{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 -30px 0)'}],{duration:1100,delay:dopo,easing:'steps(14,end)',fill:'backwards'});
+  /* il tabellone gira quando lo vedi e si ferma sulle lettere vere */
+  quando(document.getElementById('flap'),function(f){var L='ABCDEFGHILMNOPRSTUVZ';[].slice.call(f.querySelectorAll('i')).forEach(function(el,k){var vero=el.textContent,n=0,giri=5+k%7;var t=setInterval(function(){n++;el.textContent=n>=giri?vero:L[Math.floor(Math.random()*L.length)];if(n>=giri)clearInterval(t)},60)})},.8);
+  /* i tasti si posano sul video */
+  quando(document.querySelector('.scena'),function(sc){[].slice.call(sc.querySelectorAll('.tasto')).forEach(function(p,i){p.animate([{opacity:0,translate:'0 14px'},{opacity:1,translate:'0 0'}],{duration:520,delay:i*80,easing:CURVA,fill:'backwards'})})},.75);
+
+  /* i numeri contano da zero, le barre del radar mostrano lo scarto */
+  [].slice.call(document.querySelectorAll('[data-to]')).forEach(function(el){var a=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'',fmt=function(x){return pre+Math.round(x).toLocaleString('it-IT')+suf};
+    if(el.getBoundingClientRect().top<innerHeight*.85)return;el.textContent=fmt(0);quando(el,function(){tween(el,0,a,fmt,a>1000?1300:900)})});
+  var cont=document.querySelector('.contatori');
+  quando(cont,function(){[].slice.call(cont.querySelectorAll('[data-q]')).forEach(function(i,k){setTimeout(function(){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'},k*140)})});
+
+  /* titoli che si accendono entrando */
+  document.querySelectorAll('.rv').forEach(function(h){if(h.getBoundingClientRect().top>innerHeight*.82){h.classList.add('spento');quando(h,function(){h.classList.remove('spento')},.82)}});
+
+  /* il risultato del conto sale quando cambia */
+  document.querySelectorAll('[data-o="main"]').forEach(function(b){var prima=b.textContent;new MutationObserver(function(){if(b.textContent===prima)return;prima=b.textContent;b.classList.remove('aggiornato');void b.offsetWidth;b.classList.add('aggiornato')}).observe(b,{childList:true,characterData:true,subtree:true})});
+
+  /* legati allo scorrimento */
+  var bar=document.getElementById('progresso'),n1=document.getElementById('nastro1'),bin=document.querySelector('#binario i'),passi=document.querySelector('.passi'),attesa=false;
+  function aggiorna(){attesa=false;controlla();var y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
+    bar.style.transform='scaleX('+(h>0?y/h:0)+')';var m1=n1.scrollWidth/4;
+    n1.style.transform='translateX('+(-(y*.3%m1))+'px)';
+    var r=passi.getBoundingClientRect(),p=(innerHeight*.85-r.top)/(r.height+innerHeight*.35);bin.style.transform='scaleX('+Math.max(0,Math.min(1,p))+')'}
+  addEventListener('scroll',function(){if(!attesa){attesa=true;requestAnimationFrame(aggiorna)}},{passive:true});addEventListener('resize',aggiorna);aggiorna();
 })();
 </script>
 </body>

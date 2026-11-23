@@ -13,9 +13,9 @@
      sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
      In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
      Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
-  var FORNITORE = 'plausible';
-  var ATTIVA = false;
-  var UMAMI_SITO = '';
+  var FORNITORE = 'umami';
+  var ATTIVA = true;
+  var UMAMI_SITO = 'c4d4ef3e-77ce-423d-a8f1-acfb3d38d6f6';
   var DOMINIO = 'lorenzoasuni.com';
   var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
   var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;
@@ -225,7 +225,7 @@ html[data-pelle="tavola"] .segn { color: #A3241F; border-color: #A3241F; }
   <section class="intro quadretti"><div class="wrap">
     <h1>Privacy</h1>
     <p class="lead">Cosa succede ai tuoi dati quando visiti questo sito. In breve: il sito non installa cookie, non ha un modulo suo e non riceve la tua email. I numeri che scrivi nei conti restano nel tuo browser. Quando chiedi il modulo di Substack, da quel momento entra Substack, con le sue regole.</p>
-    <p class="nota">Ultimo aggiornamento: 21/11/2026.</p>
+    <p class="nota">Ultimo aggiornamento: 23/11/2026.</p>
   </div></section>
   <section class="priv"><div class="wrap">
     <ul class="indice"><li><a href="#titolare">Titolare</a></li><li><a href="#dati">Dati e finalità</a></li><li><a href="#substack">Substack</a></li><li><a href="#browser">Cookie e archiviazione locale</a></li><li><a href="#misura">Misura delle visite</a></li><li><a href="#basi">Basi giuridiche</a></li><li><a href="#conservazione">Conservazione</a></li><li><a href="#diritti">Diritti e reclamo</a></li></ul>
@@ -239,7 +239,7 @@ html[data-pelle="tavola"] .segn { color: #A3241F; border-color: #A3241F; }
       <li><strong>Dati di navigazione.</strong> Come ogni sito, il server che ospita queste pagine registra in automatico alcune informazioni tecniche a ogni richiesta: indirizzo IP, data e ora, pagina chiesta, tipo di browser. Servono a far funzionare il sito e a proteggerlo da abusi. Il sito è ospitato su GitHub Pages, un servizio di GitHub Inc., società con sede negli Stati Uniti, che registra l'indirizzo IP di chi visita le pagine per ragioni di sicurezza e lo tratta secondo la sua <a href="https://docs.github.com/it/site-policy/privacy-policies/github-general-privacy-statement">informativa</a>, compreso il trasferimento dei dati fuori dall'Unione europea.</li>
       <li><strong>Numeri dei conti.</strong> I conti dell'Officina girano nel tuo browser: i numeri che scrivi non arrivano a me né a nessun altro. Se copi il link con i tuoi numeri, i numeri stanno nella parte dell'indirizzo dopo il simbolo #, che il browser non manda al server. Arrivano solo a chi mandi tu il link.</li>
       <li><strong>Iscrizione alla newsletter.</strong> Il sito non ha un modulo suo. L'iscrizione passa dal modulo di Substack, descritto <a href="#substack">qui sotto</a>.</li>
-      <li><strong>Video, immagini e caratteri.</strong> Sono tutti su questo sito. Aprire una pagina non fa partire richieste verso altri servizi.</li>
+      <li><strong>Video, immagini e caratteri.</strong> Sono tutti su questo sito. Aprire una pagina non fa partire richieste verso altri servizi, tranne il conteggio anonimo della visita descritto <a href="#misura">più sotto</a>.</li>
       <li><strong>Link verso altri siti.</strong> I link a Substack, GitHub e ai repository di altri portano su siti con le loro regole. Prima del clic non succede nulla; dopo, vale l'informativa del sito in cui arrivi.</li>
     </ul>
 
@@ -255,12 +255,12 @@ html[data-pelle="tavola"] .segn { color: #A3241F; border-color: #A3241F; }
     <p>Li cancelli quando vuoi: nell'Officina c'è il pulsante per svuotare i conti, e in ogni caso basta cancellare i dati del sito dalle impostazioni del browser.</p>
 
     <h2 id="misura">Misura delle visite</h2>
-    <p>Oggi questo sito non misura le visite: nessun servizio di statistica riceve dati quando apri una pagina. Se in futuro userò uno strumento di misura, lo descriverò qui prima di accenderlo e aggiornerò la data in cima alla pagina.</p>
-    
+    <p>Conto le visite con Umami Cloud, un servizio di Umami Software, Inc., società con sede negli Stati Uniti, che tratta questi dati per conto del titolare. Umami non usa cookie e non salva nulla nel tuo browser. L'indirizzo IP serve solo durante la richiesta, per ricavare il paese e un codice che distingue le visite, e non viene salvato nei dati della misura. All'attivazione ho scelto la regione Unione europea, dove Umami conserva i dati di questo sito. Essendo Umami una società americana, un eventuale trattamento fuori dall'Unione europea segue le clausole contrattuali standard previste dal suo <a href="https://umami.is/dpa">accordo sul trattamento dei dati</a>.</p>
+    <p>Cosa conto: pagine viste, da dove arrivano le visite (per esempio un link su LinkedIn o un motore di ricerca), paese e tipo di dispositivo, e alcuni clic: i bottoni della home, l'apertura del modulo di iscrizione, quale conto dell'Officina viene usato, quali materiali vengono aperti, il pronostico del radar, i link verso Substack e GitHub. Non conto mai i numeri che scrivi nei conti né l'email. Vedo solo totali, non le singole persone. L'<a href="https://umami.is/privacy">informativa di Umami</a> descrive il servizio nel dettaglio.</p>
 
     <h2 id="basi">Basi giuridiche</h2>
     <ul>
-      <li>Dati di navigazione: legittimo interesse a far funzionare il sito, a proteggerlo e a capire quali pagine servono (art. 6, par. 1, lett. f del Regolamento UE 2016/679).</li>
+      <li>Dati di navigazione e misura delle visite in forma aggregata: legittimo interesse a far funzionare il sito, a proteggerlo e a capire quali pagine servono (art. 6, par. 1, lett. f del Regolamento UE 2016/679).</li>
       <li>Archiviazione locale: è necessaria a darti il servizio che chiedi, cioè ricordare i tuoi conti e le tue scelte; non richiede consenso (art. 122 del Codice privacy).</li>
       <li>Iscrizione alla newsletter: la chiedi tu sul modulo di Substack, per ricevere la newsletter (art. 6, par. 1, lett. a e b del Regolamento).</li>
     </ul>
@@ -268,7 +268,7 @@ html[data-pelle="tavola"] .segn { color: #A3241F; border-color: #A3241F; }
     <h2 id="conservazione">Per quanto tempo</h2>
     <ul>
       <li>Dati di navigazione: per il tempo stabilito da GitHub nella sua informativa.</li>
-      <li>Misura delle visite: oggi nessuna misura, quindi nessun dato conservato.</li>
+      <li>Misura delle visite: Umami conserva i conteggi per il periodo previsto dal piano scelto (sei mesi nel piano gratuito), senza indirizzi IP.</li>
       <li>Archiviazione locale: finché non la cancelli tu.</li>
       <li>Iscrizione: finché resti iscritto. Ti disiscrivi con il link in fondo a ogni email.</li>
     </ul>

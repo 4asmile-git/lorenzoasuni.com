@@ -86,9 +86,9 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 36px; font-size: 14p
      sul servizio (per Umami serve anche UMAMI_SITO, l'ID del sito). Anche accesa, invia solo dal dominio vero.
      In sviluppo (localhost, 127.0.0.1, file) scrive l'evento nella console.
      Mai email, mai valori dei calcolatori, mai testo scritto dal visitatore. */
-  var FORNITORE = 'plausible';
-  var ATTIVA = false;
-  var UMAMI_SITO = '';
+  var FORNITORE = 'umami';
+  var ATTIVA = true;
+  var UMAMI_SITO = 'c4d4ef3e-77ce-423d-a8f1-acfb3d38d6f6';
   var DOMINIO = 'lorenzoasuni.com';
   var SVILUPPO = /^(localhost|127\.0\.0\.1|\[::1\])$/.test(location.hostname) || location.protocol === 'file:';
   var PRODUZIONE = location.hostname === DOMINIO || location.hostname === 'www.' + DOMINIO;

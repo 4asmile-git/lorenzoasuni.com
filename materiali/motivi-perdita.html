@@ -167,6 +167,18 @@ footer { border-top: 1px solid var(--line); padding: 22px 0 36px; font-size: 14p
 })();
 </script>
 <script>(function(){try{var q=new URLSearchParams(location.search).get('pelle');if(q==='tavola'||q==='notte')localStorage.setItem('la-v3-pelle',q);if(localStorage.getItem('la-v3-pelle')!=='notte')document.documentElement.setAttribute('data-pelle','tavola');}catch(e){document.documentElement.setAttribute('data-pelle','tavola');}})();</script>
+<style>@font-face { font-family: 'Poppins'; src: url('../../fonts/poppins-v24-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
+/* Skin v4 per i materiali (build_materiali_v3.py): inserito in coda all'<head> da build_v4.py. */
+.firma, .indietro, h1, h2, h3, th, .btn, .sblocco .t, .domande .sn button, td[data-t]::before {
+  font-family: 'Poppins', 'Helvetica Neue', Arial, sans-serif; font-weight: 700; text-transform: none; letter-spacing: -.02em; }
+h1, h2 { letter-spacing: -.04em; line-height: 1.03; }
+h1 { font-size: clamp(36px, 6vw, 68px); }
+h2 { font-size: clamp(24px, 3vw, 32px); }
+h3 { font-size: 19px; }
+.firma { font-size: 20px; }
+.btn, .domande .sn button { font-size: 14.5px; border-radius: 12px; }
+th { font-size: 13px; letter-spacing: 0; }
+</style>
 </head>
 <body>
 <header class="testata"><div class="wrap"><a class="firma" href="../index.html">Lorenzo Asuni</a><span><a class="indietro" href="../index.html">Torna alla home</a> <a class="indietro" href="../officina.html">Officina</a></span></div></header>

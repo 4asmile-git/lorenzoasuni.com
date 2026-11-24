@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>Lorenzo Asuni. Il fatturato di una società tech, AI e calcolatrice alla mano.</title>
-<meta name="description" content="Lavoro dentro aziende tech B2B per far crescere il fatturato. Un conto da fare sui tuoi numeri, dieci domande, gli esempi della settimana con il voto.">
+<meta name="description" content="Lavoro dentro aziende tech B2B per far crescere il fatturato. Un conto da fare sui tuoi numeri, gli esempi della settimana con il voto, la newsletter.">
 <script>(function () {
   /* Misura senza script di terzi: gli eventi vanno all'API del fornitore con una sola richiesta, nessun cookie,
      nessun dato salvato nel browser. Due fornitori pronti, si sceglie con FORNITORE ('plausible' o 'umami'):
@@ -608,7 +608,12 @@ section[id]{scroll-margin-top:84px}
 @media (max-width:900px){.anteprime{grid-template-columns:1fr}}
 
 /* da dove vengo: sette passi */
-.passi{grid-template-columns:repeat(auto-fit,minmax(150px,1fr))}
+.passi{grid-template-columns:repeat(7,1fr);gap:12px}
+.passo{padding:20px 14px}
+.passo p{font-size:14px}
+@media (max-width:1100px){.passi{grid-template-columns:repeat(4,1fr)}}
+@media (max-width:760px){.passi{grid-template-columns:repeat(2,1fr)}}
+@media (max-width:520px){.passi{grid-template-columns:1fr}}
 
 /* menu su schermi stretti: una riga che scorre sotto la testata */
 @media (max-width:1260px){
@@ -722,49 +727,82 @@ header{background:rgba(247,242,223,.95)}
 .rotolo .motto{display:inline-flex;align-items:center;padding:0 40px;font-family:var(--titoli);font-weight:700;font-size:clamp(20px,2.4vw,30px);letter-spacing:-.03em;color:var(--rosso);white-space:nowrap;border-right:1px dashed #C9BFA6}
 .rotolo{padding:30px 0 28px;filter:drop-shadow(0 10px 18px rgba(46,45,43,.16));background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(192,48,42,.07) 27px 28px)}
 .biglietto b{font-size:clamp(22px,2.6vw,32px)}
+
+/* dopo il 24/11: nota sotto il +323%, video in finestra, barra delle prove su due righe da telefono */
+.cella.forte .l small{display:block;margin-top:8px;font-size:13px;opacity:.75}
+dialog#video-pres{margin:auto;border:0;border-radius:24px;padding:0;max-width:min(92vw,960px);width:100%;background:var(--notte);overflow:hidden}
+dialog#video-pres::backdrop{background:rgba(21,17,13,.72)}
+dialog#video-pres video{display:block;width:100%;max-height:82vh;background:#000}
+dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-radius:999px;background:rgba(247,242,223,.92);color:var(--ink);font-family:var(--titoli);font-weight:700;font-size:14px;padding:8px 14px;cursor:pointer}
+@media (max-width:540px){.prove li{white-space:normal;line-height:1.3;padding:0 4px}.prove ul{padding:7px 0}}
+/* v5: home corta e pagina "Lavora con me". Si somma a home_v4.css. */
+.hero-sotto{align-items:end}
+.hero-sotto .azioni{justify-self:start;padding-bottom:6px}
+.scena.scena-bassa{aspect-ratio:16/6.2}
+.credito{padding-right:0}
+@media (max-width:760px){.scena.scena-bassa{aspect-ratio:4/3}}
+.bar .btn-vuoto{padding:10px 16px;font-size:14px}
+.bar .btn-vuoto.on{background:var(--ink);color:var(--carta)}
+.bar .btn-vuoto:hover{background:var(--ink);color:var(--carta)}
+
+/* come leggo un numero, in tre righe sotto il conto */
+.legenda{margin-top:56px;font-family:var(--titoli);font-weight:700;font-size:clamp(18px,1.8vw,22px);letter-spacing:-.02em}
+.tre.tre-corto{margin-top:20px;gap:32px;padding-top:22px}
+.tre-corto h3{font-size:clamp(19px,1.8vw,22px);margin:6px 0 8px}
+.tre-corto p{font-size:15.5px}
+
+/* contatto: una riga e un indirizzo */
+.contatto{padding:clamp(84px,12vw,150px) 0}
+.contatto h2{font-size:clamp(40px,6.4vw,84px);max-width:14ch}
+.contatto .lead a{color:var(--carta)}
+.mail-grande{margin-top:34px}
+.mail-grande a{font-family:var(--titoli);font-weight:700;font-size:clamp(22px,3.8vw,42px);letter-spacing:-.03em;color:var(--giallo);text-decoration:none;border-bottom:3px solid currentColor;padding-bottom:2px;word-break:break-all}
+
+/* Lavora con me */
+.lavora-hero{padding-bottom:18px}
+.lavora-hero h1{max-width:14ch}
+.lavora-hero .posti{margin-top:26px}
+.porte.porte-due{grid-template-columns:1fr 1fr}
+@media (max-width:760px){.porte.porte-due{grid-template-columns:1fr}}
+.riga-settori{margin-top:30px;color:var(--muted);max-width:68ch;font-size:16px}
+
+/* quattro numeri in una riga, il +323% e i nomi a tutta larghezza */
+@media (min-width:761px){.griglia{grid-template-columns:repeat(4,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 4}.cella{min-height:150px}}
+.cella .l{max-width:none}
 </style>
 </head>
 <body data-home>
 <a class="skip" href="#contenuto">Vai al contenuto</a>
 <div class="progresso" id="progresso" aria-hidden="true"></div>
-<div class="prove" aria-label="In breve"><ul><li><i class="ast"></i>+323% di crescita annuale media del fatturato</li><li><i class="ast"></i>35 imprese seguite</li><li><i class="ast"></i>Oltre 100 M€ raccolti dalle società che ho seguito</li><li><i class="ast"></i>Oltre 500 iscritti alla newsletter</li><li><i class="ast"></i>Dal 2013 nel marketing e nelle vendite</li></ul></div>
 <header id="testata"><div class="wrap bar">
   <a class="logo" href="#apertura">Lorenzo Asuni<span>.</span></a>
   <nav aria-label="Sezioni"><ul>
-    <li><a href="#conto">Il conto</a></li><li><a href="#aiuto">Come lavoro</a></li><li><a href="#numero">Come leggo un numero</a></li><li><a href="#radar">Il radar</a></li>
-    <li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li><li><a href="repository.html">Da copiare</a></li><li><a href="officina.html">Officina</a></li>
+    <li><a href="#conto">Il conto</a></li><li><a href="#radar">Il radar</a></li><li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li>
   </ul></nav>
   <div class="bar-dx">
     <div class="lingue"><a class="on" href="#apertura">IT</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></div>
-    <a class="btn btn-rosso" href="#parliamo">Scrivimi due righe</a>
+    <a class="btn btn-vuoto" href="lavora-con-me.html">Lavora con me</a>
   </div>
 </div></header>
 
 <main id="contenuto">
 <div class="wrap hero" id="apertura">
-  <div class="scontrino" aria-hidden="true"><div class="carta-s"><b>LORENZO ASUNI</b><span>Fractional CMO</span><hr><p><span>Crescita media annua</span><span>+323%</span></p><p><span>Imprese seguite</span><span>35</span></p><p><span>Raccolti dalle società</span><span>100 M€+</span></p><p><span>Nel marketing</span><span>dal 2013</span></p><p><span>Lingue</span><span>IT EN ES</span></p><hr><p class="tot"><span>TOTALE</span><span>il tuo fatturato</span></p></div></div>
-  <div class="sopra">Marketing, vendite e RevOps</div>
+  <div class="sopra">Fractional CMO e RevOps</div>
   <h1>Il fatturato di una società tech, <span class="rosso">AI e calcolatrice alla mano.</span></h1>
   <div class="hero-sotto">
     <div><p>Lavoro dentro le aziende B2B e metto marketing, vendite e RevOps sugli stessi numeri.</p><p>Se guidi una società tech, da founder o da CEO, parti dal conto sul tuo fatturato e dalle dieci domande che mostrano dove lo stai perdendo. Se invece investi in società tech, usale per leggere i tuoi investimenti.</p></div>
-    <div>
-      <p class="domanda">Come posso aiutarti?</p>
-      <div class="azioni"><a class="btn btn-rosso" href="#parliamo">Scrivimi due righe</a><a class="btn btn-vuoto" href="#conto">Fai il conto</a></div>
-      <div class="posti">Prendo un nuovo progetto da aprile 2027</div>
-    </div>
+    <div class="azioni"><a class="btn btn-rosso" href="#conto">Fai il conto</a></div>
   </div>
 </div>
 
 <div class="wrap scena-wrap">
   <div style="position:relative">
-    <div class="scena">
+    <div class="scena scena-bassa">
       <video src="asset/calcolatrice-tasti-wikimedia.webm" autoplay muted loop playsinline preload="metadata" aria-hidden="true"></video>
-      <div class="tastiera"><span class="tasto">Dentro l'azienda</span><span class="tasto">Numeri con la fonte</span><span class="tasto">Progetti di 6 o 12 mesi</span><span class="tasto">IT · EN · ES</span><span class="tasto">Dal 2013</span></div>
+      
     </div>
-    <a class="tasto-uguale" href="#conto"><span aria-hidden="true">=</span><small>Fai il conto</small></a>
   </div>
   <p class="credito">Video: <a href="https://commons.wikimedia.org/wiki/File:Keystrokes_in_a_vintage_mechanical_calculator.webm">Subhashish Panigrahi</a>, <a href="https://creativecommons.org/licenses/by-sa/4.0/deed.it">CC BY-SA 4.0</a>, via Wikimedia Commons, senza audio</p>
-  
 </div>
 
 <section id="conto" aria-labelledby="t-conto">
@@ -783,59 +821,19 @@ header{background:rgba(247,242,223,.95)}
   <p class="isc-fatto" aria-live="polite"></p>
 </div>
     <div id="calc-funnel"><div class="calc2" data-calc="funnel" data-stima></div></div>
-    <div class="dopo"><a class="btn btn-nero" href="officina.html">Gli altri nove conti, nell'Officina</a><span>CAC, sconto contro volume, venditori da assumere, provvigioni e altri.</span><a class="freccia" href="materiali/autotest.html">Le dieci domande che mostrano dove perdi il fatturato</a></div>
+    <p class="legenda">Come leggo un numero, mio o di altri: tre domande, in quest'ordine.</p>
+    <div class="tre tre-corto">
+      <div><span class="n">01</span><h3>Chi lo dice</h3><p>L'ho visto io in un dato aperto o in un documento depositato, o lo dichiara chi l'ha fatto? Il dichiarato pesa meno.</p></div>
+      <div><span class="n">02</span><h3>Contro cosa</h3><p>Servono il periodo, il punto di partenza e il costo. Un "+52%" senza la base non dice niente.</p></div>
+      <div><span class="n">03</span><h3>Si rifà altrove?</h3><p>Funzionerebbe in un'azienda B2B italiana da 5 a 50 persone, con il suo budget e il suo team?</p></div>
+    </div>
+    <div class="dopo"><a class="freccia" href="officina.html">Gli altri nove conti, nell'Officina</a><a class="freccia" href="materiali/autotest.html">Le dieci domande</a></div>
   </div>
 </section>
 
 <div class="rotolo" aria-hidden="true"><div class="nastro-in" id="nastro1"></div></div>
 
-<section id="aiuto" aria-labelledby="t-aiuto">
-  <div class="wrap">
-    <div class="sopra">Come lavoro</div>
-    <h2 class="h2 rv" id="t-aiuto">Due modi di lavorare insieme. <span class="rosso">E uno per leggermi e basta.</span></h2>
-    <div class="porte"><article class="porta gialla"><span class="num">01</span><h3>Assessment go-to-market</h3><p>Leggo clienti, contratti, pipeline e registrazioni delle call, e parlo con chi vende. Ti consegno dove si perde il fatturato e cosa fare nei sei mesi dopo.</p>
-        <ul><li><i class="ast"></i>Chi state attirando e chi dovreste attirare</li><li><i class="ast"></i>Il funnel a ritroso dal fatturato che vuoi</li><li><i class="ast"></i>Un piano con obiettivi per canale</li></ul><a class="btn btn-nero" href="#parliamo" data-bisogno="assessment">Parliamo dell'assessment</a></article><article class="porta rossa"><span class="num">02</span><h3>Fractional CMO</h3><span class="durata">Progetti di 6 o 12 mesi</span><p>Seguo go-to-market, marketing e brand dentro il team, dalla crescita del fatturato alla costruzione del team e al posizionamento. Si parte con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
-        <ul><li><i class="ast"></i>Obiettivi sfidanti dal primo mese, sui tassi di oggi</li><li><i class="ast"></i>BDR, venditori e campagne con una scorecard</li><li><i class="ast"></i>Una verifica settimanale sui numeri</li></ul><a class="btn" href="#parliamo" data-bisogno="fractional">Parliamo del progetto</a></article><article class="porta bianca"><span class="num">03</span><h3>Leggimi e basta</h3>
-        <p>Il conto e l'Officina sono aperti. Una volta al mese la newsletter, ogni venerdì il radar, ogni settimana i repository da copiare.</p>
-        <ul><li><i class="ast"></i>Dieci conti collegati tra loro</li><li><i class="ast"></i>Casi con un numero e un voto</li><li><i class="ast"></i>Calcolatori e skill da adattare</li></ul>
-        <a class="btn btn-vuoto" href="#newsletter">Iscriviti alla newsletter</a></article></div>
-  </div>
-</section>
-
-<section id="settori" style="padding-top:0" aria-labelledby="t-settori">
-  <div class="wrap">
-    <div class="sopra">Settori</div>
-    <h2 class="h2 rv" id="t-settori">Dimmi cosa fa la tua azienda. <span class="rosso">Ti dico cosa ho già visto nel tuo settore.</span></h2>
-    <div class="mozzo">
-      <div class="calcolatrice">
-        <div class="display"><span id="disp" aria-live="polite"></span><i class="cursore" aria-hidden="true"></i></div>
-        <div class="tasti-s" id="tasti-s" role="group" aria-label="Scegli il settore"></div>
-        <p class="marca">Scegli il tuo settore</p>
-      </div>
-      <div class="pannello" id="pannello" aria-live="polite"><div id="pannello-in"></div></div>
-    </div>
-  </div>
-</section>
-
-<section id="numero" style="padding-top:0" aria-labelledby="t-numero">
-  <div class="wrap">
-    <div class="domande-top">
-      <div>
-        <div class="sopra">Come leggo un numero</div>
-        <h2 class="h2 rv" id="t-numero">Prima di fidarmi di un risultato, tre domande. <span class="rosso">In quest'ordine.</span></h2>
-        <p class="lead">Vale per i miei risultati e per quelli degli altri. Se cade la prima, le altre non servono.</p>
-      </div>
-      <div class="cartello" aria-hidden="true"><div class="q">?</div></div>
-    </div>
-    <div class="tre">
-      <div><span class="n">01</span><h3>Chi lo dice</h3><p>L'ho visto io, in un dato aperto o in un documento depositato, oppure lo dichiara chi l'ha fatto? Un numero dichiarato può essere vero, ma pesa meno.</p></div>
-      <div><span class="n">02</span><h3>Contro cosa</h3><p>Mi servono il periodo, il punto di partenza e il costo. Un "+52%" senza la base non mi dice niente.</p></div>
-      <div><span class="n">03</span><h3>Si rifà altrove?</h3><p>Funzionerebbe in un'azienda B2B italiana da 5 a 50 persone, con il suo budget e il suo team? Se la risposta è no, il caso resta una curiosità.</p></div>
-    </div>
-  </div>
-</section>
-
-<section id="radar" style="padding-top:0" aria-labelledby="t-radar">
+<section id="radar" aria-labelledby="t-radar">
   <div class="wrap">
     <div class="sopra">Il radar della settimana</div>
     <h2 class="h2 rv" id="t-radar">Casi con un numero. <span class="rosso">Letti a fondo, con un voto su 10.</span></h2>
@@ -867,14 +865,6 @@ header{background:rgba(247,242,223,.95)}
   </div>
 </section>
 
-<section style="padding-top:0" aria-labelledby="t-situazioni">
-  <div class="wrap">
-    <div class="sopra">Quando mi chiamano</div>
-    <h2 class="h2 rv" id="t-situazioni">Tre situazioni in cui di solito arriva la telefonata.</h2>
-    <div class="situazioni"><div><h3>Il team fissa meeting, ma i contratti non arrivano.</h3><p>Il problema sta quasi sempre in un passaggio preciso: chi si presenta, chi viene qualificato, chi riceve una proposta.</p><p class="lavoro">Tassi per passaggio, no-show, definizione di opportunità.</p></div><div><h3>Prima di un round serve un piano che regga le domande.</h3><p>Il ricorrente di oggi, quello che serve al round, e quanti meeting, opportunità e contratti stanno in mezzo.</p><p class="lavoro">Funnel a ritroso, obiettivi per canale, verifica settimanale.</p></div><div><h3>Hai assunto BDR o venditori e non sai se stanno andando.</h3><p>Dopo tre mesi nessuno sa dire se il problema è la lista, lo script, la persona o il prodotto.</p><p class="lavoro">Scorecard, ascolto delle call, coaching con un metodo.</p></div></div>
-  </div>
-</section>
-
 <div class="tovaglia" aria-hidden="true"></div>
 <section id="newsletter" aria-labelledby="t-news">
   <div class="wrap">
@@ -896,67 +886,31 @@ header{background:rgba(247,242,223,.95)}
       <div>
         <div class="sopra">Lorenzo Asuni</div>
         <h2 class="h2 rv" id="t-chi">Poche aziende alla volta. <span class="rosso">Abbastanza dentro da vedere i numeri veri.</span></h2>
-        <p class="lead">Faccio il fractional CMO: seguo go-to-market, marketing e brand di società tech B2B e B2B2B, dalla crescita del fatturato alla costruzione del team e al posizionamento. Lavoro per progetti di 6 o 12 mesi, che partono con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
+        <p class="lead">Faccio il fractional CMO e RevOps: seguo go-to-market, marketing e brand di società tech B2B e B2B2B, dalla crescita del fatturato alla costruzione del team e al posizionamento. Lavoro per progetti di 6 o 12 mesi, che partono con l'obiettivo di raddoppiare o triplicare il fatturato.</p>
+        <p class="lead"><a class="freccia" href="lavora-con-me.html">Come lavoriamo insieme</a></p>
       </div>
       <div class="foto"><img src="asset/ritratto-presentazione.jpg" alt="Lorenzo Asuni mentre presenta una palette di colori proiettata" loading="lazy"></div>
     </div>
-    <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita annuale media del fatturato, dal mio ingresso alla mia uscita (base 12 mesi)</div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2013</div><div class="l">nel marketing e nelle vendite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="500" data-suf="">Oltre 500</div><div class="l">iscritti alla newsletter, al 7/11/2026</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="22000" data-suf="">Oltre 22.000</div><div class="l">persone su LinkedIn, al 7/11/2026</div></div><div class="cella"><div class="n">IT · EN · ES</div><div class="l">lingue di lavoro</div></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
+    <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita media del fatturato nell'anno in cui lavoro con le startup<small>Dati di bilancio di esercizio nell'anno in cui ho collaborato.</small></div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2011</div><div class="l">nel marketing e nel tech</div></div><div class="cella"><div class="n">IT · EN · ES</div><div class="l">lingue di lavoro</div></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
     <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Da dove vengo</h3>
     <div class="binario" id="binario" aria-hidden="true"><i></i></div>
-    <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
-    <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Gli strumenti che ho usato</h3>
-    <div class="strumenti"><div><b>Trovare e arricchire contatti</b>Apollo, Clay, Sales Navigator</div><div><b>Sequenze ed email</b>Smartlead, Instantly, Lemlist</div><div><b>Chiamate e registrazioni</b>Aircall, Gong, Fathom, Granola, tl;dv, Calendly</div><div><b>CRM e gestionali</b>Salesforce, HubSpot, Dynamics 365, Odoo, Oracle, SAP</div><div><b>Campagne a pagamento</b>Google Ads, Meta Ads, LinkedIn Ads, TikTok Ads, Amazon Ads</div><div><b>Misura</b>GA4 e GTM, Adobe Analytics, Mixpanel, Looker Studio, SQL, Search Console, Semrush, Hotjar, Typeform, Brand24</div><div><b>Siti e grafica</b>WordPress, Wix, Framer, Canva, Figma</div><div><b>Organizzazione del lavoro</b>Asana, ClickUp, Monday, Trello, Jira e Atlassian, Linear, Airtable, GitHub</div><div><b>AI e automazioni</b>Claude Code, ChatGPT, Gemini, Make, n8n</div></div>
+    <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012: una di marketing sportivo e una di food delivery.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO e RevOps, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
   </div>
 </section>
 
-<section id="copia" style="padding-top:0" aria-labelledby="t-copia">
+<section class="parliamo contatto" id="contatto" aria-labelledby="t-contatto">
   <div class="wrap">
-    <div class="sopra">Da copiare</div>
-    <h2 class="h2 rv" id="t-copia">Repository, calcolatori e skill <span class="rosso">da prendere e adattare.</span></h2>
-    <p class="lead">Ogni settimana i tre repository di marketing e vendite da guardare (ultimo giro: 15/11/2026), lo scaffale di quelli di riferimento e i miei calcolatori e skill, da prendere e adattare.</p>
-    <div class="copia">
-      <a href="repository.html#top3"><h3>La top 3 della settimana</h3><p>I tre repository di marketing e vendite da guardare, più lo scaffale di quelli di riferimento.</p><span class="freccia">Vai ai repository</span></a>
-      <a href="repository.html#miei"><h3>I miei</h3><p>I calcolatori di questa pagina e le skill che uso nel lavoro, da copiare.</p><span class="freccia">Apri i miei</span></a>
-    </div>
-  </div>
-</section>
-
-<div class="tabellone4"><p class="wrap riga-flap" id="flap" aria-label="Il prossimo radar esce venerdì"></p></div>
-
-<section class="parliamo" id="parliamo" aria-labelledby="t-parliamo">
-  <div class="wrap parliamo-grid">
-    <div>
-      <div class="sopra">Scrivimi due righe</div>
-      <h2 id="t-parliamo">Hai un piano da far quadrare? <span style="color:var(--giallo)">Facciamo il conto.</span></h2>
-      <p class="lead">Raccontami dove sei e dove vuoi arrivare: leggo e rispondo io.</p>
-      <ul class="agenda">
-        <li><b>1</b><span>Dove sei oggi: fatturato, team, canali che funzionano.</span></li>
-        <li><b>2</b><span>Dove vuoi arrivare e in quanto tempo.</span></li>
-        <li><b>3</b><span>Se ha senso lavorare insieme, e in quale forma.</span></li>
-      </ul>
-      <div class="firma"><img src="asset/ritratto-substack.jpg" alt=""><span><b>Lorenzo Asuni</b><br>Leggo e rispondo io.</span></div>
-      <p class="mail-diretta">Se un numero di questa pagina non ti torna, scrivimelo: è il messaggio che leggo più volentieri. <a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a></p>
-    </div>
-    <form id="modulo" novalidate>
-      <div class="riga2"><label>Nome<input name="nome" autocomplete="name"></label><label>Azienda<input name="azienda" autocomplete="organization"></label></div>
-      <div><p style="font-size:14px;font-weight:700;margin-bottom:8px">Di cosa hai bisogno?</p>
-        <div class="bisogni" role="radiogroup" aria-label="Di cosa hai bisogno">
-          <label><input type="radio" name="bisogno" value="Assessment go-to-market" id="b-assessment"><span>Assessment</span></label>
-          <label><input type="radio" name="bisogno" value="Fractional CMO" id="b-fractional"><span>Fractional CMO</span></label>
-          <label><input type="radio" name="bisogno" value="Un numero che non torna"><span>Un numero che non torna</span></label>
-          <label><input type="radio" name="bisogno" value="Altro"><span>Altro</span></label>
-        </div></div>
-      <label>Raccontami la situazione in due righe<textarea name="messaggio" placeholder="Per esempio: 12 persone, 800K di ricorrente, vogliamo arrivare a 2 milioni entro fine 2027."></textarea></label>
-      <button class="btn btn-rosso" type="submit">Manda a Lorenzo</button>
-      <p class="nota">Il modulo apre il tuo programma di posta con il messaggio già scritto, verso la@lorenzoasuni.com. Nessun dato passa da questo sito.</p>
-    </form>
+    <div class="sopra">Scrivimi</div>
+    <h2 id="t-contatto">Un numero non ti torna? <span style="color:var(--giallo)">Scrivimi.</span></h2>
+    <p class="lead">È il messaggio che leggo più volentieri. Se invece vuoi lavorare insieme, la pagina è <a href="lavora-con-me.html">Lavora con me</a>.</p>
+    <p class="mail-grande"><a href="mailto:la@lorenzoasuni.com">la@lorenzoasuni.com</a></p>
   </div>
 </section>
 </main>
 
 <footer><div class="wrap">
   <span><b>Lorenzo Asuni.</b> Il fatturato, AI e calcolatrice alla mano.<br>4AS MILE S.r.l. · Via Renato Prunas 10, 09126 Cagliari · P.IVA 03941490926</span>
-  <span><a href="privacy.html">Privacy</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en">Cyber · EN</a><a href="https://github.com/4asmile-git">GitHub</a><br>Nessun cookie di questo sito. Terze parti: il conteggio anonimo delle visite con Umami e, se lo chiedi, il modulo di Substack.</span>
+  <span><a href="officina.html">Officina</a><a href="repository.html">Da copiare</a><a href="esempi.html">Esempi</a><a href="privacy.html">Privacy</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en">Cyber · EN</a><a href="https://github.com/4asmile-git">GitHub</a><br>Nessun cookie di questo sito. Terze parti: il conteggio anonimo delle visite con Umami e, se lo chiedi, il modulo di Substack.</span>
 </div></footer>
 <script>
 /* Calcolatori RevOps dell'Officina: solo formule, nessun DOM.
@@ -1649,50 +1603,32 @@ header{background:rgba(247,242,223,.95)}
   var calmo=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var EASE=function(t){return 1-Math.pow(1-t,4)};
   function tween(el,da,a,fmt,dur){if(calmo||da===a){el.textContent=fmt(a);return}var t0=performance.now();dur=dur||600;(function passo(t){var k=Math.min(1,(t-t0)/dur);el.textContent=fmt(da+(a-da)*EASE(k));if(k<1)requestAnimationFrame(passo)})(t0)}
-  /* rotolo della calcolatrice: il conto del funnel a ritroso, con i valori d'esempio del calcolatore */
-  (function(){var v=[['Esempio','il conto','',''],['Fatturato da chiudere','300.000 €','+'],['Contratto medio','15.000 €','÷'],['Contratti','20','=','t'],['Win rate','25%','÷'],['Opportunità','80','=','t'],['Opportunità da meeting','50%','÷'],['Meeting tenuti','160','=','t'],['Si presentano','80%','÷'],['Meeting fissati','200','T','t']];
-    var giro=v.map(function(r){return '<span class="biglietto'+(r[3]?' tot':'')+'"><small>'+r[0]+'</small><b>'+r[1]+'</b><i>'+r[2]+'</i></span>'}).join('')+'<span class="motto">AI e calcolatrice alla mano.</span>',h='';for(var i=0;i<4;i++)h+=giro;document.getElementById('nastro1').innerHTML=h})();
-  /* tabellone a palette, come quello del radar sul sito */
-  var flap=document.getElementById('flap');flap.innerHTML='Il prossimo radar esce venerdì'.toUpperCase().split(' ').map(function(w){return '<span class="pf" aria-hidden="true">'+w.split('').map(function(c){return '<i>'+c+'</i>'}).join('')+'</span>'}).join('');
 
-  /* settori: una calcolatrice, un tasto per settore, il display scrive il nome */
-  var settori=[{k:"Cybersecurity",s:"CY",c:"var(--rosso)",tc:"#FFF8EE",t:"Servizi e prodotti venduti a CISO e responsabili IT.",d:"Ci ho passato quattro anni da CMO e ci lavoro ancora. Il messaggio deve essere tecnico ma leggibile da chi firma, e la pipeline si apre con BDR, partner ed eventi più che con l'advertising.",e:"BDR e cold calling, partner, eventi, messaggio tecnico",w:"Da CMO dal 2021 al 2024, poi come fractional."},{k:"AI e software B2B",s:"AI",c:"var(--ink)",tc:"#FFFDF6",t:"Prodotti nuovi che cercano i primi clienti ricorrenti.",d:"Chi attirare per primo, quale offerta d'ingresso fa partire il primo contratto, come si costruisce l'upsell sui clienti che ci sono già.",e:"ICP, offerta d'ingresso, pitch, upsell",w:"In un laboratorio di LLM e bot dal 2019 al 2021, oggi come fractional e in assessment."},{k:"Servizi professionali",s:"SP",c:"#FFFDF6",tc:"var(--ink)",t:"Servizi alle PMI venduti al telefono.",d:"Liste costruite per campagna, script, ascolto delle call e coaching. Il funnel si legge per persona, campagna e fascia oraria, non in media.",e:"cold calling, liste, script, coaching",w:"Come fractional."},{k:"Fintech e finanza",s:"€",c:"var(--verde)",tc:"#FFFDF6",t:"Abbonamenti e servizi finanziari, B2C e alle PMI.",d:"Funnel con più passaggi umani, LTV letta per coorte, lancio di un prodotto d'ingresso a basso prezzo per alimentare i commerciali.",e:"LTV per coorte, funnel, prodotto d'ingresso",w:"Come fractional e in assessment."},{k:"Sanità e marketplace",s:"+",c:"var(--carta-2)",tc:"var(--ink)",t:"Marketplace con molte transazioni e un brand da costruire.",d:"Come leggere l'effetto di una campagna sui dati di vendita invece che sulle impressioni, e cosa fare con email e riacquisto dopo il primo ordine.",e:"campagne brand, dati di vendita, email e riacquisto",w:"Come fractional."},{k:"Consumer e travel",s:"TR",c:"#8E1F1A",tc:"#FFFDF6",t:"Lanciare in Italia un prodotto nato all'estero.",d:"Il primo mercato fuori casa: stampa, TV senza budget, partnership e i primi canali a pagamento.",e:"lancio paese, stampa, partnership",w:"AirHelp dal 2014 e Lunii dal 2018."}];
-  var tasti=document.getElementById('tasti-s'),pan=document.getElementById('pannello-in'),disp=document.getElementById('disp'),bt=[],scrivi=null;
-  settori.forEach(function(x,i){var b=document.createElement('button');b.type='button';b.className='tasto-s';b.innerHTML='<b>'+x.s+'</b><small>'+x.k+'</small>';b.addEventListener('click',function(){mostra(i)});tasti.appendChild(b);bt.push(b)});
-  function mostra(i){var x=settori[i];bt.forEach(function(n,j){n.classList.toggle('on',j===i);n.setAttribute('aria-pressed',j===i)});
-    var testo='0'+(i+1)+'/06 '+x.k.toUpperCase();if(scrivi)clearInterval(scrivi);
-    if(calmo)disp.textContent=testo;else{var n=0;disp.textContent='';scrivi=setInterval(function(){n++;disp.textContent=testo.slice(0,n);if(n>=testo.length)clearInterval(scrivi)},28)}
-    if(!calmo&&pan.innerHTML)pan.animate([{opacity:0,translate:'0 8px'},{opacity:1,translate:'0 0'}],{duration:380,easing:'cubic-bezier(.22,1,.36,1)'});
-    pan.innerHTML='<h3>'+x.t+'</h3><p>'+x.d+'</p><p class="etichette"><b>Su cosa lavoro:</b> '+x.e+'</p><div class="dove"><b>Dove l\'ho visto:</b> '+x.w+'</div>'}
-  mostra(0);
+  /* rotolo della calcolatrice: il funnel a ritroso con i valori d'esempio del calcolatore */
+  var rot=document.getElementById('nastro1');
+  if(rot){var v=[['Esempio','il conto','',''],['Fatturato da chiudere','300.000 €','+'],['Contratto medio','15.000 €','÷'],['Contratti','20','=','t'],['Win rate','25%','÷'],['Opportunità','80','=','t'],['Opportunità da meeting','50%','÷'],['Meeting tenuti','160','=','t'],['Si presentano','80%','÷'],['Meeting fissati','200','T','t']];
+    var giro=v.map(function(r){return '<span class="biglietto'+(r[3]?' tot':'')+'"><small>'+r[0]+'</small><b>'+r[1]+'</b><i>'+r[2]+'</i></span>'}).join('')+'<span class="motto">AI e calcolatrice alla mano.</span>',h='';for(var i=0;i<4;i++)h+=giro;rot.innerHTML=h}
 
-  /* porte e modulo */
-  document.querySelectorAll('[data-bisogno]').forEach(function(a){a.addEventListener('click',function(){var r=document.getElementById('b-'+a.dataset.bisogno);if(r)r.checked=true})});
-  document.getElementById('modulo').addEventListener('submit',function(e){e.preventDefault();var f=e.target,bis=(f.querySelector('input[name=bisogno]:checked')||{}).value||'Due righe dal sito';
-    var ogg=bis+(f.azienda.value?' · '+f.azienda.value:''),corpo='Ciao Lorenzo,\n\n'+f.messaggio.value+'\n\n'+f.nome.value+(f.azienda.value?', '+f.azienda.value:'');
-    location.href='mailto:la@lorenzoasuni.com?subject='+encodeURIComponent(ogg)+'&body='+encodeURIComponent(corpo)});
+  /* video di presentazione, solo se c'è */
+  var dlg=document.getElementById('video-pres');
+  if(dlg){var vp=dlg.querySelector('video');document.getElementById('apri-video').addEventListener('click',function(){dlg.showModal();vp.play()});
+    function chiudi(){vp.pause();dlg.close()}document.getElementById('chiudi-video').addEventListener('click',chiudi);
+    dlg.addEventListener('click',function(e){if(e.target===dlg)chiudi()});dlg.addEventListener('close',function(){vp.pause()})}
 
   var t=document.getElementById('testata');addEventListener('scroll',function(){t.classList.toggle('scrolled',scrollY>10)},{passive:true});
-  var v=document.querySelector('.scena video');
+  var vid=document.querySelector('.scena video');
 
-  if(calmo){if(v){v.removeAttribute('autoplay');v.pause()}document.querySelectorAll('[data-q]').forEach(function(i){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'});return}
+  if(calmo){if(vid){vid.removeAttribute('autoplay');vid.pause()}document.querySelectorAll('[data-q]').forEach(function(i){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'});return}
   var CURVA='cubic-bezier(.22,1,.36,1)';
   var attese=[];function quando(el,fn,q){if(el)attese.push({el:el,fn:fn,q:q||.85})}
   function controlla(){attese=attese.filter(function(a){if(a.el.getBoundingClientRect().top<innerHeight*a.q){a.fn(a.el);return false}return true})}
 
-  /* l'unica entrata al caricamento */
+  /* l'unica entrata al caricamento: il titolo parola per parola */
   var h1=document.querySelector('.hero h1'),parole=[];
   (function spezza(n){[].slice.call(n.childNodes).forEach(function(c){if(c.nodeType===3){var f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(function(w){if(!w)return;if(/^\s+$/.test(w))f.appendChild(document.createTextNode(w));else{var sp=document.createElement('span');sp.className='parola';sp.textContent=w;f.appendChild(sp);parole.push(sp)}});n.replaceChild(f,c)}else spezza(c)})})(h1);
   parole.forEach(function(w,i){w.animate([{opacity:0,translate:'0 .35em'},{opacity:1,translate:'0 0'}],{duration:650,delay:120+i*55,easing:CURVA,fill:'backwards'})});
   var dopo=120+parole.length*55;
   [].slice.call(document.querySelectorAll('.hero .sopra, .hero-sotto > div')).forEach(function(el,i){el.animate([{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:600,delay:el.classList.contains('sopra')?40:dopo+i*90,easing:CURVA,fill:'backwards'})});
-
-  /* lo scontrino si stampa */
-  var sc=document.querySelector('.scontrino');if(sc)sc.animate([{clipPath:'inset(0 0 100% 0)'},{clipPath:'inset(0 0 -30px 0)'}],{duration:1100,delay:dopo,easing:'steps(14,end)',fill:'backwards'});
-  /* il tabellone gira quando lo vedi e si ferma sulle lettere vere */
-  quando(document.getElementById('flap'),function(f){var L='ABCDEFGHILMNOPRSTUVZ';[].slice.call(f.querySelectorAll('i')).forEach(function(el,k){var vero=el.textContent,n=0,giri=5+k%7;var t=setInterval(function(){n++;el.textContent=n>=giri?vero:L[Math.floor(Math.random()*L.length)];if(n>=giri)clearInterval(t)},60)})},.8);
-  /* i tasti si posano sul video */
-  quando(document.querySelector('.scena'),function(sc){[].slice.call(sc.querySelectorAll('.tasto')).forEach(function(p,i){p.animate([{opacity:0,translate:'0 14px'},{opacity:1,translate:'0 0'}],{duration:520,delay:i*80,easing:CURVA,fill:'backwards'})})},.75);
 
   /* i numeri contano da zero, le barre del radar mostrano lo scarto */
   [].slice.call(document.querySelectorAll('[data-to]')).forEach(function(el){var a=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'',fmt=function(x){return pre+Math.round(x).toLocaleString('it-IT')+suf};
@@ -1706,11 +1642,11 @@ header{background:rgba(247,242,223,.95)}
   /* il risultato del conto sale quando cambia */
   document.querySelectorAll('[data-o="main"]').forEach(function(b){var prima=b.textContent;new MutationObserver(function(){if(b.textContent===prima)return;prima=b.textContent;b.classList.remove('aggiornato');void b.offsetWidth;b.classList.add('aggiornato')}).observe(b,{childList:true,characterData:true,subtree:true})});
 
-  /* legati allo scorrimento */
-  var bar=document.getElementById('progresso'),n1=document.getElementById('nastro1'),bin=document.querySelector('#binario i'),passi=document.querySelector('.passi'),attesa=false;
+  /* legati allo scorrimento: barra di lettura, rotolo, filo del percorso */
+  var bar=document.getElementById('progresso'),bin=document.querySelector('#binario i'),passi=document.querySelector('.passi'),attesa=false;
   function aggiorna(){attesa=false;controlla();var y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    bar.style.transform='scaleX('+(h>0?y/h:0)+')';var m1=n1.scrollWidth/4;
-    n1.style.transform='translateX('+(-(y*.3%m1))+'px)';
+    bar.style.transform='scaleX('+(h>0?y/h:0)+')';
+    if(rot){var m1=rot.scrollWidth/4;rot.style.transform='translateX('+(-(y*.3%m1))+'px)'}
     var r=passi.getBoundingClientRect(),p=(innerHeight*.85-r.top)/(r.height+innerHeight*.35);bin.style.transform='scaleX('+Math.max(0,Math.min(1,p))+')'}
   addEventListener('scroll',function(){if(!attesa){attesa=true;requestAnimationFrame(aggiorna)}},{passive:true});addEventListener('resize',aggiorna);aggiorna();
 })();

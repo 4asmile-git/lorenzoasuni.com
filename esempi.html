@@ -101,6 +101,7 @@
 @font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-regular.woff2') format('woff2'); font-weight: 400; font-display: swap; }
 @font-face { font-family: 'Archivo'; src: url('../fonts/archivo-v25-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 @font-face { font-family: 'JetBrains Mono'; src: url('../fonts/jetbrains-mono-500-normal.woff2') format('woff2'); font-weight: 500; font-display: swap; }
+@font-face { font-family: 'Poppins'; src: url('../fonts/poppins-v24-latin-700.woff2') format('woff2'); font-weight: 700; font-display: swap; }
 
 :root { --bg: #15110D; --bg-2: #1F1A15; --bg-3: #2B241C; --line: #3D352B; --text: #F4EFE4; --muted: #BDB39F; --riga2: #F7C948;
   --rosso: #E2381C; --rosso-fondo: #B3200D; --su-rosso: #FFF8EE; --arancio: #F08A2C; --giallo: #F7C948; --verde: #5BBF7A;
@@ -237,13 +238,36 @@ html[data-pelle="tavola"] .anteprima .velo { background: linear-gradient(transpa
 @media (max-width: 760px) { .uscite { grid-template-columns: 1fr; } }
 .uscite > div { background: var(--bg-2); border: 1px solid var(--line); border-radius: var(--r); padding: 18px; }
 .uscite p { margin: 0 0 12px; }
+/* Skin v4 per le pagine interne generate da build_v3.py: titoli, bottoni ed etichette in Poppins 700, senza maiuscole.
+   Caricato in fondo al <style> da build_v4.py, quindi vince sulle regole delle singole pagine. */
+:root { --display: 'Poppins', 'Helvetica Neue', Arial, sans-serif; --cond: 'Poppins', 'Helvetica Neue', Arial, sans-serif; }
+h1, h2, h3, .firma, .btn, .menu, .tab-testa, .trow .l, .tag, .card .chi, .diario a, .anteprima .velo, .lavorato, .indice2 h2,
+.materiali strong, .filtri b, .filtri button, .es .chi, .es h2, .es summary, .repo .lic, .gruppo-r, .top3 .pos, .c-come summary,
+.c-stima label, .calc-indice strong, .foglio h2, .foglio-azioni button, .c-sbl-t, .iscrizione h2, .coperto .piede::before, .ante-carta span {
+  font-family: var(--display); font-weight: 700; text-transform: none; letter-spacing: -.02em; }
+h1, h2, .foglio h2, .es h2 { letter-spacing: -.04em; line-height: 1.03; }
+h1 { font-size: clamp(40px, 6.2vw, 84px); }
+h2 { font-size: clamp(32px, 4.6vw, 56px); }
+h3, .indice2 h2, .calc-indice strong, .materiali strong { line-height: 1.15; }
+.intro h1 { font-size: clamp(40px, 6.2vw, 84px); line-height: 1.02; }
+.firma { font-size: 20px; }
+.menu { font-size: 14px; letter-spacing: -.005em; }
+.btn { font-size: 15px; border-radius: 12px; padding: 12px 20px; }
+.btn.piccolo { font-size: 13.5px; padding: 8px 14px; }
+.tab-testa, .trow .l { letter-spacing: 0; }
+.card .num, .es .num, .fatti b, .carriera .y, .voto, .es .voto, .top3 .pos { font-family: var(--display); font-weight: 700; letter-spacing: -.045em; text-transform: none; }
+.card .num { font-size: 34px; line-height: 1; }
+.fatti b { font-size: 26px; }
+.carriera .y { font-size: 22px; }
+.diario a { font-size: 19px; }
+.c-main b { font-family: var(--display); }
 </style>
 </head>
 <body>
 <a class="skip" href="#contenuto">Vai al contenuto</a>
 <header class="testata"><div class="wrap riga">
   <a class="firma" href="index.html">Lorenzo Asuni</a>
-  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li><li class="cyber"><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></li></ul></nav>
+  <nav aria-label="Sezioni"><ul class="menu"><li><a href="index.html">Torna alla home</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li class="forte"><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li><li><a href="lavora-con-me.html">Lavora con me</a></li><li class="cyber"><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></li></ul></nav>
 </div></header>
 <main id="contenuto">
   <section class="intro quadretti"><div class="wrap">

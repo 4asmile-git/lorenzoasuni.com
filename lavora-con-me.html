@@ -769,6 +769,14 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 /* quattro numeri in una riga, il +323% e i nomi a tutta larghezza */
 @media (min-width:761px){.griglia{grid-template-columns:repeat(4,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 4}.cella{min-height:150px}}
 .cella .l{max-width:none}
+
+/* 26/11: "Da usare" in home, tre porte (Officina, Da copiare, Esempi) */
+#usa{padding-bottom:clamp(56px,7vw,96px)}
+.copia.copia-tre{grid-template-columns:repeat(3,1fr)}
+.copia.copia-tre a:nth-child(2){background:var(--carta-3);border:1.5px solid var(--line)}
+.copia.copia-tre a:last-child{background:var(--carta-2)}
+.copia a:first-child p{opacity:.92}
+@media (max-width:900px){.copia.copia-tre{grid-template-columns:1fr}.copia.copia-tre a{min-height:0}}
 </style>
 </head>
 <body>
@@ -776,7 +784,7 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 <header id="testata"><div class="wrap bar">
   <a class="logo" href="index.html">Lorenzo Asuni<span>.</span></a>
   <nav aria-label="Sezioni"><ul>
-    <li><a href="index.html#conto">Il conto</a></li><li><a href="index.html#radar">Il radar</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li><a href="index.html#chi">Chi sono</a></li>
+    <li><a href="index.html#conto">Il conto</a></li><li><a href="index.html#radar">Il radar</a></li><li><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li><li><a href="esempi.html">Esempi</a></li><li><a href="index.html#newsletter">Newsletter</a></li><li><a href="index.html#chi">Chi sono</a></li>
   </ul></nav>
   <div class="bar-dx">
     <div class="lingue"><a class="on" href="index.html">IT</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></div>

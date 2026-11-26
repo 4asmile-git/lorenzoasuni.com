@@ -769,6 +769,14 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 /* quattro numeri in una riga, il +323% e i nomi a tutta larghezza */
 @media (min-width:761px){.griglia{grid-template-columns:repeat(4,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 4}.cella{min-height:150px}}
 .cella .l{max-width:none}
+
+/* 26/11: "Da usare" in home, tre porte (Officina, Da copiare, Esempi) */
+#usa{padding-bottom:clamp(56px,7vw,96px)}
+.copia.copia-tre{grid-template-columns:repeat(3,1fr)}
+.copia.copia-tre a:nth-child(2){background:var(--carta-3);border:1.5px solid var(--line)}
+.copia.copia-tre a:last-child{background:var(--carta-2)}
+.copia a:first-child p{opacity:.92}
+@media (max-width:900px){.copia.copia-tre{grid-template-columns:1fr}.copia.copia-tre a{min-height:0}}
 </style>
 </head>
 <body data-home>
@@ -777,7 +785,7 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 <header id="testata"><div class="wrap bar">
   <a class="logo" href="#apertura">Lorenzo Asuni<span>.</span></a>
   <nav aria-label="Sezioni"><ul>
-    <li><a href="#conto">Il conto</a></li><li><a href="#radar">Il radar</a></li><li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li>
+    <li><a href="#conto">Il conto</a></li><li><a href="#radar">Il radar</a></li><li><a href="officina.html">Officina</a></li><li><a href="repository.html">Da copiare</a></li><li><a href="esempi.html">Esempi</a></li><li><a href="#newsletter">Newsletter</a></li><li><a href="#chi">Chi sono</a></li>
   </ul></nav>
   <div class="bar-dx">
     <div class="lingue"><a class="on" href="#apertura">IT</a><a href="https://cyber.lorenzoasuni.com/" hreflang="en" title="Go-to-market per la cybersecurity, in inglese">Cyber · EN</a></div>
@@ -862,6 +870,19 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
     <div class="esito-pron" id="esito-pron" aria-live="polite" hidden><p></p></div>
     <p class="nota-radar"><i class="ast"></i><span>Sono i tre esempi con il voto più alto dall'8 novembre, quando il radar è partito. In due settimane il sistema ha raccolto 385 articoli e io ne ho tenuti 8. Il più solido è uno studio misurato da terzi; quasi tutti gli altri sono numeri dichiarati da chi l'ha fatto, e vanno letti così. Non ho ancora trovato un caso italiano con un numero.</span></p>
     <div class="dopo"><a class="freccia" href="esempi.html">Tutti gli 8 esempi, con fonte e voto</a></div>
+  </div>
+</section>
+
+<section id="usa" style="padding-top:0" aria-labelledby="t-usa">
+  <div class="wrap">
+    <div class="sopra">Da usare</div>
+    <h2 class="h2 rv" id="t-usa">Conti, repository ed esempi <span class="rosso">da prendere e adattare.</span></h2>
+    <p class="lead">Quello che uso nel lavoro e si può aprire senza chiedermelo.</p>
+    <div class="copia copia-tre">
+      <a href="officina.html"><h3>Officina</h3><p>Dieci conti sul fatturato: funnel a ritroso, CAC, sconto contro volume, venditori da assumere, provvigioni. Sotto ogni risultato c'è la formula.</p><span class="freccia">Apri l'Officina</span></a>
+      <a href="repository.html"><h3>Da copiare</h3><p>I repository di marketing e vendite che consulto, verificati su GitHub, più i miei calcolatori e le skill che uso ogni giorno.</p><span class="freccia">Vai ai repository</span></a>
+      <a href="esempi.html"><h3>Esempi</h3><p>Le campagne passate dal radar, ognuna con il suo numero, il tipo di prova e un voto su 10.</p><span class="freccia">Vedi gli esempi</span></a>
+    </div>
   </div>
 </section>
 

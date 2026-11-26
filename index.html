@@ -796,6 +796,46 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 .copia a:first-child p{opacity:.92}
 @media (max-width:900px){.copia.copia-tre{grid-template-columns:1fr}.copia.copia-tre a{min-height:0}}
 </style>
+<style>/* Motion (26/11/2026): stili dei pezzi che esistono solo con Motion acceso (html.moto). Entrano nella sola home, da build_v5.py. */
+
+/* tacciono le tre animazioni CSS che lo script rifà: bottone premuto, voto, risultato del conto */
+html.moto .btn:active{transform:none}
+html.moto .podio:not(.coperto) .voto{animation:none}
+html.moto [data-o="main"].aggiornato{animation:none}
+
+/* numeri a rulli, come il contatore di un'addizionatrice: una colonna di cifre per ogni cifra */
+.vh-m{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
+.rulli{display:inline-flex;align-items:flex-start;vertical-align:top;white-space:pre;height:var(--lh);line-height:var(--lh)}
+/* le regole della pagina sugli span (per esempio .contatori span) non devono rimpicciolire le cifre */
+html.moto span.rulli,html.moto .rulli span{font:inherit;color:inherit;letter-spacing:inherit;margin:0;text-transform:none}
+.rulli .rullo{display:block;height:var(--lh);overflow:hidden}
+.rulli .col{display:block;will-change:transform}
+.rulli .col span{display:block;height:var(--lh);line-height:var(--lh);text-align:center}
+
+/* lo scontrino che si stampa scorrendo: prende il posto del rotolo, con gli stessi numeri */
+.stampa{display:none}
+html.moto .rotolo{display:none}
+html.moto .stampa{display:block;margin:clamp(34px,5vw,64px) 0;background-image:repeating-linear-gradient(0deg,transparent 0 27px,rgba(192,48,42,.06) 27px 28px)}
+.stampa-in{width:min(390px,calc(100% - 40px));margin:0 auto;rotate:-1.2deg}
+.stampa-finestra{overflow:hidden;position:relative}
+.carta-s{position:relative;background:#FFFDF8;border-left:1px solid #E4DAC6;border-right:1px solid #E4DAC6;padding:22px 20px 78px;font-family:var(--mono);color:var(--ink);will-change:transform}
+.carta-s::before{content:"";position:absolute;left:0;right:0;top:0;height:10px;background:linear-gradient(135deg,var(--carta) 7px,transparent 0) 0 0/14px 10px repeat-x,linear-gradient(-135deg,var(--carta) 7px,transparent 0) 0 0/14px 10px repeat-x}
+.riga-s{display:grid;grid-template-columns:1fr auto 1.2em;align-items:center;column-gap:10px;height:44px;border-bottom:1px dashed #D9D0BE}
+.riga-s small{font-size:11px;letter-spacing:.08em;text-transform:uppercase;color:var(--muted);line-height:1.2}
+.riga-s b{font-weight:500;font-size:18px;font-variant-numeric:tabular-nums;white-space:nowrap}
+.riga-s i{font-style:normal;font-weight:500;font-size:16px;color:var(--muted);text-align:right}
+.riga-s.tot b,.riga-s.tot i{color:var(--rosso)}
+.riga-s.testa small{color:var(--ink);font-weight:700}
+.riga-s.fine{height:60px;border-bottom:0}
+.riga-s.fine b{font-size:26px}
+.timbro-s{position:absolute;left:50%;bottom:22px;translate:-50% 0;rotate:-6deg;white-space:nowrap;border:2.5px solid var(--rosso);border-radius:8px;padding:7px 12px;font-family:var(--titoli);font-weight:700;font-size:15px;letter-spacing:-.02em;color:var(--rosso);opacity:0;pointer-events:none}
+.testina{position:relative;height:38px;margin:0 -12px;background:var(--ink);border-radius:8px 8px 14px 14px;box-shadow:0 10px 18px rgba(46,45,43,.22)}
+.testina::before{content:"";position:absolute;left:14px;right:14px;top:6px;height:3px;border-radius:2px;background:#000}
+.testina i{position:absolute;right:16px;bottom:10px;width:9px;height:9px;border-radius:50%;background:var(--rosso);opacity:.35}
+
+/* la scena del video cresce entrando */
+html.moto .scena{will-change:transform}
+</style>
 </head>
 <body data-home>
 <a class="skip" href="#contenuto">Vai al contenuto</a>
@@ -933,7 +973,7 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
     <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita media del fatturato nell'anno in cui lavoro con le startup<small>Dati di bilancio di esercizio nell'anno in cui ho collaborato.</small></div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2011</div><div class="l">nel marketing e nel tech</div></div><div class="cella nomi mercati"><span class="t">Mercati in cui ho lavorato con le startup</span><span class="nome">Italia</span><span class="nome">DACH</span><span class="nome">Regno Unito</span><span class="nome">Francia</span><span class="nome">Spagna</span><span class="nome">Portogallo</span><span class="nome">Paesi Bassi</span><span class="nome">Polonia</span><span class="nome">Stati Uniti</span><span class="nome">Emirati Arabi</span></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
     <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Da dove vengo</h3>
     <div class="binario" id="binario" aria-hidden="true"><i></i></div>
-    <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012: una di marketing sportivo e una di food delivery.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO e RevOps, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
+    <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012: una di marketing sportivo e una di food delivery.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO e RevOps, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
   </div>
 </section>
 
@@ -1637,8 +1677,19 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
   try { if (v && matchMedia('(prefers-reduced-motion: reduce)').matches) { v.removeAttribute('autoplay'); v.pause(); } } catch (e) {}
 })();
 </script>
+<script src="asset/motion-lite.js"></script>
 <script>
+/* Le animazioni della home su Motion (motion.dev), dal 26/11/2026 al posto di MOTO5 in build_v5.py (che resta con SITO_MOTO=no).
+   Motion arriva da asset/motion-lite.js (vendor/).
+   Cosa cambia rispetto a MOTO5:
+   - barra di lettura e filo del percorso: scroll() di Motion, che dove può li affida al browser (ScrollTimeline);
+   - entrate (numeri, barre del radar, titoli): inView() al posto della misura a ogni scorrimento;
+   - molla sui bottoni premuti, sul risultato del conto che cambia e sul voto che si scopre;
+   - pezzi nuovi (secondo giro): numeri a rulli, scontrino che si stampa al posto del rotolo, scena che cresce,
+     card che entrano in fila e si inclinano sotto il mouse. Stili in moto5_motion.css.
+   Se Motion non si carica o l'utente chiede meno movimento, la pagina resta ferma e leggibile. */
 (function(){
+  var M=window.Motion;
   var calmo=window.matchMedia&&matchMedia('(prefers-reduced-motion: reduce)').matches;
   var EASE=function(t){return 1-Math.pow(1-t,4)};
   function tween(el,da,a,fmt,dur){if(calmo||da===a){el.textContent=fmt(a);return}var t0=performance.now();dur=dur||600;(function passo(t){var k=Math.min(1,(t-t0)/dur);el.textContent=fmt(da+(a-da)*EASE(k));if(k<1)requestAnimationFrame(passo)})(t0)}
@@ -1654,40 +1705,124 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
     function chiudi(){vp.pause();dlg.close()}document.getElementById('chiudi-video').addEventListener('click',chiudi);
     dlg.addEventListener('click',function(e){if(e.target===dlg)chiudi()});dlg.addEventListener('close',function(){vp.pause()})}
 
-  var t=document.getElementById('testata');addEventListener('scroll',function(){t.classList.toggle('scrolled',scrollY>10)},{passive:true});
+  var t=document.getElementById('testata');
   var vid=document.querySelector('.scena video');
 
-  if(calmo){if(vid){vid.removeAttribute('autoplay');vid.pause()}document.querySelectorAll('[data-q]').forEach(function(i){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'});return}
-  var CURVA='cubic-bezier(.22,1,.36,1)';
-  var attese=[];function quando(el,fn,q){if(el)attese.push({el:el,fn:fn,q:q||.85})}
-  function controlla(){attese=attese.filter(function(a){if(a.el.getBoundingClientRect().top<innerHeight*a.q){a.fn(a.el);return false}return true})}
+  /* senza movimento (scelta dell'utente) o senza Motion (file non arrivato): tutto al suo posto, fermo */
+  if(calmo||!M){
+    addEventListener('scroll',function(){t.classList.toggle('scrolled',scrollY>10)},{passive:true});
+    if(calmo&&vid){vid.removeAttribute('autoplay');vid.pause()}
+    document.querySelectorAll('[data-q]').forEach(function(i){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'});
+    return}
+
+  document.documentElement.classList.add('moto');
+  var CURVA=[.22,1,.36,1];
+  var tutti=function(s,r){return [].slice.call((r||document).querySelectorAll(s))};
+  /* "entra" quando il bordo alto supera l'85% (o l'82%) dell'altezza dello schermo, come prima.
+     Il margine alto enorme conta anche ciò che è già passato sopra: chi salta con un link del menu non lascia numeri a zero. */
+  var VISTA={margin:'99999px 0px -15% 0px'},VISTA_T={margin:'99999px 0px -18% 0px'};
 
   /* l'unica entrata al caricamento: il titolo parola per parola */
   var h1=document.querySelector('.hero h1'),parole=[];
-  (function spezza(n){[].slice.call(n.childNodes).forEach(function(c){if(c.nodeType===3){var f=document.createDocumentFragment();c.textContent.split(/(\s+)/).forEach(function(w){if(!w)return;if(/^\s+$/.test(w))f.appendChild(document.createTextNode(w));else{var sp=document.createElement('span');sp.className='parola';sp.textContent=w;f.appendChild(sp);parole.push(sp)}});n.replaceChild(f,c)}else spezza(c)})})(h1);
-  parole.forEach(function(w,i){w.animate([{opacity:0,translate:'0 .35em'},{opacity:1,translate:'0 0'}],{duration:650,delay:120+i*55,easing:CURVA,fill:'backwards'})});
-  var dopo=120+parole.length*55;
-  [].slice.call(document.querySelectorAll('.hero .sopra, .hero-sotto > div')).forEach(function(el,i){el.animate([{opacity:0,translate:'0 12px'},{opacity:1,translate:'0 0'}],{duration:600,delay:el.classList.contains('sopra')?40:dopo+i*90,easing:CURVA,fill:'backwards'})});
+  (function spezza(n){[].slice.call(n.childNodes).forEach(function(c){
+    if(c.nodeType!==3){spezza(c);return}
+    var f=document.createDocumentFragment();
+    c.textContent.split(/(\s+)/).forEach(function(w){if(!w)return;
+      if(/^\s+$/.test(w)){f.appendChild(document.createTextNode(w));return}
+      var sp=document.createElement('span');sp.className='parola';sp.textContent=w;f.appendChild(sp);parole.push(sp)});
+    n.replaceChild(f,c)})})(h1);
+  M.animate(parole,{opacity:[0,1],translate:['0 .35em','0 0']},{duration:.65,delay:M.stagger(.055,{startDelay:.12}),ease:CURVA});
+  var dopo=.12+parole.length*.055;
+  tutti('.hero .sopra, .hero-sotto > div').forEach(function(el,i){
+    M.animate(el,{opacity:[0,1],translate:['0 12px','0 0']},{duration:.6,delay:el.classList.contains('sopra')?.04:dopo+i*.09,ease:CURVA})});
 
-  /* i numeri contano da zero, le barre del radar mostrano lo scarto */
-  [].slice.call(document.querySelectorAll('[data-to]')).forEach(function(el){var a=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'',fmt=function(x){return pre+Math.round(x).toLocaleString('it-IT')+suf};
-    if(el.getBoundingClientRect().top<innerHeight*.85)return;el.textContent=fmt(0);quando(el,function(){tween(el,0,a,fmt,a>1000?1300:900)})});
+  /* i numeri girano a rulli quando entrano, come il contatore di un'addizionatrice: prima le unità, poi le decine */
+  tutti('[data-to]').forEach(function(el){var a=+el.dataset.to,pre=el.dataset.pre||'',suf=el.dataset.suf||'';
+    if(el.getBoundingClientRect().top<innerHeight*.85)return;
+    var cs=getComputedStyle(el),lh=parseFloat(cs.lineHeight)/parseFloat(cs.fontSize);if(!(lh>0))lh=1.2;
+    var testo=el.textContent,cifre=Math.round(a).toLocaleString('it-IT'),cols=[];
+    var box=document.createElement('span');box.className='rulli';box.setAttribute('aria-hidden','true');box.style.setProperty('--lh',lh+'em');
+    function fisso(s){if(!s)return;var f=document.createElement('span');f.textContent=s;box.appendChild(f)}
+    fisso(pre);
+    cifre.split('').forEach(function(ch){if(!/\d/.test(ch)){fisso(ch);return}
+      var r=document.createElement('span');r.className='rullo';var c=document.createElement('span');c.className='col';
+      for(var k=0;k<20;k++){var d=document.createElement('span');d.textContent=k%10;c.appendChild(d)}
+      r.appendChild(c);box.appendChild(r);cols.push([c,+ch])});
+    fisso(suf);
+    var letto=document.createElement('span');letto.className='vh-m';letto.textContent=testo;
+    el.textContent='';el.appendChild(letto);el.appendChild(box);
+    M.inView(el,function(){cols.forEach(function(x,i){var fine='translateY('+(-(10+x[1])*5)+'%)';
+      M.animate(x[0],{transform:['translateY(0%)',fine]},{type:M.spring,bounce:.22,duration:1.1+.12*(cols.length-1-i),delay:.09*(cols.length-1-i)}).finished.then(function(){x[0].style.transform=fine})})},VISTA)});
+
+  /* le barre del radar mostrano lo scarto, una dopo l'altra */
   var cont=document.querySelector('.contatori');
-  quando(cont,function(){[].slice.call(cont.querySelectorAll('[data-q]')).forEach(function(i,k){setTimeout(function(){i.style.transform='scaleX('+Math.max(.015,+i.dataset.q)+')'},k*140)})});
+  if(cont)M.inView(cont,function(){tutti('[data-q]',cont).forEach(function(i,k){var q=Math.max(.015,+i.dataset.q);
+    i.style.transition='none';
+    M.animate(i,{transform:['scaleX(0)','scaleX('+q+')']},{duration:1,delay:k*.14,ease:CURVA}).finished.then(function(){i.style.transform='scaleX('+q+')'})})},VISTA);
 
   /* titoli che si accendono entrando */
-  document.querySelectorAll('.rv').forEach(function(h){if(h.getBoundingClientRect().top>innerHeight*.82){h.classList.add('spento');quando(h,function(){h.classList.remove('spento')},.82)}});
+  tutti('.rv').forEach(function(h){if(h.getBoundingClientRect().top>innerHeight*.82){h.classList.add('spento');M.inView(h,function(){h.classList.remove('spento')},VISTA_T)}});
 
-  /* il risultato del conto sale quando cambia */
-  document.querySelectorAll('[data-o="main"]').forEach(function(b){var prima=b.textContent;new MutationObserver(function(){if(b.textContent===prima)return;prima=b.textContent;b.classList.remove('aggiornato');void b.offsetWidth;b.classList.add('aggiornato')}).observe(b,{childList:true,characterData:true,subtree:true})});
+  /* il risultato del conto arriva con una molla quando cambia */
+  tutti('[data-o="main"]').forEach(function(b){var prima=b.textContent;new MutationObserver(function(){if(b.textContent===prima)return;prima=b.textContent;
+    M.animate(b,{opacity:[.3,1]},{duration:.3,ease:'ease-out'});
+    M.animate(b,{translate:['0 10px','0 0']},{type:M.spring,bounce:.5,duration:.5})}).observe(b,{childList:true,characterData:true,subtree:true})});
 
-  /* legati allo scorrimento: barra di lettura, rotolo, filo del percorso */
-  var bar=document.getElementById('progresso'),bin=document.querySelector('#binario i'),passi=document.querySelector('.passi'),attesa=false;
-  function aggiorna(){attesa=false;controlla();var y=scrollY,h=document.documentElement.scrollHeight-innerHeight;
-    bar.style.transform='scaleX('+(h>0?y/h:0)+')';
-    if(rot){var m1=rot.scrollWidth/4;rot.style.transform='translateX('+(-(y*.3%m1))+'px)'}
-    var r=passi.getBoundingClientRect(),p=(innerHeight*.85-r.top)/(r.height+innerHeight*.35);bin.style.transform='scaleX('+Math.max(0,Math.min(1,p))+')'}
-  addEventListener('scroll',function(){if(!attesa){attesa=true;requestAnimationFrame(aggiorna)}},{passive:true});addEventListener('resize',aggiorna);aggiorna();
+  /* i bottoni affondano sotto il dito e tornano su con una molla */
+  M.press('.btn, .podio .card',function(el){
+    M.animate(el,{scale:.95},{duration:.12,ease:'ease-out'});
+    return function(){M.animate(el,{scale:1},{type:M.spring,bounce:.55,duration:.45})}});
+
+  /* il voto si scopre come un timbro: prima il primo, poi gli altri */
+  tutti('.podio').forEach(function(p){var era=p.classList.contains('coperto');new MutationObserver(function(){var e=p.classList.contains('coperto');if(era&&!e){
+      M.animate(tutti('.voto',p),{opacity:[0,1]},{duration:.2,delay:M.stagger(.12)});
+      M.animate(tutti('.voto',p),{scale:[1.9,1]},{type:M.spring,bounce:.45,duration:.55,delay:M.stagger(.12)})}era=e}).observe(p,{attributes:true,attributeFilter:['class']})});
+
+  /* la scena del video cresce entrando, e dentro il video si allarga al contrario */
+  var scena=document.querySelector('.scena');
+  if(scena){var vista_scena={target:scena,offset:['start end','center center']};
+    M.scroll(M.animate(scena,{transform:['scale(.86)','scale(1)']},{ease:'linear'}),vista_scena);
+    if(vid)M.scroll(M.animate(vid,{transform:['scale(1.22)','scale(1)']},{ease:'linear'}),vista_scena)}
+
+  /* gruppi di card che entrano in fila, dal basso, con una molla */
+  ['.podio','.copia-tre','.anteprime','.griglia','.passi','.tre-corto'].forEach(function(s){tutti(s).forEach(function(g){
+    var figli=[].slice.call(g.children);if(!figli.length||g.getBoundingClientRect().top<innerHeight*.85)return;
+    figli.forEach(function(f){f.style.opacity='0'});
+    M.inView(g,function(){
+      M.animate(figli,{opacity:[0,1]},{duration:.45,ease:'ease-out',delay:M.stagger(.07)});
+      M.animate(figli,{translate:['0 38px','0 0']},{type:M.spring,bounce:.3,duration:.8,delay:M.stagger(.07)}).finished.then(function(){figli.forEach(function(f){f.style.opacity='';f.style.translate=''})});
+      figli.forEach(function(f){f.style.opacity=''})},VISTA)})});
+
+  /* le card si inclinano verso il mouse e tornano piatte con una molla (solo dove c'è un mouse) */
+  if(matchMedia('(hover:hover) and (pointer:fine)').matches)tutti('.podio .card, .copia-tre > *, .anteprime > *').forEach(function(el){var torna=null,PIATTA='perspective(900px) rotateX(0deg) rotateY(0deg)';
+    el.addEventListener('pointermove',function(e){if(torna){torna.cancel();torna=null}var r=el.getBoundingClientRect(),x=(e.clientX-r.left)/r.width-.5,y=(e.clientY-r.top)/r.height-.5;
+      el.style.transform='perspective(900px) rotateX('+(-y*5).toFixed(2)+'deg) rotateY('+(x*6).toFixed(2)+'deg)'});
+    el.addEventListener('pointerleave',function(){var da=el.style.transform||PIATTA;
+      torna=M.animate(el,{transform:[da,PIATTA]},{type:M.spring,bounce:.5,duration:.6});el.style.transform='';
+      var mia=torna;mia.finished.then(function(){if(torna===mia){mia.cancel();torna=null}},function(){})})});
+
+  /* lo scontrino che si stampa: una riga a ogni scatto dello scorrimento, poi il timbro. Sta al posto del rotolo, con gli stessi numeri */
+  var rotolo=document.querySelector('.rotolo');
+  if(rotolo&&typeof v!=='undefined'){
+    var st=document.createElement('div');st.className='stampa';st.setAttribute('aria-hidden','true');
+    var righe=v.map(function(r,i){return '<div class="riga-s'+(i===0?' testa':'')+(r[3]?' tot':'')+(i===v.length-1?' fine':'')+'"><small>'+r[0]+(i===0?' · '+r[1]:'')+'</small><b>'+(i===0?'':r[1])+'</b><i>'+(r[2]||'')+'</i></div>'}).join('');
+    st.innerHTML='<div class="stampa-in"><div class="stampa-finestra"><div class="carta-s">'+righe+'<span class="timbro-s">AI e calcolatrice alla mano.</span></div></div><div class="testina"><i></i></div></div>';
+    rotolo.parentNode.insertBefore(st,rotolo.nextSibling);
+    var carta=st.querySelector('.carta-s'),led=st.querySelector('.testina i'),timbro=st.querySelector('.timbro-s'),PASSI=v.length+2,fatto=0;
+    carta.style.transform='translateY(100%)';
+    M.scroll(function(p){var k=Math.round(Math.max(0,Math.min(1,p))*PASSI);if(k<=fatto)return;fatto=k;
+      M.animate(carta,{transform:'translateY('+((1-k/PASSI)*100).toFixed(2)+'%)'},{duration:.2,ease:'ease-out'});
+      M.animate(led,{opacity:[1,.35]},{duration:.35});
+      if(k===PASSI){M.animate(timbro,{opacity:[0,1]},{duration:.15,delay:.25});M.animate(timbro,{scale:[2.2,1]},{type:M.spring,bounce:.5,duration:.5,delay:.25})}
+    },{target:st,offset:['start 0.8','end 0.92']})}
+
+  /* legati allo scorrimento: barra di lettura e filo del percorso li muove il browser, rotolo e testata un solo ascolto */
+  var bar=document.getElementById('progresso'),bin=document.querySelector('#binario i'),passi=document.querySelector('.passi');
+  if(bar)M.scroll(M.animate(bar,{transform:['scaleX(0)','scaleX(1)']},{ease:'linear'}));
+  if(bin&&passi)M.scroll(M.animate(bin,{transform:['scaleX(0)','scaleX(1)']},{ease:'linear'}),{target:passi,offset:['start 0.85','end 0.5']});
+  var m1=0;function misura(){m1=rot?rot.scrollWidth/4:0}
+  misura();addEventListener('resize',misura);if(document.fonts&&document.fonts.ready)document.fonts.ready.then(misura);
+  M.scroll(function(p,info){var y=info.y.current;t.classList.toggle('scrolled',y>10);if(rot&&m1)rot.style.transform='translateX('+(-(y*.3%m1))+'px)'});
 })();
 </script>
 </body>

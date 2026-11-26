@@ -767,8 +767,26 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 .riga-settori{margin-top:30px;color:var(--muted);max-width:68ch;font-size:16px}
 
 /* quattro numeri in una riga, il +323% e i nomi a tutta larghezza */
-@media (min-width:761px){.griglia{grid-template-columns:repeat(4,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 4}.cella{min-height:150px}}
-.cella .l{max-width:none}
+/* 26/11: griglia più compatta, tre numeri in riga, mercati al posto delle lingue */
+.griglia{margin-top:44px}
+.cella{min-height:0;padding:24px 26px;gap:10px;justify-content:flex-start}
+.cella .n{font-size:clamp(32px,3.4vw,46px);white-space:nowrap}
+.cella .l{max-width:none;font-size:15px;line-height:1.45}
+.cella.forte{padding:26px 30px;gap:24px;align-items:center}
+.cella.forte .n{font-size:clamp(52px,6.4vw,84px)}
+.cella.forte .l{padding-bottom:0;font-size:16px;max-width:46ch}
+.cella.nomi{padding:20px 26px;gap:8px 26px}
+.cella.nomi .nome{font-size:clamp(18px,1.9vw,24px)}
+.cella.nomi.mercati{column-gap:20px}
+.cella.nomi.mercati .nome{font-size:clamp(16px,1.55vw,20px)}
+@media (min-width:761px){.griglia{grid-template-columns:repeat(3,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 3}}
+@media (max-width:760px){
+  .griglia{grid-template-columns:1fr}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 1}
+  .cella{padding:18px 16px;min-height:0;flex-direction:row;align-items:baseline;gap:14px}
+  .cella{flex-wrap:wrap;row-gap:6px}.cella .n{font-size:30px;flex:0 0 auto}.cella .l{flex:1 1 150px}
+  .cella.forte{flex-direction:column;align-items:flex-start;gap:8px}.cella.forte .n{font-size:60px}
+  .cella.nomi{flex-direction:row;padding:18px 16px;gap:6px 18px}
+}
 
 /* 26/11: "Da usare" in home, tre porte (Officina, Da copiare, Esempi) */
 #usa{padding-bottom:clamp(56px,7vw,96px)}

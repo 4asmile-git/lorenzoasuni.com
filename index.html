@@ -767,8 +767,26 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
 .riga-settori{margin-top:30px;color:var(--muted);max-width:68ch;font-size:16px}
 
 /* quattro numeri in una riga, il +323% e i nomi a tutta larghezza */
-@media (min-width:761px){.griglia{grid-template-columns:repeat(4,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 4}.cella{min-height:150px}}
-.cella .l{max-width:none}
+/* 26/11: griglia più compatta, tre numeri in riga, mercati al posto delle lingue */
+.griglia{margin-top:44px}
+.cella{min-height:0;padding:24px 26px;gap:10px;justify-content:flex-start}
+.cella .n{font-size:clamp(32px,3.4vw,46px);white-space:nowrap}
+.cella .l{max-width:none;font-size:15px;line-height:1.45}
+.cella.forte{padding:26px 30px;gap:24px;align-items:center}
+.cella.forte .n{font-size:clamp(52px,6.4vw,84px)}
+.cella.forte .l{padding-bottom:0;font-size:16px;max-width:46ch}
+.cella.nomi{padding:20px 26px;gap:8px 26px}
+.cella.nomi .nome{font-size:clamp(18px,1.9vw,24px)}
+.cella.nomi.mercati{column-gap:20px}
+.cella.nomi.mercati .nome{font-size:clamp(16px,1.55vw,20px)}
+@media (min-width:761px){.griglia{grid-template-columns:repeat(3,1fr)}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 3}}
+@media (max-width:760px){
+  .griglia{grid-template-columns:1fr}.griglia .cella.forte,.griglia .cella.nomi{grid-column:span 1}
+  .cella{padding:18px 16px;min-height:0;flex-direction:row;align-items:baseline;gap:14px}
+  .cella{flex-wrap:wrap;row-gap:6px}.cella .n{font-size:30px;flex:0 0 auto}.cella .l{flex:1 1 150px}
+  .cella.forte{flex-direction:column;align-items:flex-start;gap:8px}.cella.forte .n{font-size:60px}
+  .cella.nomi{flex-direction:row;padding:18px 16px;gap:6px 18px}
+}
 
 /* 26/11: "Da usare" in home, tre porte (Officina, Da copiare, Esempi) */
 #usa{padding-bottom:clamp(56px,7vw,96px)}
@@ -912,7 +930,7 @@ dialog#video-pres .chiudi{position:absolute;top:12px;right:12px;border:0;border-
       </div>
       <div class="foto"><img src="asset/ritratto-presentazione.jpg" alt="Lorenzo Asuni mentre presenta una palette di colori proiettata" loading="lazy"></div>
     </div>
-    <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita media del fatturato nell'anno in cui lavoro con le startup<small>Dati di bilancio di esercizio nell'anno in cui ho collaborato.</small></div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2011</div><div class="l">nel marketing e nel tech</div></div><div class="cella"><div class="n">IT · EN · ES</div><div class="l">lingue di lavoro</div></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
+    <div class="griglia"><div class="cella forte"><div class="n" data-pre="+" data-to="323" data-suf="%">+323%</div><div class="l">crescita media del fatturato nell'anno in cui lavoro con le startup<small>Dati di bilancio di esercizio nell'anno in cui ho collaborato.</small></div></div><div class="cella"><div class="n" data-pre="" data-to="35" data-suf="">35</div><div class="l">imprese seguite</div></div><div class="cella"><div class="n" data-pre="Oltre " data-to="100" data-suf=" M€">Oltre 100 M€</div><div class="l">raccolti dalle società che ho seguito, dal pre-seed alla Series A</div></div><div class="cella"><div class="n">Dal 2011</div><div class="l">nel marketing e nel tech</div></div><div class="cella nomi mercati"><span class="t">Mercati in cui ho lavorato con le startup</span><span class="nome">Italia</span><span class="nome">DACH</span><span class="nome">Regno Unito</span><span class="nome">Francia</span><span class="nome">Spagna</span><span class="nome">Portogallo</span><span class="nome">Paesi Bassi</span><span class="nome">Polonia</span><span class="nome">Stati Uniti</span><span class="nome">Emirati Arabi</span></div><div class="cella nomi"><span class="t">Ho lavorato con</span><span class="nome">AirHelp (Y Combinator)</span><span class="nome">Lunii</span></div><div class="cella nomi"><span class="t">Investo in società tech e oltre</span><span class="nome">Anthropic</span><span class="nome">SpaceX</span><span class="nome">Revolut</span><span class="nome">Deel</span><span class="nome">Perplexity e altre società tech</span></div></div>
     <h3 style="font-size:clamp(26px,3vw,36px);margin-top:72px">Da dove vengo</h3>
     <div class="binario" id="binario" aria-hidden="true"><i></i></div>
     <div class="passi"><div class="passo"><span class="anno">2009</span><p>Miseramente fallite due aziende tra il 2009 ed il 2012: una di marketing sportivo e una di food delivery.</p></div><div class="passo"><span class="anno">2014</span><p>AirHelp, startup di Y Combinator, a Berlino: business developer, poi growth per l'Europa, poi country manager per l'Italia. Con l'ufficio stampa, senza budget, venti passaggi in TV.</p></div><div class="passo"><span class="anno">2018</span><p>Lunii, scale-up francese: il lancio in Italia, con oltre 300 uscite stampa nei primi dodici mesi.</p></div><div class="passo"><span class="anno">2019</span><p>Uno dei primi laboratori di LLM e bot in Europa, fino al 2021.</p></div><div class="passo"><span class="anno">2021</span><p>CMO di Ermes, un'azienda di cybersecurity, fino al 2024. In quegli anni l'azienda chiude un round da 7,5 milioni di euro.</p></div><div class="passo"><span class="anno">2024</span><p>Fractional CMO e RevOps, dentro poche aziende alla volta, tra Italia, Europa e Golfo.</p></div><div class="passo"><span class="anno">2026</span><p>La newsletter passa da 103 iscritti a inizio agosto a oltre 500 a novembre. Dall'8 novembre, ogni venerdì, il radar.</p></div></div>
